@@ -17,7 +17,8 @@ main:
     
   - title: "CV"
     # url: /cv/
-    url: /files/qsimeon_resume.pdf
+    html: '<a href="/files/qsimeon_resume.pdf" target="_blank">CV</a>'
+    # url: /files/qsimeon_resume.pdf
     
   # - title: "Guide"
   #   url: /markdown/
