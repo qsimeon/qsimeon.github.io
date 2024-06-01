@@ -19,5 +19,5 @@ main:
     # url: /cv/
     url: /files/qsimeon_resume.pdf
     
-  - title: "Guide"
-    url: /markdown/
+  # - title: "Guide"
+  #   url: /markdown/

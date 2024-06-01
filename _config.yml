@@ -24,7 +24,7 @@ author:
   avatar           : "profile-1.png"
   name             : "Quilee Simeon"
   pronouns         : # example: "she/her"  
-  bio              : "I ❤️ neuroscience"
+  bio              : "I ❤️ neuroscience!"
   location         : "Cambride, MA"
   employer         : "MIT"
   uri              : # URL
@@ -290,6 +290,7 @@ plugins:
   - jekyll-sitemap
   - jekyll-gist
   - jekyll-feed
+  - jekyll-target-blank
   - jekyll-redirect-from
 # mimic GitHub Pages with --safe
 whitelist:
@@ -297,6 +298,7 @@ whitelist:
   - jekyll-sitemap
   - jekyll-gist
   - jekyll-feed
+  - jekyll-target-blank
   - jemoji
 
 
