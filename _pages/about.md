@@ -16,7 +16,7 @@ I study the neural system of _C. elegans_, an organism with only 300 neurons, to
 
 Background and History
 ======
-Before starting my PhD at MIT, I completed a B.S. in Computation and Cognition from the same institution. I grew up in St. Lucia.
+Before starting my PhD at MIT, I completed a B.Sc. in Computation and Cognition from the same institution. I grew up in St. Lucia.
 
 Non-academic Interests
 ======
