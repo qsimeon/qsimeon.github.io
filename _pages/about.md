@@ -20,4 +20,4 @@ Before starting my PhD at MIT, I completed a B.S. in Computation and Cognition f
 
 Non-academic Interests
 ======
-Outside of academia, I enjoy reading fiction and hiking. I also enjoy traveling when possible, with a keen interst in understanding different cultures.
+Outside of academia, I enjoy reading fiction and hiking. I also enjoy traveling when possible, with a keen interest in understanding different cultures.
