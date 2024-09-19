@@ -12,7 +12,7 @@ I'm a PhD-candidate in the Department of Brain and Cognitive Sciences at MIT. My
 
 Current Research Interest
 ======
-I study the neural system of _C. elegans_, an organism with only 300 neurons, to understand how even simple nervous sytems interact with the environment to produce complex behavior. This research aims to enhance our knowledge in neuroscience and may have potential applications to signal processing, control theory and artifical intelligence.
+I study the neural system of _C. elegans_, an organism with only 300 neurons, to understand how even simple nervous systems interact with the environment to produce complex behavior. This research aims to enhance our knowledge in neuroscience and may have potential applications to signal processing, control theory and artificial intelligence.
 
 Background and History
 ======
