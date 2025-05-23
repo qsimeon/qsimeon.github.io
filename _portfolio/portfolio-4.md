@@ -1,11 +1,9 @@
 ---
-title: Envisioning the Future of Computing Prize
-excerpt: >
-  Honorable Mention for visionary essay on ethical identity and future digital selves, awarded by MIT SERC.
+title: "Envisioning the Future of Computing Prize"
+excerpt: "Honorable Mention for visionary essay on ethical identity and future digital selves, awarded by MIT SERC.<br/>
+"
 collection: portfolio
 ---
-
-![MIT SERC Prize Recognition Banner](/files/serc-prize-banner.png)
 
 In 2025, I was awarded an **Honorable Mention** in the [Envisioning the Future of Computing Prize, MIT SERC](https://computing.mit.edu/cross-cutting/social-and-ethical-responsibilities-of-computing/envisioning-the-future-of-computing-prize-home/envisioning-the-future-of-computing-prize-2025-winners/). The competition, hosted by MIT's Schwarzman College of Computing, received 67 highly competitive entries across multiple departments.
 
