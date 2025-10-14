@@ -26,7 +26,7 @@ Machine Learning Research Intern
 *June 2025 -- September 2025*
 - Developed reverse distillation methods for transferring sparsity patterns from large teacher models to smaller student models
 - Designed sparse stack selector mechanisms for selectively activating submodules in stacked architectures
-- Contributed to Cerebras collaboration exploring LLM inference on Cerebras hardware, focusing on scaling sparse models and activation routing
+- Contributed to external collaboration exploring LLM inference on new efficient computing hardware, focusing on scaling sparse models and activation routing
 
 # Research Experience
 

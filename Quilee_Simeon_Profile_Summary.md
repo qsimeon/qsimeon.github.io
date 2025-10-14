@@ -51,7 +51,7 @@ At Numenta, you worked on projects combining neuroscience-inspired architectures
 
 - **Reverse Distillation Project:** Developed a method for transferring sparsity patterns and activation structure from large teacher models into smaller, efficient student models.  
 - **Sparse Stack Selector:** Designed mechanisms for selectively activating submodules in stacked architectures, improving inference-time sparsity and interpretability.  
-- **Cerebras Collaboration:** Contributed to a cross-organization effort exploring LLM inference on Cerebras hardware, focusing on scaling sparse models and activation routing.  
+- **External Collaboration:** Contributed to a cross-organization effort exploring LLM inference on emerging efficient compute hardware, focusing on scaling sparse models and activation routing.  
 
 These experiences positioned you at the intersection of neural modeling, systems-level ML optimization, and hardware-aware inference.
 
@@ -91,7 +91,7 @@ Your goals emphasize:
 - Working in collaborative, high-growth environments that value both research depth and practical engineering.  
 - Expanding your skill set in reinforcement learning, generative modeling, and distributed systems.
 
-You’re open to **Research Engineer**, **Applied Scientist**, or **ML Systems** positions, and have expressed interest in organizations such as **Cerebras**, **Arc Institute**, **insitro**, and **Numenta**.
+You’re open to **Research Engineer**, **Applied Scientist**, or **ML Systems** positions.
 
 ---
 
