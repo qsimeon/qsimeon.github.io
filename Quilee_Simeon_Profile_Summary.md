@@ -14,7 +14,7 @@ Hi, I’m **Quilee Simeon**, a research engineer trained at MIT working at the i
 
 - **Institution:** Massachusetts Institute of Technology (MIT)  
 - **Program:** PhD in Brain and Cognitive Sciences (in progress; currently on hold)  
-- **Master’s Thesis:** *C. elegans as a Platform for Multimodal Neural Data Integration: Advances, Challenges, and Future Directions*  
+- **Master’s Thesis:** *C. elegans as a Platform for Multimodal Neural Data Integration*  
 - **Research Interests:**  
   - Multimodal neural data modeling  
   - Integration across calcium dynamics, connectomics, and transcriptomics  

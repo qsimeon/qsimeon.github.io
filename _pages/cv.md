@@ -14,7 +14,7 @@ redirect_from:
 **Massachusetts Institute of Technology (MIT)**, Cambridge, MA  
 Ph.D. Candidate, Brain and Cognitive Sciences (currently on hold)  
 *Sept 2021 -- Present*  
-Master's Thesis: *C. elegans as a Platform for Multimodal Neural Data Integration: Advances, Challenges, and Future Directions*
+Master's Thesis: *C. elegans as a Platform for Multimodal Neural Data Integration*
 
 B.S. in Computation and Cognition, Minor in Statistics and Data Science  
 *Sept 2017 -- June 2021*
