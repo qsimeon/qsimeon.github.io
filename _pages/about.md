@@ -24,9 +24,9 @@ My work centers on multimodal neural data modeling, particularly using _C. elega
 ## 💼 Professional Experience
 
 **Numenta, Inc. — Machine Learning Research Intern** (June 2025 – September 2025)
-- Developed reverse distillation methods for transferring sparsity patterns from large to small models
-- Designed sparse stack selector mechanisms for efficient inference
-- Contributed to Cerebras collaboration on LLM inference optimization
+- Developed distillation methods for transferring sparsity patterns from large to small models
+- Designed sparse weight and activation mechanisms for efficient inference
+- Contributed to external collaboration on LLM inference optimization
 
 **MIT Department of Brain and Cognitive Sciences — Graduate Researcher** (2022 – Present)
 - Built large-scale data pipelines for multimodal C. elegans neural datasets
@@ -62,7 +62,7 @@ I'm open to **Research Engineer**, **Applied Scientist**, or **ML Systems** posi
 
 ## 🌍 Background
 
-I grew up in St. Lucia and completed my B.Sc. in Computation and Cognition at MIT before beginning my PhD. Outside of research, I enjoy reading fiction, hiking, and traveling to understand different cultures.
+I grew up in St. Lucia and completed my B.Sc. in Computation and Cognition (minor in Statistics & Data Science) and a M.Sc. in Brain and Cognition Sciences at MIT, where I'm also curently a PhD candidate. Outside of research, I enjoy reading fiction, hiking, and traveling to understand different cultures.
 
 ---
 
