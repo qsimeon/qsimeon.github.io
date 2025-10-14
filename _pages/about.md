@@ -8,16 +8,62 @@ redirect_from:
   - /about.html
 ---
 
-I'm a PhD-candidate in the Department of Brain and Cognitive Sciences at MIT. My research focuses on the neural systems of small organisms, which I use as a model to advance our understanding in computational neuroscience. I combine both traditional and modern computational approaches with frontier neuroscientific discoveries. I have an interest in biotechnology, especially in areas of natural computing and bioinformatics. I also mentor, with a special emphasis on supporting under-represented minorities in STEM. I'm open to collaborations.
+Hi, I'm **Quilee Simeon**, a research engineer trained at MIT working at the intersection of **machine learning**, **neuroscience**, and **scientific computing**. I'm currently a PhD candidate in Brain and Cognitive Sciences at MIT, where I combine large-scale data processing, representation learning, and computational modeling to study biological neural circuits.
 
-Current Research Interest
-======
-I study the neural system of _C. elegans_, an organism with only 300 neurons, to understand how even simple nervous systems interact with the environment to produce complex behavior. This research aims to enhance our knowledge in neuroscience and may have potential applications to signal processing, control theory and artificial intelligence.
+## 🧠 Research Focus
 
-Background and History
-======
-Before starting my PhD at MIT, I completed a B.Sc. in Computation and Cognition from the same institution. I grew up in St. Lucia.
+My work centers on multimodal neural data modeling, particularly using _C. elegans_ as a platform for understanding how biological neural systems process information. I integrate data across calcium dynamics, connectomics, and transcriptomics using machine learning frameworks including transformer architectures and self-supervised learning.
 
-Non-academic Interests
-======
-Outside of academia, I enjoy reading fiction and hiking. I also enjoy traveling when possible, with a keen interest in understanding different cultures.
+**Key Research Areas:**
+- Multimodal neural data integration and modeling
+- Self-supervised learning for neural systems  
+- Transformer architectures for time-series neural activity
+- Graph-based learning approaches for connectome data
+- Neural efficiency and interpretability
+
+## 💼 Professional Experience
+
+**Numenta, Inc. — Machine Learning Research Intern** (June 2025 – September 2025)
+- Developed reverse distillation methods for transferring sparsity patterns from large to small models
+- Designed sparse stack selector mechanisms for efficient inference
+- Contributed to Cerebras collaboration on LLM inference optimization
+
+**MIT Department of Brain and Cognitive Sciences — Graduate Researcher** (2022 – Present)
+- Built large-scale data pipelines for multimodal C. elegans neural datasets
+- Modeled neural population dynamics using graph-based architectures
+- Integrated transcriptomic and anatomical data for neuron identity prediction
+
+## 🛠️ Technical Expertise
+
+**Machine Learning & AI:** Transformer models, contrastive learning, spectral normalization, diffusion models, reinforcement learning, neural network interpretability
+
+**Scientific Computing:** Python, PyTorch, Julia, high-performance cluster computing (SLURM-based systems)
+
+**Data Engineering:** Neural data preprocessing, signal aggregation, connectome-based modeling
+
+**Software Tools:** NumPy, PyTorch Geometric, OpenAI API, Hugging Face Datasets, Matplotlib, Marimo/Pluto notebooks
+
+## 🎯 Current Direction
+
+I'm transitioning toward applied ML and AI systems roles that blend algorithmic research with scientific applications. I'm particularly interested in:
+
+- Building generalizable models that bridge biological and artificial intelligence
+- Working in collaborative environments that value both research depth and practical engineering
+- Expanding expertise in reinforcement learning, generative modeling, and distributed systems
+
+I'm open to **Research Engineer**, **Applied Scientist**, or **ML Systems** positions at organizations like **Cerebras**, **Arc Institute**, **insitro**, and **Numenta**.
+
+## 🏅 Leadership & Community
+
+- **President, IEEE-HKN (Eta Kappa Nu) Honor Society — MIT Chapter**
+- **Secretary, Fraternity Leadership Role** 
+- Mentor and advocate for open science, data transparency, and interdisciplinary education
+- Strong commitment to supporting underrepresented minorities in STEM
+
+## 🌍 Background
+
+I grew up in St. Lucia and completed my B.Sc. in Computation and Cognition at MIT before beginning my PhD. Outside of research, I enjoy reading fiction, hiking, and traveling to understand different cultures.
+
+---
+
+*"I'm driven by the idea that understanding intelligence — biological or artificial — means learning how information transforms meaningfully through systems."*

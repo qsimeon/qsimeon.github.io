@@ -12,16 +12,30 @@ redirect_from:
 # Education
 
 **Massachusetts Institute of Technology (MIT)**, Cambridge, MA  
-Ph.D. Candidate, Interdisciplinary PhD in Brain and Cognitive Sciences and Statistics  
-*Sept 2021 -- Present*
+Ph.D. Candidate, Brain and Cognitive Sciences (currently on hold)  
+*Sept 2021 -- Present*  
+Master's Thesis: *C. elegans as a Platform for Multimodal Neural Data Integration: Advances, Challenges, and Future Directions*
 
 B.S. in Computation and Cognition, Minor in Statistics and Data Science  
 *Sept 2017 -- June 2021*
+
+# Professional Experience
+
+**Numenta, Inc.**, Cambridge, MA  
+Machine Learning Research Intern  
+*June 2025 -- September 2025*
+- Developed reverse distillation methods for transferring sparsity patterns from large teacher models to smaller student models
+- Designed sparse stack selector mechanisms for selectively activating submodules in stacked architectures
+- Contributed to Cerebras collaboration exploring LLM inference on Cerebras hardware, focusing on scaling sparse models and activation routing
 
 # Research Experience
 
 **Graduate Research Assistant**, McGovern Institute for Brain Research, MIT  
 *March 2022 -- Present*
+- Developed large-scale data pipelines for processing multimodal C. elegans neural datasets
+- Modeled neural population dynamics using graph-based architectures and self-supervised learning
+- Integrated transcriptomic and anatomical data for neuron identity prediction tasks
+- Mentored junior students in computational neuroscience methods and data wrangling
 
 **Graduate Rotation Student**, Brain and Cognitive Sciences, MIT  
 *Oct 2021 -- Feb 2022*
@@ -84,11 +98,14 @@ Instructor - Johannesburg, ZAF
 - Verbe et al. (2024). "Flies Tune the Sensitivity of Their Multifunctional Gyroscope." [bioRxiv](https://doi.org/10.1101/2024.03.13.583703)
 - Friedman et al. (2020). "Striosomes Mediate Value-Based Learning Vulnerable in Age ...." [Cell](https://doi.org/10.1016/j.cell.2020.09.020)
 
-# Skills
+# Technical Skills
 
-| **Computer Programming**       | **Analytical**                 | **Software**              |
-| -------------------------------| -------------------------------| --------------------------|
-| Python, MATLAB, C, R           | ML, AI, Statistics, Data Science| PyTorch, OpenAI APIs, Gym  |
+**Programming:** Python, Julia, C++, SQL, MATLAB  
+**ML Frameworks:** PyTorch, PyTorch Geometric, Hugging Face, Scikit-learn  
+**Data Tools:** NumPy, pandas, Matplotlib, OpenAI API, TensorBoard  
+**Scientific Tools:** NEURON, NetworkX, Graphviz, SciPy  
+**DevOps / HPC:** SLURM, Conda, AWS, Docker, Git, CI/CD  
+**Soft Skills:** Cross-disciplinary collaboration, mentoring, reproducible research, technical writing
 
 # Coursework
 
@@ -96,7 +113,12 @@ AI & ML, Statistics & Data Science, Statistical Learning, Discrete Math & Linear
 
 # Leadership and Honors
 
-| **Leadership**                                        | **Honors**                                    |
-| -----------------------------------------------------| ----------------------------------------------|
-| Co-President, IEEE-HKN Beta Theta Chapter            | Instructor, SPISE 2020 Computer Programming   |
-| Oxford Rhodes Finalist, Commonwealth Caribbean       | Beta Chapter of Theta Chi at MIT              |
+**Leadership:**
+- President, IEEE-HKN (Eta Kappa Nu) Honor Society — MIT Chapter
+- Secretary, Fraternity Leadership Role
+- Mentor and advocate for open science, data transparency, and interdisciplinary education
+
+**Honors:**
+- Oxford Rhodes Finalist, Commonwealth Caribbean
+- Instructor, SPISE 2020 Computer Programming
+- Beta Chapter of Theta Chi at MIT
