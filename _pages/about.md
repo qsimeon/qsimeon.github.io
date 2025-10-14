@@ -51,7 +51,7 @@ I'm transitioning toward applied ML and AI systems roles that blend algorithmic 
 - Working in collaborative environments that value both research depth and practical engineering
 - Expanding expertise in reinforcement learning, generative modeling, and distributed systems
 
-I'm open to **Research Engineer**, **Applied Scientist**, or **ML Systems** positions at organizations like **Cerebras**, **Arc Institute**, **insitro**, and **Numenta**.
+I'm open to **Research Engineer**, **Applied Scientist**, or **ML Systems** positions.
 
 ## 🏅 Leadership & Community
 
