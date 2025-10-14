@@ -21,7 +21,7 @@ repository               : "qsimeon/qsimeon.github.io"
 #               Additional customization can be done by editing /_includes/author-profile.html
 author:
   # Biographic information
-  avatar           : "profile-1.png"
+  avatar           : "profile-1.jpg"
   name             : "Quilee Simeon"
   pronouns         : # example: "she/her"  
   bio              : "Research engineer at the intersection of machine learning, neuroscience, and scientific computing. PhD candidate at MIT."
