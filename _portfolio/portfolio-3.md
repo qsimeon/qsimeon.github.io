@@ -1,6 +1,6 @@
 ---
 title: "Bernstein Conference 2024 Poster"
-excerpt: "Unified _C. elegans Neural Activity_ and Connectivity Datasets for Building Foundation Models of a Small Nervous System<br/><img src='/images/bernstein-poster.png'>"
+excerpt: "Unified _C. elegans Neural Activity_ and Connectivity Datasets for Building Foundation Models of a Small Nervous System<br/><img src='/images/bernstein-poster.jpg'>"
 collection: portfolio
 ---
 
