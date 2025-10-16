@@ -14,11 +14,6 @@ tags:
 
 [Quilee Simeon](https://qsimeon.github.io/) | [MIT Deep Learning Final Project Blog](https://github.com/qsimeon/deep_learning_project) | December 2024
 
-
-# Towards the Platonic Representation via Multimodal Contrastive Alignment
-
-*Quilee Simeon & Gabe Manso | MIT Deep Learning Final Project Blog | December 2024*
-
 ## Introduction
 
 Deep learning models are typically trained to transform raw data into representations optimized for specific tasks. Recently, two lines of research have inspired a deeper inquiry into the nature of these representations. The **CLIP framework** demonstrated the utility of aligning representations across modalities, using paired image-text data to train joint embeddings for cross-modal retrieval. Meanwhile, the **Platonic Representation Hypothesis** posits that performant models converge toward a shared statistical model of reality in their representation spaces, suggesting a potential universality underlying learned representations.
