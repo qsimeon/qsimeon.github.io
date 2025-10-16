@@ -17,7 +17,6 @@ This project, completed as part of MIT's Deep Learning course (6.7960), explores
 ## Resources
 
 - **[Full Technical Blog Post](/blog/multimodal-alignment/)**
-- **[Google Colab Notebook](https://colab.research.google.com/drive/1tguG-THn52pPGcU9KIkmVBzYbhiPfw1w?usp=sharing)**
-- **[Weights & Biases Logs](https://wandb.ai/gmanso-mit/multimodal-proj)**
+- **[GitHub Repository](https://github.com/qsimeon/deep_learning_project)**
 
 *Collaboration with Gabe Manso*
