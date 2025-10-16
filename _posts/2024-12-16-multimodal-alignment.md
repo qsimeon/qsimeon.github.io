@@ -149,7 +149,7 @@ We conjecture that the aligned multimodal kernel will have higher similarity wit
 
 ## Methodology
 
-All code for this project is available in our [Google Colab notebook](https://colab.research.google.com/drive/1BkyPko0x-8CL41Z-VSmyxI41B90hB2Fc?usp=sharing).
+All code for this project is available in our [GitHub Repository](https://github.com/qsimeon/deep_learning_project).
 
 ### Data Pipeline
 
