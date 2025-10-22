@@ -12,7 +12,7 @@ Hi, I'm **Quilee Simeon**, a research engineer trained at MIT working at the int
 
 ## 🧠 Research Focus
 
-My work centers on multimodal neural data modeling as a platform for understanding how biological neural systems process information. I integrate data across calcium dynamics, connectomics, and transcriptomics using machine learning frameworks including transformer architectures and self-supervised learning.
+My work centers on multimodal neural data modeling as a platform for understanding how biological neural systems process information. I integrate data across neural dynamics, connectomics, and transcriptomics using machine learning frameworks including transformer architectures and self-supervised learning.
 
 **Key Research Areas:**
 - Multimodal neural data integration and modeling
