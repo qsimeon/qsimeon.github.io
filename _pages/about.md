@@ -29,7 +29,7 @@ My work centers on multimodal neural data modeling as a platform for understandi
 - Contributed to external collaboration on LLM inference optimization
 
 **MIT Department of Brain and Cognitive Sciences — Graduate Researcher** (2022 – Present)
-- Built large-scale data pipelines for multimodal C. elegans neural datasets
+- Built large-scale data pipelines for multimodal neural datasets
 - Modeled neural population dynamics using graph-based architectures
 - Integrated transcriptomic and anatomical data for neuron identity prediction
 
