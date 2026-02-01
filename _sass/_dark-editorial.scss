@@ -1,0 +1,965 @@
+/*
+ * Dark Editorial Theme Overrides
+ * Applies dark mode styling with gold accents to Minimal Mistakes theme
+ */
+
+// Color palette
+$dark-bg-primary:     #0c0c0f;
+$dark-surface-card:   #14141a;
+$dark-border-color:   #1e1e28;
+$dark-text-primary:   #e2e2e8;
+$dark-text-muted:     #7a7a8a;
+$dark-accent-gold:    #c8a84b;
+$dark-hover-gold:     #dab85f;
+$dark-border-gold:    2px solid $dark-accent-gold;
+
+// ===========================
+// Global Body & Text Styling
+// ===========================
+
+html {
+  background-color: $dark-bg-primary;
+}
+
+body {
+  background-color: $dark-bg-primary !important;
+  color: $dark-text-primary !important;
+  font-family: "Source Sans 3", sans-serif;
+}
+
+// Typography overrides
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Playfair Display", serif;
+  color: $dark-text-primary;
+}
+
+p {
+  color: $dark-text-primary;
+}
+
+a {
+  color: $dark-accent-gold;
+  transition: color 0.3s ease, text-decoration 0.3s ease;
+
+  &:hover {
+    color: $dark-hover-gold;
+    text-decoration: underline;
+  }
+
+  &:visited {
+    color: #b8965f;
+  }
+}
+
+strong {
+  color: $dark-accent-gold;
+  font-weight: 600;
+}
+
+// ===========================
+// Masthead & Navigation
+// ===========================
+
+.masthead {
+  background-color: $dark-surface-card;
+  border-bottom: 1px solid $dark-border-color;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.site-title {
+  @media (min-width: $medium) {
+    float: left;
+    margin-left: 0;
+  }
+
+  a {
+    color: $dark-text-primary;
+
+    &:hover {
+      color: $dark-accent-gold;
+    }
+  }
+}
+
+.site-nav {
+  display: none;
+
+  @media (min-width: $medium) {
+    display: block;
+    float: right;
+    margin-right: 0;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    clear: both;
+    list-style: none;
+  }
+
+  li {
+    display: block;
+    list-style-item: none;
+
+    @media (min-width: $medium) {
+      display: inline-block;
+    }
+  }
+
+  a {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: $dark-text-primary;
+
+    &:hover {
+      color: $dark-accent-gold;
+      background-color: rgba(200, 168, 75, 0.1);
+    }
+  }
+}
+
+.greedy-nav {
+  background-color: $dark-surface-card;
+
+  a {
+    color: $dark-text-primary;
+
+    &:hover {
+      color: $dark-accent-gold;
+    }
+  }
+
+  button {
+    background-color: rgba(200, 168, 75, 0.2);
+    color: $dark-accent-gold;
+
+    &:hover {
+      background-color: rgba(200, 168, 75, 0.3);
+    }
+  }
+}
+
+.nav-list {
+  li {
+    a {
+      padding: 0.5rem 0;
+      color: $dark-text-primary;
+
+      &:hover {
+        color: $dark-accent-gold;
+      }
+    }
+  }
+}
+
+// ===========================
+// Sidebar & Author Profile
+// ===========================
+
+.sidebar {
+  background-color: $dark-surface-card;
+}
+
+.author__name {
+  font-family: "Playfair Display", serif;
+  color: $dark-text-primary;
+}
+
+.author__bio {
+  color: $dark-text-muted;
+}
+
+.author__urls {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    white-space: nowrap;
+    margin-bottom: 0.5rem;
+
+    a {
+      color: $dark-accent-gold;
+
+      &:hover {
+        color: $dark-hover-gold;
+      }
+    }
+  }
+}
+
+.author__avatar {
+  display: block;
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 1rem;
+  padding: 10px;
+  border: 2px solid $dark-accent-gold;
+  border-radius: 50%;
+  background-color: $dark-bg-primary;
+
+  @media (min-width: $large) {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+// ===========================
+// Page Content Styling
+// ===========================
+
+.page {
+  background-color: $dark-bg-primary;
+
+  h2 {
+    color: $dark-text-primary;
+    border-left: 2px solid $dark-accent-gold;
+    padding-left: 1rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  h3, h4, h5, h6 {
+    color: $dark-text-primary;
+  }
+
+  strong {
+    color: $dark-accent-gold;
+  }
+
+  em {
+    color: $dark-text-muted;
+  }
+}
+
+blockquote {
+  margin: 2em 0;
+  padding: 1.25em 1.5em;
+  border-left: 4px solid $dark-accent-gold;
+  background-color: $dark-surface-card;
+  color: $dark-text-primary;
+  font-style: italic;
+
+  > :last-child {
+    margin-bottom: 0;
+  }
+}
+
+code {
+  background-color: $dark-surface-card;
+  color: #a8c37a;
+  padding: 0 0.25rem;
+  border-radius: 3px;
+  font-family: "Courier New", monospace;
+}
+
+pre {
+  background-color: $dark-surface-card;
+  border: 1px solid $dark-border-color;
+  border-radius: 4px;
+  padding: 1rem;
+  overflow-x: auto;
+
+  code {
+    background-color: transparent;
+    color: #a8c37a;
+    padding: 0;
+  }
+}
+
+// ===========================
+// Links & Text Colors
+// ===========================
+
+.notice {
+  padding: 1em;
+  margin: 2em 0 !important;
+  text-indent: initial;
+  border-radius: 4px;
+}
+
+.notice--primary {
+  background-color: $dark-surface-card;
+  color: $dark-text-primary;
+  border-left: 4px solid $dark-accent-gold;
+}
+
+.notice--info {
+  background-color: $dark-surface-card;
+  color: $dark-text-primary;
+  border-left: 4px solid #4a9eff;
+}
+
+.notice--warning {
+  background-color: $dark-surface-card;
+  color: $dark-text-primary;
+  border-left: 4px solid #ff9800;
+}
+
+.notice--danger {
+  background-color: $dark-surface-card;
+  color: $dark-text-primary;
+  border-left: 4px solid #f44336;
+}
+
+.notice--success {
+  background-color: $dark-surface-card;
+  color: $dark-text-primary;
+  border-left: 4px solid #4caf50;
+}
+
+// ===========================
+// Archive & Card Styling
+// ===========================
+
+.archive {
+  margin: 2em 0;
+}
+
+.archive__item {
+  margin-bottom: 2em;
+}
+
+.archive__item-title {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  color: $dark-text-primary;
+  font-family: "Playfair Display", serif;
+}
+
+.archive__item-excerpt {
+  margin-top: 0;
+  color: $dark-text-muted;
+}
+
+.list__item {
+  border-bottom: 1px solid $dark-border-color;
+  padding-bottom: 2em;
+  margin-bottom: 2em;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .page__meta {
+    margin: 0 0 0.5em 0;
+    font-size: 0.85em;
+    color: $dark-text-muted;
+  }
+
+  a {
+    color: $dark-accent-gold;
+
+    &:hover {
+      color: $dark-hover-gold;
+    }
+  }
+}
+
+.list__item--large {
+  padding: 2em;
+  background-color: $dark-surface-card;
+  border: 2px solid transparent;
+  border-top-color: $dark-accent-gold;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  margin-bottom: 2em;
+
+  &:hover {
+    border-color: $dark-accent-gold;
+    box-shadow: 0 4px 12px rgba(200, 168, 75, 0.15);
+    transform: translateY(-2px);
+  }
+
+  a {
+    color: $dark-accent-gold;
+
+    &:hover {
+      color: $dark-hover-gold;
+    }
+  }
+}
+
+// Portfolio/Collection cards
+.feature__wrapper {
+  .feature__item {
+    background-color: $dark-surface-card;
+    border-top: 2px solid $dark-accent-gold;
+    padding: 1.5em;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    margin-bottom: 2em;
+
+    &:hover {
+      box-shadow: 0 4px 12px rgba(200, 168, 75, 0.15);
+      transform: translateY(-2px);
+    }
+
+    h2 {
+      margin-top: 0;
+      border: none;
+      padding: 0;
+      color: $dark-text-primary;
+    }
+
+    .page__meta {
+      color: $dark-text-muted;
+      font-size: 0.85em;
+    }
+
+    p {
+      color: $dark-text-primary;
+    }
+
+    a {
+      color: $dark-accent-gold;
+
+      &:hover {
+        color: $dark-hover-gold;
+      }
+    }
+  }
+}
+
+// ===========================
+// Timeline Styling (for talks)
+// ===========================
+
+.timeline {
+  position: relative;
+  padding: 0;
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 30px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, $dark-accent-gold, transparent);
+
+    @media (max-width: $medium) {
+      left: 15px;
+    }
+  }
+}
+
+.timeline__item {
+  position: relative;
+  padding-left: 80px;
+  padding-bottom: 2rem;
+  margin-bottom: 2rem;
+
+  @media (max-width: $medium) {
+    padding-left: 50px;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 18px;
+    top: 0;
+    width: 24px;
+    height: 24px;
+    border: 2px solid $dark-accent-gold;
+    border-radius: 50%;
+    background-color: $dark-bg-primary;
+
+    @media (max-width: $medium) {
+      left: 3px;
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  &:hover::before {
+    background-color: $dark-accent-gold;
+    box-shadow: 0 0 0 4px rgba(200, 168, 75, 0.2);
+  }
+
+  h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: $dark-text-primary;
+  }
+
+  .page__meta {
+    color: $dark-text-muted;
+    margin-bottom: 0.5rem;
+    font-size: 0.9em;
+  }
+
+  p {
+    margin: 0.5rem 0;
+    color: $dark-text-muted;
+
+    &.summary {
+      color: $dark-text-primary;
+    }
+  }
+
+  a {
+    color: $dark-accent-gold;
+
+    &:hover {
+      color: $dark-hover-gold;
+    }
+  }
+}
+
+// ===========================
+// Button Styling
+// ===========================
+
+.btn {
+  display: inline-block;
+  margin-bottom: 0.25em;
+  padding: 0.75em 1.5em;
+  font-family: inherit;
+  font-size: 0.9em;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  border-width: 0;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: $dark-accent-gold;
+  color: $dark-bg-primary;
+
+  &:hover {
+    background-color: $dark-hover-gold;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(200, 168, 75, 0.3);
+  }
+
+  &:focus {
+    outline: 2px solid $dark-accent-gold;
+    outline-offset: 2px;
+  }
+
+  &.btn--small {
+    padding: 0.5em 1em;
+    font-size: 0.8em;
+  }
+
+  &.btn--large {
+    padding: 1em 2em;
+    font-size: 1.1em;
+  }
+
+  &.btn--success {
+    background-color: #4caf50;
+    color: white;
+
+    &:hover {
+      background-color: #45a049;
+    }
+  }
+
+  &.btn--info {
+    background-color: #4a9eff;
+    color: white;
+
+    &:hover {
+      background-color: #2e88ff;
+    }
+  }
+
+  &.btn--warning {
+    background-color: #ff9800;
+    color: white;
+
+    &:hover {
+      background-color: #f57c00;
+    }
+  }
+
+  &.btn--danger {
+    background-color: #f44336;
+    color: white;
+
+    &:hover {
+      background-color: #d32f2f;
+    }
+  }
+
+  &.btn--inverse {
+    background-color: $dark-surface-card;
+    color: $dark-accent-gold;
+    border: 2px solid $dark-accent-gold;
+
+    &:hover {
+      background-color: rgba(200, 168, 75, 0.1);
+    }
+  }
+
+  &.btn--light-outline {
+    background-color: transparent;
+    color: $dark-accent-gold;
+    border: 2px solid $dark-accent-gold;
+
+    &:hover {
+      background-color: rgba(200, 168, 75, 0.1);
+    }
+  }
+}
+
+// ===========================
+// Footer Styling
+// ===========================
+
+.page__footer {
+  background-color: $dark-surface-card;
+  border-top: 2px solid $dark-accent-gold;
+  color: $dark-text-primary;
+}
+
+.footer {
+  @extend .page__footer;
+}
+
+.page__footer-follow {
+  margin-bottom: 2em;
+  padding: 1em 0;
+  border-top: 1px solid $dark-border-color;
+
+  p {
+    margin: 0;
+    padding: 0;
+    color: $dark-text-primary;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  li {
+    display: inline-block;
+    padding: 0.5em 1em;
+    margin: 0;
+
+    a {
+      color: $dark-accent-gold;
+
+      &:hover {
+        color: $dark-hover-gold;
+      }
+    }
+  }
+}
+
+.page__footer-copyright {
+  font-size: 0.85em;
+  color: $dark-text-muted;
+}
+
+// ===========================
+// Forms & Inputs
+// ===========================
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="url"],
+input[type="date"],
+input[type="month"],
+input[type="time"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="week"],
+input[type="number"],
+input[type="search"],
+input[type="tel"],
+input[type="color"],
+textarea,
+select {
+  background-color: $dark-surface-card;
+  border: 1px solid $dark-border-color;
+  border-radius: 4px;
+  color: $dark-text-primary;
+  padding: 0.5em;
+  transition: all 0.3s ease;
+
+  &:focus {
+    background-color: $dark-surface-card;
+    border-color: $dark-accent-gold;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(200, 168, 75, 0.2);
+  }
+
+  &::placeholder {
+    color: $dark-text-muted;
+  }
+}
+
+textarea {
+  resize: vertical;
+}
+
+// ===========================
+// Pagination & Navigation
+// ===========================
+
+.pagination {
+  margin: 2em 0;
+  padding: 0;
+  font-family: inherit;
+  font-size: 0.85em;
+  list-style: none;
+  text-align: center;
+
+  li {
+    display: inline;
+
+    > a,
+    > span {
+      margin-left: 0.5em;
+      padding: 0.5em 0.75em;
+      background-color: $dark-surface-card;
+      color: $dark-accent-gold;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      border: 1px solid $dark-border-color;
+
+      &:hover {
+        background-color: rgba(200, 168, 75, 0.1);
+        border-color: $dark-accent-gold;
+      }
+    }
+  }
+
+  .current {
+    padding: 0.5em 0.75em;
+    background-color: $dark-accent-gold;
+    color: $dark-bg-primary;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+
+  .disabled {
+    color: $dark-text-muted;
+    pointer-events: none;
+  }
+}
+
+// ===========================
+// Table of Contents
+// ===========================
+
+.toc {
+  background-color: $dark-surface-card;
+  border: 1px solid $dark-border-color;
+  border-radius: 4px;
+  padding: 1.25em;
+  margin: 2em 0;
+
+  h2 {
+    border: none;
+    padding: 0;
+    margin-top: 0;
+    font-size: 1.1em;
+    color: $dark-text-primary;
+  }
+
+  > ul {
+    margin-bottom: 0;
+
+    a {
+      color: $dark-accent-gold;
+
+      &:hover {
+        color: $dark-hover-gold;
+      }
+    }
+  }
+}
+
+// ===========================
+// Tables
+// ===========================
+
+table {
+  background-color: $dark-surface-card;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  margin: 2em 0;
+  width: 100%;
+
+  thead {
+    background-color: $dark-border-color;
+    color: $dark-text-primary;
+    text-align: left;
+  }
+
+  th,
+  td {
+    border: 1px solid $dark-border-color;
+    padding: 0.75em;
+  }
+
+  th {
+    font-weight: 600;
+    color: $dark-accent-gold;
+  }
+
+  tbody {
+    tr {
+      &:nth-child(even) {
+        background-color: rgba(200, 168, 75, 0.05);
+      }
+
+      &:hover {
+        background-color: rgba(200, 168, 75, 0.1);
+      }
+    }
+  }
+
+  a {
+    color: $dark-accent-gold;
+
+    &:hover {
+      color: $dark-hover-gold;
+    }
+  }
+}
+
+// ===========================
+// Social Icons
+// ===========================
+
+.social-icons {
+  a {
+    color: $dark-accent-gold;
+    display: inline-block;
+    padding: 0.5em;
+    transition: all 0.3s ease;
+
+    &:hover {
+      color: $dark-hover-gold;
+      transform: translateY(-2px);
+    }
+  }
+}
+
+// ===========================
+// Image Styling
+// ===========================
+
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+
+  &.page__hero-image {
+    border-radius: 4px;
+  }
+}
+
+figure {
+  margin: 2em 0;
+
+  figcaption {
+    color: $dark-text-muted;
+    font-size: 0.85em;
+    font-style: italic;
+    text-align: center;
+    margin-top: 0.5em;
+  }
+}
+
+// ===========================
+// Responsive Adjustments
+// ===========================
+
+@media (max-width: $medium) {
+  .sidebar {
+    display: none;
+
+    &.sticky {
+      display: block;
+    }
+  }
+
+  .page {
+    padding-left: 1em;
+    padding-right: 1em;
+  }
+
+  h2 {
+    font-size: 1.5em;
+  }
+
+  .archive__item {
+    margin-bottom: 1em;
+  }
+
+  .list__item--large {
+    padding: 1em;
+  }
+}
+
+@media (max-width: $small) {
+  h2 {
+    font-size: 1.3em;
+  }
+
+  h3 {
+    font-size: 1.1em;
+  }
+
+  .timeline {
+    &::before {
+      left: 15px;
+    }
+  }
+
+  .timeline__item {
+    padding-left: 50px;
+
+    &::before {
+      left: 3px;
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .btn {
+    padding: 0.5em 1em;
+    font-size: 0.85em;
+  }
+}
+
+// ===========================
+// Print Styles
+// ===========================
+
+@media print {
+  body,
+  html {
+    background-color: white;
+    color: black;
+  }
+
+  a {
+    color: #0000ee;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: black;
+  }
+
+  .sidebar,
+  .masthead,
+  .page__footer {
+    display: none;
+  }
+}
