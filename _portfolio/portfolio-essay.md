@@ -12,4 +12,4 @@ Worlds, in this framework, are **agent-relative**: defined not by what exists, b
 
 The essay draws on Penrose's three-world model, reinterprets Plato's allegory of the cave, and makes explicit distinctions between multi-worldedness and both the sci-fi multiverse and multimodality.
 
-**[Read the full essay →](/blog_post.html)**
+**[Read the full essay →](_portfolio/blog_post.html)**
