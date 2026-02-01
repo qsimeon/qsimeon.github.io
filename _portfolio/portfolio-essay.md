@@ -1,29 +1,15 @@
 ---
-title: "Multimodal Alignment and Platonic Representation"
-excerpt: "Exploring how disparate pre-trained neural networks can be aligned into shared multimodal representations."
+title: "We Don't Live in One World. We Never Did."
+excerpt: "An essay on agent-relative worlds, plurality, and why the singular world model is a fiction."
 collection: portfolio
 date: 2026-02-01
-permalink: /portfolio/essay-multimodal/
+permalink: /portfolio/essay-multi-world/
 ---
 
-## Multimodal Alignment and Platonic Representation
+This essay argues that the assumption of a single unified world is not just incomplete—it actively distorts how we think, build, and reason about reality.
 
-This essay explores a fundamental question in deep learning: How can we align disparate pre-trained neural networks into shared multimodal representations that preserve the semantic structure of their individual specializations?
+Worlds, in this framework, are **agent-relative**: defined not by what exists, but by what a given actor can directly observe and interact with. The macroscopic physical world, the digital world, the microscopic world, the cosmos, and the world of abstract thought are not "views of the same thing"—they are distinct domains with different logic, different relevant variables, and different demands.
 
-### Key Insights
+The essay draws on Penrose's three-world model, reinterprets Plato's allegory of the cave, and makes explicit distinctions between multi-worldedness and both the sci-fi multiverse and multimodality.
 
-The research investigates how:
-- Vision transformers and language models encode information in structurally different ways
-- Shared embedding spaces can facilitate cross-modal understanding
-- Platonic representations offer a theoretical framework for thinking about universal representations
-
-### Full Essay
-
-For the complete analysis, methodology, and findings, please visit the [full essay](/blog_post.html).
-
-### Related Work
-
-This research connects to ongoing work in:
-- Multimodal learning and representation alignment
-- Theoretical foundations of neural network geometry
-- Applications to vision-language understanding tasks
+**[Read the full essay →](/blog_post.html)**
