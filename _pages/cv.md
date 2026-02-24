@@ -13,18 +13,24 @@ redirect_from:
 
 # Education
 
-**Massachusetts Institute of Technology (MIT)**, Cambridge, MA  
-Ph.D. Candidate, Brain and Cognitive Sciences (currently on hold)  
-*Sept 2021 -- Present*  
+**Massachusetts Institute of Technology (MIT)**, Cambridge, MA
+Ph.D., Brain and Cognitive Sciences (on hold)
+*Sept 2021 -- Present*
+
+M.S. Computational Neuroscience (May 2025)
 Master's Thesis: *C. elegans as a Platform for Multimodal Neural Data Integration*
 
-B.S. in Computation and Cognition, Minor in Statistics and Data Science  
+B.S. in Computation and Cognition, Minor in Statistics and Data Science
 *Sept 2017 -- June 2021*
 
 # Professional Experience
 
-**Numenta, Inc.**, Cambridge, MA  
-Machine Learning Research Intern  
+**MIT Office of Research Computing and Data**, Cambridge, MA
+Research Computing Technical Staff
+*Nov 2025 -- Present*
+
+**Numenta, Inc.**, Cambridge, MA
+Machine Learning Research Intern
 *June 2025 -- September 2025*
 - Developed reverse distillation methods for transferring sparsity patterns from large teacher models to smaller student models
 - Designed sparse stack selector mechanisms for selectively activating submodules in stacked architectures
@@ -32,39 +38,39 @@ Machine Learning Research Intern
 
 # Research Experience
 
-**Graduate Research Assistant**, McGovern Institute for Brain Research, MIT  
-*March 2022 -- Present*
+**Graduate Research Assistant**, McGovern Institute for Brain Research, MIT
+*March 2022 -- Oct 2025*
 - Developed large-scale data pipelines for processing multimodal C. elegans neural datasets
 - Modeled neural population dynamics using graph-based architectures and self-supervised learning
 - Integrated transcriptomic and anatomical data for neuron identity prediction tasks
 - Mentored junior students in computational neuroscience methods and data wrangling
 
-**Graduate Rotation Student**, Brain and Cognitive Sciences, MIT  
+**Graduate Rotation Student**, Brain and Cognitive Sciences, MIT
 *Oct 2021 -- Feb 2022*
 
-**Summer Course Participant**, Methods in Computational Neuroscience, MBL  
+**Summer Course Participant**, Methods in Computational Neuroscience, MBL
 *July 2023 -- Aug 2023*
 
-**Summer Course Participant**, Neurophysics of Locomotion, KITP  
+**Summer Course Participant**, Neurophysics of Locomotion, KITP
 *July 2022 -- Aug 2022*
 
-**ELO Intern**, MIT International Science and Technology Initiatives, Remote  
+**ELO Intern**, MIT International Science and Technology Initiatives, Remote
 *June 2020 -- Aug 2020*
 
-**Undergraduate Researcher**, UROP, McGovern Institute, MIT  
+**Undergraduate Researcher**, UROP, McGovern Institute, MIT
 *June 2018 -- Dec 2020*
 
 # Work Experience
 
-**Triplet Therapeutics**, Cambridge, MA  
-Bioinformatics Intern  
+**Triplet Therapeutics**, Cambridge, MA
+Bioinformatics Intern
 *Jan 2021 -- March 2021*
 
-Software Development Intern  
+Software Development Intern
 *July 2019 -- Sept 2019*
 
-**Saint Lucia Distillers Group of Companies**, Castries, St. Lucia  
-Quality Assurance Analyst  
+**Saint Lucia Distillers Group of Companies**, Castries, St. Lucia
+Quality Assurance Analyst
 *July 2016 — June 2017*
 
 # Teaching Experience
@@ -102,11 +108,12 @@ Instructor - Johannesburg, ZAF
 
 # Technical Skills
 
-**Programming:** Python, Julia, C++, SQL, MATLAB  
-**ML Frameworks:** PyTorch, PyTorch Geometric, Hugging Face, Scikit-learn  
-**Data Tools:** NumPy, pandas, Matplotlib, OpenAI API, TensorBoard  
-**Scientific Tools:** NEURON, NetworkX, Graphviz, SciPy  
-**DevOps / HPC:** SLURM, Conda, AWS, Docker, Git, CI/CD  
+**Programming:** Python, Rust, TypeScript, Julia, C++, SQL, MATLAB
+**ML Frameworks:** PyTorch, PyTorch Geometric, Hugging Face, Scikit-learn, Claude Code
+**Data Tools:** NumPy, pandas, Matplotlib, OpenAI API, TensorBoard, fal.ai
+**Web & APIs:** FastAPI, Next.js, React, Supabase
+**Scientific Tools:** NEURON, NetworkX, Graphviz, SciPy
+**DevOps / HPC:** SLURM, Conda, AWS, Docker, Git, CI/CD
 **Soft Skills:** Cross-disciplinary collaboration, mentoring, reproducible research, technical writing
 
 # Coursework
@@ -116,11 +123,14 @@ AI & ML, Statistics & Data Science, Statistical Learning, Discrete Math & Linear
 # Leadership and Honors
 
 **Leadership:**
-- President, IEEE-HKN (Eta Kappa Nu) Honor Society — MIT Chapter
-- Secretary, Fraternity Leadership Role
+- Co-President, IEEE-HKN (Eta Kappa Nu) Honor Society — MIT Chapter
+- MIT Black Student Union — Social Chair
+- Secretary, Beta Chapter of Theta Chi at MIT
 - Mentor and advocate for open science, data transparency, and interdisciplinary education
 
 **Honors:**
+- 1st Place, Neural Decoding Challenge (2026)
+- Honorable Mention, MIT Science and Engineering Research Competition (2025)
+- Graduate Student Spotlight, BCS (2022)
 - Oxford Rhodes Finalist, Commonwealth Caribbean
 - Instructor, SPISE 2020 Computer Programming
-- Beta Chapter of Theta Chi at MIT
