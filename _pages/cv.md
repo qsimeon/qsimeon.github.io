@@ -9,6 +9,8 @@ redirect_from:
 
 {% include base_path %}
 
+<a href="{{ base_path }}/files/Quilee_Simeon_Resume_2025.pdf" class="btn btn--inverse" style="margin-bottom: 1.5em;"><i class="fas fa-download"></i> Download Resume (PDF)</a>
+
 # Education
 
 **Massachusetts Institute of Technology (MIT)**, Cambridge, MA  
