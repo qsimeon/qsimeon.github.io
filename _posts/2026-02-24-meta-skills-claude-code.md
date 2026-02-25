@@ -42,7 +42,7 @@ This happens because Claude Code scopes sessions to working directories. Change 
 - `--merge-splits` auto-fixes all of them with one command
 - `--dry-run` for previewing before committing
 
-Under the hood: it collects all JSONL entries from source sessions, sorts by timestamp, rewrites `sessionId` fields to a new merged UUID, copies subagent files, and updates the session index. Message threading is preserved — only the session-level identity changes.
+Under the hood: it finds the main conversation trunk of each session (the longest `parentUuid` chain), then stitches them together — linking the root of session N+1 to the leaf of session N — so Claude Code can walk one continuous chain when resuming. All merged sessions land in your home directory project, so they're always resumable from `~` regardless of where the source sessions lived.
 
 **Try it:** [qsimeon.github.io/session-merge](https://qsimeon.github.io/session-merge)
 
