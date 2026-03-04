@@ -123,9 +123,18 @@ This asymmetry — where temporal history is cheap to include but critical for a
 
 ## Results
 
-**1st place, Track 1, BrainStorm 2026.** Our approach scored well across all three dimensions: strong balanced accuracy (~87%), sub-millisecond inference latency, and a compact model file from PCA compression.
+**1st place, Track 1, BrainStorm 2026.** Final score: **91.7 / 100** — 22.5 points ahead of second place.
 
-The remaining headroom is mostly in model size — the serialized PCA components add weight to the checkpoint file — and in accuracy on the rarer tone classes, where limited training examples make generalization harder.
+| | mindmeld | 2nd place (synapse) |
+|---|---|---|
+| **Total** | **91.7** | 69.2 |
+| Accuracy (50 pts) | 47.1 | 30.9 |
+| Latency (25 pts) | 23.8 | 15.4 |
+| Size (25 pts) | 20.8 | 23.0 |
+
+Balanced accuracy: **94.2%** (47.1/50). Inference latency: **<5ms**. Model size: **~0.2 MB**.
+
+The remaining headroom is in model size — the serialized PCA components add weight to the checkpoint — and in accuracy on the rarer tone classes where limited training data makes generalization harder.
 
 Code: [github.com/qsimeon/brainstorm-track1-public](https://github.com/qsimeon/brainstorm-track1-public)
 
@@ -153,4 +162,8 @@ uv run python examples/train_eegnet.py \
 
 ---
 
-*Team MindMeld — BrainStorm 2026, Track 1 Neural Decoder Challenge*
+**[Full illustrated version with architecture diagrams, charts, and leaderboard →](/brainstorm_bci_blog.html)**
+
+---
+
+*Authored by Quilee Simeon. Team MindMeld: Quilee Simeon, Dennis Loevlie, Raghav Gali, Rohan Bhatane, Shravankumar Janawade, Sriram G. — BrainStorm 2026, Track 1 Neural Decoder Challenge, hosted by [Precision Neuroscience](https://www.precisionneuro.io/).*

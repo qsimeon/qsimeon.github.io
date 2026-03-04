@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>How We Won a BCI Hackathon: Decoding Brain Signals on the Edge</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #090c10;
+    --surface: #0f1318;
+    --surface-bright: #171d26;
+    --surface-border: #1e2630;
+    --text: #cdd6e0;
+    --text-dim: #64748b;
+    --text-muted: #3d4f60;
+    --green: #39d353;
+    --green-dim: rgba(57,211,83,0.12);
+    --green-glow: rgba(57,211,83,0.25);
+    --purple: #a78bfa;
+    --purple-dim: rgba(167,139,250,0.12);
+    --cyan: #38bdf8;
+    --cyan-dim: rgba(56,189,248,0.10);
+    --orange: #fb923c;
+    --orange-dim: rgba(251,146,60,0.12);
+    --red: #f87171;
+    --grid: rgba(56,189,248,0.04);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+      linear-gradient(0deg, var(--grid) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ═══ HERO ═══ */
+  .hero {
+    position: relative;
+    min-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 100px 24px 80px;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 50% at 50% 20%, rgba(57,211,83,0.07), transparent 70%),
+      radial-gradient(ellipse 50% 40% at 20% 80%, rgba(167,139,250,0.05), transparent 70%),
+      radial-gradient(ellipse 40% 30% at 80% 70%, rgba(56,189,248,0.05), transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-badge {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface);
+    border: 1px solid rgba(57,211,83,0.3);
+    border-radius: 24px;
+    padding: 7px 18px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--green);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+
+  .hero-badge::before {
+    content: '';
+    width: 7px; height: 7px;
+    background: var(--green);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--green-glow);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .hero h1 {
+    position: relative;
+    font-size: clamp(32px, 5.5vw, 68px);
+    font-weight: 700;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    max-width: 900px;
+    margin-bottom: 28px;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    background: linear-gradient(135deg, var(--green) 0%, var(--cyan) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    position: relative;
+    font-size: 18px;
+    color: var(--text-dim);
+    max-width: 640px;
+    margin-bottom: 40px;
+    line-height: 1.7;
+  }
+
+  .hero-meta {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .hero-meta span { color: var(--text-dim); }
+
+  .score-trio {
+    position: relative;
+    display: flex;
+    gap: 16px;
+    margin-top: 56px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .score-card {
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    border-radius: 12px;
+    padding: 20px 28px;
+    text-align: center;
+    min-width: 130px;
+  }
+
+  .score-card .val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .score-card .val.green { color: var(--green); text-shadow: 0 0 20px var(--green-glow); }
+  .score-card .val.cyan  { color: var(--cyan); }
+  .score-card .val.purple { color: var(--purple); }
+
+  .score-card .label {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .score-card .sub {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  /* ═══ LAYOUT ═══ */
+  .container {
+    position: relative;
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 0 24px 120px;
+  }
+
+  /* ═══ SECTIONS ═══ */
+  .section {
+    margin-bottom: 80px;
+  }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--green);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  h2 {
+    font-size: clamp(22px, 3vw, 30px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #e2eaf2;
+    margin-bottom: 20px;
+    line-height: 1.25;
+  }
+
+  h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #d0dae5;
+    margin: 36px 0 14px;
+    letter-spacing: -0.01em;
+  }
+
+  p {
+    color: var(--text);
+    margin-bottom: 18px;
+  }
+
+  a { color: var(--cyan); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  strong { color: #e2eaf2; font-weight: 600; }
+  em { color: var(--purple); font-style: italic; }
+
+  /* ═══ CALLOUT ═══ */
+  .callout {
+    background: var(--surface);
+    border-left: 3px solid var(--green);
+    border-radius: 0 8px 8px 0;
+    padding: 18px 22px;
+    margin: 24px 0;
+    font-size: 15px;
+  }
+
+  .callout.purple { border-left-color: var(--purple); }
+  .callout.cyan   { border-left-color: var(--cyan); }
+  .callout.orange { border-left-color: var(--orange); }
+
+  /* ═══ CODE ═══ */
+  pre {
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    border-radius: 10px;
+    padding: 22px 24px;
+    overflow-x: auto;
+    margin: 24px 0;
+    position: relative;
+  }
+
+  pre code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text);
+    background: none;
+    padding: 0;
+  }
+
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    background: var(--surface-bright);
+    border: 1px solid var(--surface-border);
+    padding: 2px 7px;
+    border-radius: 4px;
+    color: var(--cyan);
+  }
+
+  .code-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: -12px;
+    padding: 8px 24px 0;
+  }
+
+  /* syntax colors */
+  .kw { color: var(--purple); }
+  .fn { color: var(--cyan); }
+  .st { color: var(--green); }
+  .cm { color: var(--text-muted); font-style: italic; }
+  .nm { color: var(--orange); }
+  .op { color: var(--text-dim); }
+
+  /* ═══ TABLES ═══ */
+  .table-wrap { overflow-x: auto; margin: 24px 0; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+
+  th {
+    background: var(--surface-bright);
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--surface-border);
+  }
+
+  td {
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--surface-border);
+    color: var(--text);
+    font-size: 14px;
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  tr.highlight td { background: rgba(57,211,83,0.05); }
+  tr.highlight td:first-child { border-left: 2px solid var(--green); }
+
+  .mono { font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+  .green-text { color: var(--green); font-weight: 600; }
+  .dim-text { color: var(--text-dim); }
+
+  /* ═══ DIVIDER ═══ */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--surface-border);
+    margin: 60px 0;
+  }
+
+  /* ═══ PHOTO ═══ */
+  .photo-wrap {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--surface-border);
+    margin: 28px 0;
+  }
+
+  .photo-wrap img {
+    width: 100%;
+    display: block;
+  }
+
+  .photo-caption {
+    background: var(--surface);
+    padding: 10px 16px;
+    font-size: 13px;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ═══ SVG CHARTS ═══ */
+  .chart-wrap {
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    border-radius: 12px;
+    padding: 28px 24px;
+    margin: 28px 0;
+  }
+
+  .chart-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  /* ═══ ARCH DIAGRAM ═══ */
+  .arch-block {
+    background: var(--surface-bright);
+    border: 1px solid var(--surface-border);
+    border-radius: 8px;
+    padding: 14px 20px;
+    margin: 6px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+  }
+
+  .arch-block .name { color: #e2eaf2; font-weight: 600; }
+  .arch-block .detail { color: var(--text-muted); font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+  .arch-block .shape { color: var(--green); font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; }
+
+  .arch-arrow {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 18px;
+    line-height: 1;
+    margin: 2px 0;
+  }
+
+  /* ═══ LEADERBOARD ═══ */
+  .lb-row {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 10px 16px;
+    border-radius: 8px;
+    margin: 4px 0;
+    font-size: 14px;
+    transition: background 0.15s;
+  }
+
+  .lb-row:hover { background: var(--surface-bright); }
+  .lb-row.winner { background: rgba(57,211,83,0.07); border: 1px solid rgba(57,211,83,0.2); }
+
+  .lb-rank { width: 36px; font-family: 'JetBrains Mono', monospace; color: var(--text-muted); font-size: 13px; }
+  .lb-name { flex: 1; font-weight: 500; color: var(--text); }
+  .lb-name.winner { color: var(--green); font-weight: 600; }
+  .lb-score { width: 56px; text-align: right; font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+  .lb-score.winner { color: var(--green); }
+  .lb-sub { width: 56px; text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-muted); }
+
+  .lb-header {
+    display: flex;
+    padding: 0 16px 8px;
+    border-bottom: 1px solid var(--surface-border);
+    margin-bottom: 8px;
+  }
+
+  .lb-header span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* ═══ TAKEAWAYS ═══ */
+  .takeaway {
+    display: flex;
+    gap: 16px;
+    margin: 20px 0;
+    align-items: flex-start;
+  }
+
+  .takeaway-num {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    background: var(--green-dim);
+    border: 1px solid rgba(57,211,83,0.25);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--green);
+    margin-top: 2px;
+  }
+
+  .takeaway-body h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #e2eaf2;
+    margin-bottom: 4px;
+  }
+
+  .takeaway-body p {
+    font-size: 14px;
+    color: var(--text-dim);
+    margin: 0;
+    line-height: 1.65;
+  }
+
+  /* ═══ TEAM ═══ */
+  .team-credits {
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-top: 60px;
+    font-size: 14px;
+    color: var(--text-dim);
+  }
+
+  .team-credits strong { color: var(--text); }
+
+  /* ═══ NAV ═══ */
+  .back-link {
+    position: fixed;
+    top: 24px;
+    left: 24px;
+    z-index: 100;
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .back-link:hover { border-color: var(--green); color: var(--green); text-decoration: none; }
+
+  @media (max-width: 600px) {
+    .back-link { display: none; }
+    .score-card { min-width: 100px; padding: 16px 18px; }
+    .score-card .val { font-size: 28px; }
+    .arch-block { flex-direction: column; align-items: flex-start; gap: 4px; }
+    .lb-sub { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<a class="back-link" href="/">← qsimeon.github.io</a>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<div class="hero">
+  <div class="hero-badge">🏆 &nbsp;BrainStorm 2026 · 1st Place · Track 1</div>
+
+  <h1>How We Won a BCI Hackathon:<br><em>Decoding Brain Signals on the Edge</em></h1>
+
+  <p class="hero-sub">
+    Team MindMeld built a real-time neural decoder for 1024-channel ECoG recordings
+    under strict edge hardware constraints — and finished 22.5 points ahead of second place.
+  </p>
+
+  <div class="hero-meta">
+    <span>Quilee Simeon</span>
+    <span style="color:var(--text-muted)">·</span>
+    <span>January 24, 2026</span>
+    <span style="color:var(--text-muted)">·</span>
+    <span>~12 min read</span>
+    <span style="color:var(--text-muted)">·</span>
+    <a href="https://github.com/qsimeon/brainstorm-track1-public" style="font-family:'JetBrains Mono',monospace;font-size:12px;">github ↗</a>
+  </div>
+
+  <div class="score-trio">
+    <div class="score-card">
+      <div class="val green">91.7</div>
+      <div class="label">Total Score</div>
+      <div class="sub">out of 100</div>
+    </div>
+    <div class="score-card">
+      <div class="val green">94.2%</div>
+      <div class="label">Balanced Acc.</div>
+      <div class="sub">47.1 / 50 pts</div>
+    </div>
+    <div class="score-card">
+      <div class="val cyan">&lt;5ms</div>
+      <div class="label">Latency</div>
+      <div class="sub">23.8 / 25 pts</div>
+    </div>
+    <div class="score-card">
+      <div class="val purple">~0.2 MB</div>
+      <div class="label">Model Size</div>
+      <div class="sub">20.8 / 25 pts</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ CONTENT ═══════════════════ -->
+<div class="container">
+
+  <div class="photo-wrap">
+    <img src="/images/brainstorm-team.jpg" alt="Team MindMeld at BrainStorm 2026" />
+    <div class="photo-caption">// Team MindMeld at BrainStorm 2026, Microsoft NERD Center, Boston</div>
+  </div>
+
+  <!-- ═══ THE CHALLENGE ═══ -->
+  <div class="section">
+    <div class="section-label">01 — The Challenge</div>
+    <h2>Real-Time Neural Decoding Under Hardware Constraints</h2>
+
+    <p>
+      <a href="https://brainstormhackathon.com">BrainStorm 2026</a> was hosted by
+      <a href="https://www.precisionneuro.io/">Precision Neuroscience</a>, the company behind the
+      Layer7 micro-ECoG array — a 1024-electrode cortical surface implant already in clinical trials.
+      Track 1 put that hardware front and center.
+    </p>
+
+    <p>
+      The problem statement: given a continuous stream of voltage recordings from 1024 electrodes
+      implanted over an animal's auditory cortex, classify what sound frequency the subject is
+      hearing — <strong>one sample at a time, in real time</strong>.
+    </p>
+
+    <div class="photo-wrap" style="max-width:500px;">
+      <img src="/images/brainstorm-tracks.png" alt="BrainStorm 2026 track overview" />
+      <div class="photo-caption">// Opening slide: Track 1 was the ML + DSP track</div>
+    </div>
+
+    <p>
+      The challenge is deeper than just classification. Real BCIs run on <strong>edge hardware</strong> —
+      implanted or wearable devices with strict limits on power, memory, and compute. A server-grade
+      model is useless next to the brain. This creates the core tension:
+      <em>bigger models are typically more accurate, but accuracy is only half the score.</em>
+    </p>
+
+    <h3>The Scoring Formula</h3>
+    <p>
+      The final score is a composite of three exponentially-penalized metrics. The non-linearity
+      is intentional: it aggressively rewards ultra-compact, ultra-fast models while allowing
+      diminishing returns at the high end.
+    </p>
+
+    <div class="chart-wrap">
+      <div class="chart-title">// Scoring decomposition — total out of 100</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Weight</th>
+              <th>Formula</th>
+              <th>What it rewards</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Balanced Accuracy</strong></td>
+              <td class="mono green-text">50 pts</td>
+              <td class="mono">bal_acc × 50</td>
+              <td>Equal recall across all classes</td>
+            </tr>
+            <tr>
+              <td><strong>Prediction Lag</strong></td>
+              <td class="mono green-text">25 pts</td>
+              <td class="mono">exp(−6 × lag_ms / 500) × 25</td>
+              <td>Sub-10ms detection of stimulus onset</td>
+            </tr>
+            <tr>
+              <td><strong>Model Size</strong></td>
+              <td class="mono green-text">25 pts</td>
+              <td class="mono">exp(−4 × size_mb / 5) × 25</td>
+              <td>Compact enough for embedded hardware</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:13px;color:var(--text-muted);margin:12px 0 0;font-family:'JetBrains Mono',monospace;">
+        Note: exponential penalty on lag and size is steep. A 5 MB model instead of 1 MB costs ~12 points. A 50ms lag instead of 10ms costs ~8 points.
+      </p>
+    </div>
+
+    <p>
+      There is also a <strong>hard causality constraint</strong>: real BCIs cannot see the future.
+      The evaluation harness feeds data sequentially, one sample at a time. Your model may maintain
+      a history buffer but cannot use future data points or bidirectional filters. Any approach
+      that looks ahead is automatically disqualified.
+    </p>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ═══ THE DATA ═══ -->
+  <div class="section">
+    <div class="section-label">02 — The Data</div>
+    <h2>90 Seconds of Brain Activity, 16:1 Class Imbalance</h2>
+
+    <p>
+      The training set is a <code>(90386, 1024)</code> parquet file — 90,386 millisecond timesteps
+      of float32 voltage across 1024 electrodes. The validation set adds another ~22,000 samples.
+      By ML standards, this is a very small dataset.
+    </p>
+
+    <p>
+      Nine target classes represent the frequency of the presented auditory tone in Hz,
+      plus silence (0 Hz):
+    </p>
+
+    <!-- Class distribution chart -->
+    <div class="chart-wrap">
+      <div class="chart-title">// Class distribution — training set (90,386 samples)</div>
+      <svg viewBox="0 0 680 280" style="width:100%;overflow:visible">
+        <!-- Y axis labels -->
+        <text x="0" y="14" fill="#3d4f60" font-family="JetBrains Mono" font-size="10">70%</text>
+        <text x="0" y="74" fill="#3d4f60" font-family="JetBrains Mono" font-size="10">40%</text>
+        <text x="0" y="134" fill="#3d4f60" font-family="JetBrains Mono" font-size="10">20%</text>
+        <text x="0" y="194" fill="#3d4f60" font-family="JetBrains Mono" font-size="10">10%</text>
+
+        <!-- Grid lines -->
+        <line x1="44" y1="10" x2="670" y2="10" stroke="#1e2630" stroke-width="1"/>
+        <line x1="44" y1="70" x2="670" y2="70" stroke="#1e2630" stroke-width="1"/>
+        <line x1="44" y1="130" x2="670" y2="130" stroke="#1e2630" stroke-width="1"/>
+        <line x1="44" y1="190" x2="670" y2="190" stroke="#1e2630" stroke-width="1"/>
+
+        <!-- Silence bar (67%) — highlighted red/orange for imbalance -->
+        <rect x="50" y="14" width="68" height="196" fill="rgba(251,146,60,0.7)" rx="3"/>
+        <text x="84" y="10" fill="#fb923c" font-family="JetBrains Mono" font-size="11" text-anchor="middle" font-weight="700">67%</text>
+        <text x="84" y="222" fill="#64748b" font-family="JetBrains Mono" font-size="10" text-anchor="middle">0 Hz</text>
+        <text x="84" y="234" fill="#3d4f60" font-family="JetBrains Mono" font-size="9" text-anchor="middle">(silence)</text>
+
+        <!-- Tone bars (each ~4%) -->
+        <rect x="132" y="186" width="52" height="24" fill="rgba(57,211,83,0.6)" rx="3"/>
+        <text x="158" y="182" fill="#39d353" font-family="JetBrains Mono" font-size="10" text-anchor="middle">4.1%</text>
+        <text x="158" y="222" fill="#64748b" font-family="JetBrains Mono" font-size="10" text-anchor="middle">120</text>
+
+        <rect x="196" y="186" width="52" height="24" fill="rgba(57,211,83,0.6)" rx="3"/>
+        <text x="222" y="182" fill="#39d353" font-family="JetBrains Mono" font-size="10" text-anchor="middle">4.1%</text>
+        <text x="222" y="222" fill="#64748b" font-family="JetBrains Mono" font-size="10" text-anchor="middle">224</text>
+
+        <rect x="260" y="186" width="52" height="24" fill="rgba(57,211,83,0.6)" rx="3"/>
+        <text x="286" y="182" fill="#39d353" font-family="JetBrains Mono" font-size="10" text-anchor="middle">4.1%</text>
+        <text x="286" y="222" fill="#64748b" font-family="JetBrains Mono" font-size="10" text-anchor="middle">421</text>
+
+        <rect x="324" y="186" width="52" height="24" fill="rgba(57,211,83,0.6)" rx="3"/>
+        <text x="350" y="182" fill="#39d353" font-family="JetBrains Mono" font-size="10" text-anchor="middle">4.3%</text>
+        <text x="350" y="222" fill="#64748b" font-family="JetBrains Mono" font-size="10" text-anchor="middle">789</text>
+
+        <rect x="388" y="186" width="52" height="24" fill="rgba(57,211,83,0.6)" rx="3"/>
+        <text x="414" y="182" fill="#39d353" font-family="JetBrains Mono" font-size="10" text-anchor="middle">4.3%</text>
+        <text x="414" y="222" fill="#64748b" font-family="JetBrains Mono" font-size="10" text-anchor="middle">1479</text>
+
+        <rect x="452" y="186" width="52" height="24" fill="rgba(57,211,83,0.6)" rx="3"/>
+        <text x="478" y="182" fill="#39d353" font-family="JetBrains Mono" font-size="10" text-anchor="middle">4.3%</text>
+        <text x="478" y="222" fill="#64748b" font-family="JetBrains Mono" font-size="10" text-anchor="middle">2772</text>
+
+        <rect x="516" y="186" width="52" height="24" fill="rgba(57,211,83,0.6)" rx="3"/>
+        <text x="542" y="182" fill="#39d353" font-family="JetBrains Mono" font-size="10" text-anchor="middle">4.1%</text>
+        <text x="542" y="222" fill="#64748b" font-family="JetBrains Mono" font-size="10" text-anchor="middle">5195</text>
+
+        <rect x="580" y="186" width="52" height="24" fill="rgba(167,139,250,0.55)" rx="3"/>
+        <text x="606" y="182" fill="#a78bfa" font-family="JetBrains Mono" font-size="10" text-anchor="middle">4.1%</text>
+        <text x="606" y="222" fill="#64748b" font-family="JetBrains Mono" font-size="10" text-anchor="middle">9736</text>
+        <text x="606" y="234" fill="#3d4f60" font-family="JetBrains Mono" font-size="9" text-anchor="middle">(aliased)</text>
+
+        <!-- X axis -->
+        <line x1="44" y1="210" x2="670" y2="210" stroke="#1e2630" stroke-width="1"/>
+
+        <!-- Annotations -->
+        <text x="260" y="258" fill="#fb923c" font-family="DM Sans" font-size="12" text-anchor="middle">⚠ 16.5:1 imbalance between silence and each tone class</text>
+      </svg>
+    </div>
+
+    <p>
+      The silence class dominates at 67% of all samples. A model that predicts silence everywhere
+      achieves 67% <em>raw</em> accuracy but only 11% <strong>balanced accuracy</strong> — the metric
+      that actually matters for scoring. Naive training without addressing this imbalance will
+      collapse to a silent predictor.
+    </p>
+
+    <p>
+      One signal processing detail worth knowing: the sampling rate is 1000 Hz, so the Nyquist
+      frequency is 500 Hz. The highest stimulus at 9736 Hz aliases into the recordable band at
+      ~264 Hz. The model doesn't need to "know" the physical frequency — it just needs to learn
+      the distinct pattern of cortical activity each stimulus produces. But it means all frequency
+      discrimination happens within 0–500 Hz, and 93.9% of total signal power sits below 30 Hz
+      (local field potential oscillations dominate).
+    </p>
+
+    <div class="callout cyan">
+      <strong>Signal characteristics:</strong> Mean voltage −0.23 µV, std 112.66 µV.
+      ~250 of the 1024 channels account for 50% of total power — the array is spatially sparse.
+      This sparsity is important: it means most channels carry redundant or noise-dominated signal,
+      which motivates aggressive dimensionality reduction before the model sees anything.
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ═══ THE APPROACH ═══ -->
+  <div class="section">
+    <div class="section-label">03 — The Approach</div>
+    <h2>PCA + EEGNet + a Large Context Window</h2>
+
+    <p>
+      Our winning pipeline has three components that interact in a specific way:
+      PCA compresses 1024 channels down to 32 while filtering noise;
+      EEGNet classifies the compressed, windowed signal efficiently;
+      and a 1.6-second context window gives the model enough temporal history to decode
+      sustained auditory responses reliably. Each component was chosen to optimize all three
+      scoring dimensions simultaneously, not just accuracy.
+    </p>
+
+    <!-- Pipeline overview -->
+    <div class="chart-wrap">
+      <div class="chart-title">// Inference pipeline — one sample at a time</div>
+
+      <div class="arch-block" style="border-color:rgba(56,189,248,0.3);">
+        <div>
+          <div class="name">Raw ECoG Input</div>
+          <div class="detail">new voltage sample arrives every 1ms</div>
+        </div>
+        <div class="shape">(1024,)</div>
+      </div>
+      <div class="arch-arrow">↓</div>
+
+      <div class="arch-block" style="border-color:rgba(57,211,83,0.3);">
+        <div>
+          <div class="name">PCA Projection</div>
+          <div class="detail">single matrix multiply — pre-fit on training data</div>
+        </div>
+        <div class="shape">(32,)</div>
+      </div>
+      <div class="arch-arrow">↓</div>
+
+      <div class="arch-block" style="border-color:rgba(57,211,83,0.2);">
+        <div>
+          <div class="name">Causal Sliding Window Buffer</div>
+          <div class="detail">append new sample, drop oldest — maintains past 1.6 seconds</div>
+        </div>
+        <div class="shape">(32, 1600)</div>
+      </div>
+      <div class="arch-arrow">↓</div>
+
+      <div class="arch-block" style="border-color:rgba(167,139,250,0.3);">
+        <div>
+          <div class="name">EEGNet Forward Pass</div>
+          <div class="detail">temporal conv → depthwise spatial → separable → classify</div>
+        </div>
+        <div class="shape">(9,) logits</div>
+      </div>
+      <div class="arch-arrow">↓</div>
+
+      <div class="arch-block" style="border-color:rgba(57,211,83,0.4);">
+        <div>
+          <div class="name">Prediction</div>
+          <div class="detail">argmax → map to Hz class</div>
+        </div>
+        <div class="shape">scalar</div>
+      </div>
+    </div>
+
+    <h3>Step 1: PCA Channel Reduction (1024 → 32)</h3>
+    <p>
+      High-density electrode arrays like the Layer7 record from 1024 channels simultaneously,
+      but not all channels are equally informative. On this dataset, ~250 channels account for
+      50% of signal power; 600 channels account for 80%. The rest is noise and correlated redundancy.
+    </p>
+    <p>
+      We fit PCA on the training data and project down to 32 principal components. This choice
+      serves double duty. First, it dramatically shrinks the model: downstream weight matrices
+      are 32-wide rather than 1024-wide. Second, it acts as a structured denoising filter —
+      the top 32 PCs capture the most consistent covariance across the array, discarding the
+      noise-dominated tail. Fitting takes seconds; at inference it's a single matrix multiply
+      with negligible latency cost.
+    </p>
+
+    <div class="code-label">// brainstorm/ml/channel_projection.py</div>
+    <pre><code><span class="kw">class</span> <span class="fn">PCAProjection</span>:
+    <span class="kw">def</span> <span class="fn">fit</span>(self, X: np.ndarray) <span class="op">-></span> <span class="fn">Self</span>:
+        <span class="cm"># X shape: (n_samples, 1024)</span>
+        self.mean_ = X.mean(axis=<span class="nm">0</span>)
+        centered = X - self.mean_
+        _, _, Vt = np.linalg.svd(centered, full_matrices=<span class="kw">False</span>)
+        self.components_ = Vt[:self.n_components]  <span class="cm"># (32, 1024)</span>
+        <span class="kw">return</span> self
+
+    <span class="kw">def</span> <span class="fn">transform</span>(self, x: np.ndarray) <span class="op">-></span> np.ndarray:
+        <span class="cm"># At inference: single matrix multiply — (1024,) → (32,)</span>
+        <span class="kw">return</span> (x - self.mean_) @ self.components_.T</code></pre>
+
+    <h3>Step 2: EEGNet Architecture</h3>
+    <p>
+      With 90 seconds of training data and tight size constraints, we needed an architecture with
+      strong inductive biases for ECoG — one that wouldn't waste parameters on patterns that can't
+      be learned from this small a dataset. EEGNet
+      (<a href="https://arxiv.org/abs/1611.08024">Lawhern et al., 2018</a>) was designed exactly
+      for this regime.
+    </p>
+    <p>
+      The key idea is factoring the spatiotemporal convolution into two explicit stages: a
+      <strong>temporal filter</strong> that learns <em>when</em> neural features occur, followed by
+      a <strong>depthwise spatial filter</strong> that learns <em>which channel combinations</em>
+      matter. Depthwise separability avoids the parameter explosion of a full spatiotemporal
+      convolution. The architecture is parameter-efficient by design.
+    </p>
+
+    <div class="chart-wrap">
+      <div class="chart-title">// EEGNet architecture — input shape (batch, 1, 32 channels, 1600 samples)</div>
+
+      <div class="arch-block">
+        <div>
+          <div class="name">Block 1 — Temporal Convolution</div>
+          <div class="detail">Conv2d(1→8, kernel=(1,800)) + BatchNorm — learns spectrotemporal patterns</div>
+        </div>
+        <div class="shape">(B, 8, 32, 1600)</div>
+      </div>
+      <div class="arch-arrow">↓</div>
+
+      <div class="arch-block">
+        <div>
+          <div class="name">Block 2 — Depthwise Spatial Conv</div>
+          <div class="detail">Conv2d(8→16, kernel=(32,1), groups=8) — learns spatial channel combinations</div>
+        </div>
+        <div class="shape">(B, 16, 1, 1600)</div>
+      </div>
+      <div class="arch-arrow">↓ AvgPool(1,4)</div>
+
+      <div class="arch-block">
+        <div>
+          <div class="name">Block 3 — Separable Convolution</div>
+          <div class="detail">Depthwise + Pointwise Conv2d — combines features across channels</div>
+        </div>
+        <div class="shape">(B, 16, 1, 400)</div>
+      </div>
+      <div class="arch-arrow">↓ AvgPool(1,8)</div>
+
+      <div class="arch-block">
+        <div>
+          <div class="name">Classifier</div>
+          <div class="detail">Flatten → Linear(flat_size → 9)</div>
+        </div>
+        <div class="shape">(B, 9)</div>
+      </div>
+    </div>
+
+    <div class="code-label">// brainstorm/ml/eegnet.py — core forward pass</div>
+    <pre><code><span class="kw">def</span> <span class="fn">forward</span>(self, x: torch.Tensor) <span class="op">-></span> torch.Tensor:
+    <span class="cm"># x: (batch, 1, n_channels=32, window=1600)</span>
+
+    <span class="cm"># Block 1: temporal patterns</span>
+    x = self.conv1(x)      <span class="cm"># (B, F1=8, 32, 1600)</span>
+    x = self.bn1(x)
+
+    <span class="cm"># Block 2: spatial channel combinations (depthwise)</span>
+    x = self.depthwise(x)  <span class="cm"># (B, F1*D=16, 1, 1600)</span>
+    x = self.bn2(x)
+    x = F.elu(x)
+    x = self.pool1(x)      <span class="cm"># (B, 16, 1, 400) — aggressive downsampling</span>
+    x = self.dropout1(x)
+
+    <span class="cm"># Block 3: separable convolution</span>
+    x = self.separable1(x) <span class="cm"># depthwise</span>
+    x = self.separable2(x) <span class="cm"># pointwise</span>
+    x = self.bn3(x)
+    x = F.elu(x)
+    x = self.pool2(x)      <span class="cm"># (B, F2=16, 1, ~50)</span>
+    x = self.dropout2(x)
+
+    x = x.flatten(start_dim=<span class="nm">1</span>)
+    <span class="kw">return</span> self.fc(x)       <span class="cm"># (B, 9)</span></code></pre>
+
+    <h3>Step 3: Training Strategy</h3>
+
+    <p><strong>Class-weighted loss.</strong> With a 16.5:1 silence-to-tone ratio, standard
+    cross-entropy collapses. We weight the loss inversely proportional to class frequency,
+    which forces the model to treat a correct prediction on a rare tone class as equally
+    important as predicting silence correctly. This single change had an outsized impact on
+    balanced accuracy.</p>
+
+    <pre><code><span class="cm"># Inverse frequency class weights</span>
+class_counts = np.bincount([label_to_idx[l] <span class="kw">for</span> l <span class="kw">in</span> labels])
+weights = <span class="nm">1.0</span> / class_counts
+weights = weights / weights.sum() * len(weights)
+criterion = nn.<span class="fn">CrossEntropyLoss</span>(
+    weight=torch.tensor(weights, dtype=torch.float32).to(device)
+)</code></pre>
+
+    <p><strong>Train on the full dataset for final submission.</strong> After selecting the
+    best configuration on validation, we retrained on combined train + validation data for an
+    additional 45 epochs. With this small a dataset, every example counts.</p>
+
+    <p><strong>Final hyperparameters:</strong></p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Parameter</th><th>Value</th><th>Why</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>projected_channels</code></td><td class="mono">32</td><td>Optimal size/accuracy tradeoff</td></tr>
+          <tr><td><code>window_size</code></td><td class="mono green-text">1600</td><td>1.6 seconds of causal context — see below</td></tr>
+          <tr><td><code>F1</code> (temporal filters)</td><td class="mono">8</td><td>EEGNet default</td></tr>
+          <tr><td><code>D</code> (depthwise multiplier)</td><td class="mono">2</td><td>EEGNet default</td></tr>
+          <tr><td><code>dropout</code></td><td class="mono">0.25</td><td>Regularization on small dataset</td></tr>
+          <tr><td><code>batch_size</code></td><td class="mono">64</td><td>Stable gradient estimates</td></tr>
+          <tr><td><code>epochs</code></td><td class="mono">30 + 45</td><td>Validation tuning + full retrain</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ═══ THE INSIGHT ═══ -->
+  <div class="section">
+    <div class="section-label">04 — The Key Insight</div>
+    <h2>Window Size Is Cheap. History Is Valuable.</h2>
+
+    <p>
+      This was the single most impactful finding from the entire hackathon, and it runs counter
+      to the intuition most people bring to streaming inference.
+    </p>
+
+    <p>
+      The common assumption: a larger input window means higher latency. If you're processing
+      one sample every millisecond, a 1600-sample window seems slow. Most teams used windows
+      of 50–128ms. We tried 1600ms (1.6 seconds).
+    </p>
+
+    <div class="chart-wrap">
+      <div class="chart-title">// Window size vs. performance — EEGNet, 32 PCA channels</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Window Size</th>
+              <th>Balanced Accuracy</th>
+              <th>Accuracy Score</th>
+              <th>Inference Latency</th>
+              <th>Delta</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="mono">128ms (128 samples)</td>
+              <td class="mono">~67%</td>
+              <td class="mono">~33.5 / 50</td>
+              <td class="mono">&lt;1ms</td>
+              <td class="dim-text">baseline</td>
+            </tr>
+            <tr class="highlight">
+              <td class="mono"><strong>1600ms (1600 samples)</strong></td>
+              <td class="mono green-text"><strong>~94%</strong></td>
+              <td class="mono green-text"><strong>47.1 / 50</strong></td>
+              <td class="mono"><strong>&lt;1ms</strong></td>
+              <td class="green-text">+20% accuracy, same latency</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <p>
+      Same latency. Twenty-seven percentage points more accuracy. How?
+    </p>
+
+    <p>
+      The answer is in EEGNet's architecture. The average pooling layers in Blocks 2 and 3
+      decimate the time dimension aggressively early in the network:
+    </p>
+
+    <pre><code>Input window:   1600 samples
+After Pool1:     400 samples  (÷4)
+After Pool2:      ~50 samples (÷8)
+→ Classifier sees a 50-sample representation regardless of input window length</code></pre>
+
+    <p>
+      By the time the input reaches the expensive operations — the separable convolution and
+      the linear classifier — a 1600-sample window has been compressed to ~50 samples. The
+      forward pass cost is dominated by the initial temporal convolution and the final linear
+      layer, neither of which scales strongly with input length.
+    </p>
+
+    <p>
+      The PCA projection runs in constant time. The ring buffer update is O(1). The
+      latency bottleneck is memory bandwidth and a handful of fixed-size matrix operations —
+      not window size.
+    </p>
+
+    <p>
+      The biological reason this works: auditory cortex responses to sustained tones are
+      not sharp spikes at onset. They are slow-building oscillatory patterns — synchronized
+      low-frequency activity that takes hundreds of milliseconds to develop and reach
+      steady state. A 128ms window catches only the onset transient. A 1600ms window
+      captures the full sustained response, making the nine tone classes far more
+      distinguishable.
+    </p>
+
+    <div class="callout">
+      <strong>Generalizable principle:</strong> In streaming BCI, always profile your
+      actual latency before assuming window size is a bottleneck. For convolutional architectures
+      with pooling, the cost scales far less than linearly with input length. History is
+      nearly free; use it.
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ═══ RESULTS ═══ -->
+  <div class="section">
+    <div class="section-label">05 — Results</div>
+    <h2>Final Leaderboard: 91.7 / 100, 22.5 Points Ahead</h2>
+
+    <p>
+      Ten teams competed. Our final submission on January 24 scored 91.7 — a 22.5-point gap
+      over second place. The accuracy component alone (47.1/50) accounted for most of the margin;
+      our balanced accuracy of 94.2% was nearly double the second-place team's accuracy score.
+    </p>
+
+    <!-- Recreated leaderboard -->
+    <div class="chart-wrap">
+      <div class="chart-title">// BrainStorm 2026 Track 1 — Final Leaderboard</div>
+
+      <div class="lb-header">
+        <span style="width:36px">RNK</span>
+        <span style="flex:1">TEAM</span>
+        <span style="width:56px;text-align:right">SCORE</span>
+        <span style="width:56px;text-align:right">ACC</span>
+        <span style="width:56px;text-align:right">LAT</span>
+        <span style="width:56px;text-align:right">SIZE</span>
+      </div>
+
+      <div class="lb-row winner">
+        <div class="lb-rank">🥇 1</div>
+        <div class="lb-name winner">mindmeld</div>
+        <div class="lb-score winner">91.7</div>
+        <div class="lb-sub" style="color:var(--green)">47.1</div>
+        <div class="lb-sub" style="color:var(--green)">23.8</div>
+        <div class="lb-sub" style="color:var(--green)">20.8</div>
+      </div>
+      <div class="lb-row">
+        <div class="lb-rank">🥈 2</div>
+        <div class="lb-name">synapse</div>
+        <div class="lb-score" style="color:var(--text-dim)">69.2</div>
+        <div class="lb-sub">30.9</div>
+        <div class="lb-sub">15.4</div>
+        <div class="lb-sub">23.0</div>
+      </div>
+      <div class="lb-row">
+        <div class="lb-rank">🥉 3</div>
+        <div class="lb-name">brainhz</div>
+        <div class="lb-score" style="color:var(--text-dim)">67.2</div>
+        <div class="lb-sub">32.4</div>
+        <div class="lb-sub">15.6</div>
+        <div class="lb-sub">19.2</div>
+      </div>
+      <div class="lb-row">
+        <div class="lb-rank dim-text">4</div>
+        <div class="lb-name dim-text">forehead</div>
+        <div class="lb-score dim-text">61.9</div>
+        <div class="lb-sub">26.4</div>
+        <div class="lb-sub">15.2</div>
+        <div class="lb-sub">20.4</div>
+      </div>
+      <div class="lb-row">
+        <div class="lb-rank dim-text">5</div>
+        <div class="lb-name dim-text">brainrot-computer-interface</div>
+        <div class="lb-score dim-text">59.2</div>
+        <div class="lb-sub">22.4</div>
+        <div class="lb-sub">15.1</div>
+        <div class="lb-sub">21.7</div>
+      </div>
+      <div class="lb-row">
+        <div class="lb-rank dim-text">6–10</div>
+        <div class="lb-name dim-text">remaining teams</div>
+        <div class="lb-score dim-text">≤59</div>
+        <div class="lb-sub">—</div>
+        <div class="lb-sub">—</div>
+        <div class="lb-sub">—</div>
+      </div>
+    </div>
+
+    <p>
+      Looking at the score breakdown: our accuracy advantage was the dominant factor (+16.2 pts
+      over 2nd place on accuracy alone). Latency and size were more competitive across the field —
+      most teams got inference under 20ms, but nobody matched our accuracy-to-size ratio.
+      The 1600ms window was our differentiator.
+    </p>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ═══ REPRODUCE ═══ -->
+  <div class="section">
+    <div class="section-label">06 — Reproduce It</div>
+    <h2>Code</h2>
+
+    <p>
+      The full codebase is public on GitHub. The repo is the fork of the official BrainStorm
+      starter template, with our EEGNet implementation, training scripts, and a benchmark
+      utility that computes all three scoring dimensions against any checkpoint.
+    </p>
+
+    <div class="code-label">// clone and install</div>
+    <pre><code>git clone https://github.com/qsimeon/brainstorm-track1-public
+cd brainstorm-track1-public
+make install           <span class="cm"># sets up uv venv + dependencies + git hooks</span></code></pre>
+
+    <div class="code-label">// train the winning model</div>
+    <pre><code>uv run python examples/train_eegnet.py \
+    --window-size 1600 \
+    --projected-channels 32 \
+    --batch-size 64 \
+    --epochs 30</code></pre>
+
+    <div class="code-label">// benchmark all three scoring dimensions</div>
+    <pre><code>uv run python examples/benchmark_eegnet.py
+<span class="cm"># outputs: balanced_accuracy, lag_ms, size_mb, and all three sub-scores</span></code></pre>
+
+    <div class="code-label">// streaming inference — one sample at a time</div>
+    <pre><code>model = EEGNet.<span class="fn">load</span>()      <span class="cm"># loads model.pt from repo root</span>
+model.<span class="fn">reset</span>()              <span class="cm"># clear history buffer for new session</span>
+
+<span class="kw">for</span> sample <span class="kw">in</span> stream:      <span class="cm"># sample shape: (1024,)</span>
+    prediction = model.<span class="fn">predict</span>(sample)
+    <span class="cm"># prediction: scalar Hz class (0, 120, 224, ... 9736)</span></code></pre>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ═══ TAKEAWAYS ═══ -->
+  <div class="section">
+    <div class="section-label">07 — Takeaways</div>
+    <h2>What BCI Engineers Should Know</h2>
+
+    <div class="takeaway">
+      <div class="takeaway-num">1</div>
+      <div class="takeaway-body">
+        <h4>Temporal context is cheap — profile before you assume otherwise</h4>
+        <p>Don't guess that a larger window adds latency. For convolutional architectures with
+        pooling, the cost scales far less than linearly. We went from 128ms to 1600ms with no
+        measurable latency increase. This asymmetry — history is nearly free but dramatically
+        improves accuracy — holds broadly for streaming neural data.</p>
+      </div>
+    </div>
+
+    <div class="takeaway">
+      <div class="takeaway-num">2</div>
+      <div class="takeaway-body">
+        <h4>PCA is underrated for high-density arrays</h4>
+        <p>In micro-ECoG recordings, most structured signal lives in a low-dimensional subspace.
+        PCA compression simultaneously reduces model file size, speeds up all downstream
+        computation, and improves generalization by discarding noise-dominated directions.
+        It isn't just a preprocessing trick — it's a core part of the scoring strategy.</p>
+      </div>
+    </div>
+
+    <div class="takeaway">
+      <div class="takeaway-num">3</div>
+      <div class="takeaway-body">
+        <h4>Class-weighted loss is non-negotiable on imbalanced neural data</h4>
+        <p>67% silence means an unweighted model learns to predict silence. Track balanced
+        accuracy from epoch 1, not just raw accuracy. Weight your loss. The two metrics can
+        diverge by 60+ percentage points on a dataset like this.</p>
+      </div>
+    </div>
+
+    <div class="takeaway">
+      <div class="takeaway-num">4</div>
+      <div class="takeaway-body">
+        <h4>Domain-specific architectures beat general ones in small-data regimes</h4>
+        <p>EEGNet's inductive biases — explicit temporal-then-spatial factorization, aggressive
+        pooling — are directly matched to how ECoG data is structured. With 90 seconds of
+        training data, this match matters more than raw model capacity. Transformers, LSTMs,
+        and other general-purpose architectures need substantially more data to overcome
+        the lack of prior structure.</p>
+      </div>
+    </div>
+
+    <div class="takeaway">
+      <div class="takeaway-num">5</div>
+      <div class="takeaway-body">
+        <h4>Multi-objective scoring requires explicit joint tracking from the start</h4>
+        <p>It's easy to over-optimize accuracy and discover you've blown the size budget
+        with an hour to go. Build a benchmark script on day one that reports all three
+        sub-scores for every run. The scoring formulas are public — use them during development,
+        not just at submission time.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ═══ TEAM ═══ -->
+  <div class="team-credits">
+    <p style="margin-bottom:10px;">
+      <strong>Team MindMeld</strong> — BrainStorm 2026, Track 1: Neural Decoder Challenge
+    </p>
+    <p style="margin:0;">
+      Quilee Simeon &nbsp;·&nbsp;
+      Dennis Loevlie &nbsp;·&nbsp;
+      Raghav Gali &nbsp;·&nbsp;
+      Rohan Bhatane &nbsp;·&nbsp;
+      Shravankumar Janawade &nbsp;·&nbsp;
+      Sriram G.
+    </p>
+    <p style="margin-top:12px;font-size:13px;color:var(--text-muted)">
+      Hosted by <a href="https://www.precisionneuro.io/">Precision Neuroscience</a> at
+      Microsoft NERD Center, Boston · January 23–24, 2026 · 10 competing teams
+    </p>
+  </div>
+
+</div><!-- /container -->
+
+</body>
+</html>
