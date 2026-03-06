@@ -541,8 +541,7 @@
   <h1>How We Won a BCI Hackathon:<br><em>Decoding Brain Signals on the Edge</em></h1>
 
   <p class="hero-sub">
-    Team MindMeld built a real-time neural decoder for 1024-channel ECoG recordings
-    under strict edge hardware constraints — and finished 22.5 points ahead of second place.
+    Team MindMeld built a real-time neural decoder for 1024-channel ECoG recordings, optimized for edge hardware constraints. Final score: 91.7/100, 22.5 points clear of second place.
   </p>
 
   <div class="hero-meta">
@@ -595,14 +594,12 @@
     <p>
       <a href="https://brainstormhackathon.com">BrainStorm 2026</a> was hosted by
       <a href="https://www.precisionneuro.io/">Precision Neuroscience</a>, the company behind the
-      Layer7 micro-ECoG array — a 1024-electrode cortical surface implant already in clinical trials.
-      Track 1 put that hardware front and center.
+      Layer7 micro-ECoG array, a 1024-electrode cortical surface implant currently in clinical trials.
+      Track 1 was built around that hardware.
     </p>
 
     <p>
-      The problem statement: given a continuous stream of voltage recordings from 1024 electrodes
-      implanted over an animal's auditory cortex, classify what sound frequency the subject is
-      hearing — <strong>one sample at a time, in real time</strong>.
+      The task: classify the sound frequency being heard by the subject, given a continuous stream of voltage from 1024 electrodes on the auditory cortex. <strong>One prediction per millisecond, using only past data.</strong>
     </p>
 
     <div class="photo-wrap" style="max-width:500px;">
@@ -611,17 +608,12 @@
     </div>
 
     <p>
-      The challenge is deeper than just classification. Real BCIs run on <strong>edge hardware</strong> —
-      implanted or wearable devices with strict limits on power, memory, and compute. A server-grade
-      model is useless next to the brain. This creates the core tension:
-      <em>bigger models are typically more accurate, but accuracy is only half the score.</em>
+      Real BCIs run on implanted or wearable devices with hard limits on power, memory, and compute. A model that achieves high accuracy but won't fit on the target hardware is not a solution. The scoring was designed to enforce this: <em>accuracy was worth 50 points, but latency and model size together were worth the other 50.</em>
     </p>
 
     <h3>The Scoring Formula</h3>
     <p>
-      The final score is a composite of three exponentially-penalized metrics. The non-linearity
-      is intentional: it aggressively rewards ultra-compact, ultra-fast models while allowing
-      diminishing returns at the high end.
+      The final score combined three exponentially penalized metrics. The penalties are steep: a 5 MB model scores about 12 points lower than a 1 MB model on the size component alone, and a 50ms lag costs roughly 8 points compared to 10ms.
     </p>
 
     <div class="chart-wrap">
@@ -664,10 +656,7 @@
     </div>
 
     <p>
-      There is also a <strong>hard causality constraint</strong>: real BCIs cannot see the future.
-      The evaluation harness feeds data sequentially, one sample at a time. Your model may maintain
-      a history buffer but cannot use future data points or bidirectional filters. Any approach
-      that looks ahead is automatically disqualified.
+      The evaluation harness feeds data one sample at a time. Models can maintain a buffer of past data, but any use of future samples is disqualified. This rules out bidirectional filters and non-causal normalization.
     </p>
   </div>
 
@@ -679,9 +668,7 @@
     <h2>90 Seconds of Brain Activity, 16:1 Class Imbalance</h2>
 
     <p>
-      The training set is a <code>(90386, 1024)</code> parquet file — 90,386 millisecond timesteps
-      of float32 voltage across 1024 electrodes. The validation set adds another ~22,000 samples.
-      By ML standards, this is a very small dataset.
+      The training set is 90,386 timesteps sampled at 1000 Hz, across 1024 float32 channels. About 90 seconds of recording total. The validation set adds another 22,596 samples.
     </p>
 
     <p>
@@ -754,26 +741,20 @@
     </div>
 
     <p>
-      The silence class dominates at 67% of all samples. A model that predicts silence everywhere
-      achieves 67% <em>raw</em> accuracy but only 11% <strong>balanced accuracy</strong> — the metric
-      that actually matters for scoring. Naive training without addressing this imbalance will
-      collapse to a silent predictor.
+      The silence class dominates at 67% of all samples. A model that predicts silence everywhere achieves 67% <em>raw</em> accuracy but only 11% <strong>balanced accuracy</strong>, which is the metric that counts. Naive training without addressing this imbalance will converge to a silent predictor.
     </p>
 
     <p>
       One signal processing detail worth knowing: the sampling rate is 1000 Hz, so the Nyquist
       frequency is 500 Hz. The highest stimulus at 9736 Hz aliases into the recordable band at
-      ~264 Hz. The model doesn't need to "know" the physical frequency — it just needs to learn
-      the distinct pattern of cortical activity each stimulus produces. But it means all frequency
+      ~264 Hz. The model learns the cortical activity pattern each stimulus produces. All frequency
       discrimination happens within 0–500 Hz, and 93.9% of total signal power sits below 30 Hz
       (local field potential oscillations dominate).
     </p>
 
     <div class="callout cyan">
-      <strong>Signal characteristics:</strong> Mean voltage −0.23 µV, std 112.66 µV.
-      ~250 of the 1024 channels account for 50% of total power — the array is spatially sparse.
-      This sparsity is important: it means most channels carry redundant or noise-dominated signal,
-      which motivates aggressive dimensionality reduction before the model sees anything.
+      <strong>Signal characteristics:</strong> mean voltage −0.23 µV, std 112.66 µV.
+      About 250 of the 1024 channels account for 50% of total power. Most of the array records noise or highly correlated activity, which points toward a compression strategy before anything else.
     </div>
   </div>
 
@@ -785,12 +766,7 @@
     <h2>PCA + EEGNet + a Large Context Window</h2>
 
     <p>
-      Our winning pipeline has three components that interact in a specific way:
-      PCA compresses 1024 channels down to 32 while filtering noise;
-      EEGNet classifies the compressed, windowed signal efficiently;
-      and a 1.6-second context window gives the model enough temporal history to decode
-      sustained auditory responses reliably. Each component was chosen to optimize all three
-      scoring dimensions simultaneously, not just accuracy.
+      The pipeline is three pieces: PCA compression from 1024 channels to 32, EEGNet for classification, and a 1600ms causal context window. Each component affects all three scoring dimensions and they were tuned together rather than in isolation.
     </p>
 
     <!-- Pipeline overview -->
@@ -849,12 +825,7 @@
       50% of signal power; 600 channels account for 80%. The rest is noise and correlated redundancy.
     </p>
     <p>
-      We fit PCA on the training data and project down to 32 principal components. This choice
-      serves double duty. First, it dramatically shrinks the model: downstream weight matrices
-      are 32-wide rather than 1024-wide. Second, it acts as a structured denoising filter —
-      the top 32 PCs capture the most consistent covariance across the array, discarding the
-      noise-dominated tail. Fitting takes seconds; at inference it's a single matrix multiply
-      with negligible latency cost.
+      Fitting PCA on the training data and projecting to 32 components shrinks every downstream weight matrix from 1024-wide to 32-wide, reducing parameter count and file size. The top 32 PCs capture the most consistent covariance across the electrode array, discarding the noise-dominated directions. At inference, the projection is one matrix multiply.
     </p>
 
     <div class="code-label">// brainstorm/ml/channel_projection.py</div>
@@ -873,18 +844,11 @@
 
     <h3>Step 2: EEGNet Architecture</h3>
     <p>
-      With 90 seconds of training data and tight size constraints, we needed an architecture with
-      strong inductive biases for ECoG — one that wouldn't waste parameters on patterns that can't
-      be learned from this small a dataset. EEGNet
-      (<a href="https://arxiv.org/abs/1611.08024">Lawhern et al., 2018</a>) was designed exactly
-      for this regime.
+      EEGNet (<a href="https://arxiv.org/abs/1611.08024">Lawhern et al., 2018</a>) was designed for BCI classification from EEG and ECoG. With 90 seconds of training data and tight size constraints, an architecture with structural assumptions about neural signals will outperform a general-purpose one on this kind of problem.
     </p>
     <p>
-      The key idea is factoring the spatiotemporal convolution into two explicit stages: a
-      <strong>temporal filter</strong> that learns <em>when</em> neural features occur, followed by
-      a <strong>depthwise spatial filter</strong> that learns <em>which channel combinations</em>
-      matter. Depthwise separability avoids the parameter explosion of a full spatiotemporal
-      convolution. The architecture is parameter-efficient by design.
+      The architecture factors the spatiotemporal convolution into two explicit stages: a
+      <strong>temporal filter</strong> that learns <em>when</em> neural features occur, followed by a depthwise spatial filter over channels. Keeping these stages separate, rather than a full joint spatiotemporal convolution, is what keeps the parameter count low enough to meet the size constraint.
     </p>
 
     <div class="chart-wrap">
@@ -954,11 +918,7 @@
 
     <h3>Step 3: Training Strategy</h3>
 
-    <p><strong>Class-weighted loss.</strong> With a 16.5:1 silence-to-tone ratio, standard
-    cross-entropy collapses. We weight the loss inversely proportional to class frequency,
-    which forces the model to treat a correct prediction on a rare tone class as equally
-    important as predicting silence correctly. This single change had an outsized impact on
-    balanced accuracy.</p>
+    <p><strong>Class-weighted loss.</strong> Standard cross-entropy on this distribution trains toward silence. We weighted each class inversely proportional to its frequency, so a correct prediction on a rare tone contributes the same gradient signal as predicting silence correctly.</p>
 
     <pre><code><span class="cm"># Inverse frequency class weights</span>
 class_counts = np.bincount([label_to_idx[l] <span class="kw">for</span> l <span class="kw">in</span> labels])
@@ -968,9 +928,7 @@ criterion = nn.<span class="fn">CrossEntropyLoss</span>(
     weight=torch.tensor(weights, dtype=torch.float32).to(device)
 )</code></pre>
 
-    <p><strong>Train on the full dataset for final submission.</strong> After selecting the
-    best configuration on validation, we retrained on combined train + validation data for an
-    additional 45 epochs. With this small a dataset, every example counts.</p>
+    <p><strong>Final retrain on the full dataset.</strong> After settling on hyperparameters using the validation split, we retrained on combined train and validation data for 45 additional epochs. With 90 seconds of total recording, the extra 22,000 samples made a difference.</p>
 
     <p><strong>Final hyperparameters:</strong></p>
 
@@ -1005,14 +963,11 @@ criterion = nn.<span class="fn">CrossEntropyLoss</span>(
     <h2>Window Size Is Cheap. History Is Valuable.</h2>
 
     <p>
-      This was the single most impactful finding from the entire hackathon, and it runs counter
-      to the intuition most people bring to streaming inference.
+      Most teams used 50-128ms context windows. The reasoning is straightforward: smaller windows mean less data to process, so they should be faster. We pushed the window to 1600ms and found the inference time barely changed.
     </p>
 
     <p>
-      The common assumption: a larger input window means higher latency. If you're processing
-      one sample every millisecond, a 1600-sample window seems slow. Most teams used windows
-      of 50–128ms. We tried 1600ms (1.6 seconds).
+      Accuracy jumped 27 percentage points with no change in inference latency.
     </p>
 
     <div class="chart-wrap">
@@ -1049,12 +1004,11 @@ criterion = nn.<span class="fn">CrossEntropyLoss</span>(
     </div>
 
     <p>
-      Same latency. Twenty-seven percentage points more accuracy. How?
+      The explanation is in how EEGNet handles its input.
     </p>
 
     <p>
-      The answer is in EEGNet's architecture. The average pooling layers in Blocks 2 and 3
-      decimate the time dimension aggressively early in the network:
+      EEGNet's average pooling layers compress the time dimension before the computationally expensive operations run:
     </p>
 
     <pre><code>Input window:   1600 samples
@@ -1063,32 +1017,19 @@ After Pool2:      ~50 samples (÷8)
 → Classifier sees a 50-sample representation regardless of input window length</code></pre>
 
     <p>
-      By the time the input reaches the expensive operations — the separable convolution and
-      the linear classifier — a 1600-sample window has been compressed to ~50 samples. The
-      forward pass cost is dominated by the initial temporal convolution and the final linear
-      layer, neither of which scales strongly with input length.
+      By the time the input reaches the classifier, a 1600-sample window has been compressed to roughly 50 time steps. The forward pass cost is dominated by fixed-size matrix multiplies.
     </p>
 
     <p>
-      The PCA projection runs in constant time. The ring buffer update is O(1). The
-      latency bottleneck is memory bandwidth and a handful of fixed-size matrix operations —
-      not window size.
+      The PCA projection and ring buffer update run in constant time. Latency is dominated by a handful of fixed-size matrix operations, not the input window length.
     </p>
 
     <p>
-      The biological reason this works: auditory cortex responses to sustained tones are
-      not sharp spikes at onset. They are slow-building oscillatory patterns — synchronized
-      low-frequency activity that takes hundreds of milliseconds to develop and reach
-      steady state. A 128ms window catches only the onset transient. A 1600ms window
-      captures the full sustained response, making the nine tone classes far more
-      distinguishable.
+      Auditory cortex responses to sustained tones build slowly. They are not sharp onset spikes but synchronized low-frequency oscillations that take hundreds of milliseconds to reach steady state. A 128ms window catches the onset transient but misses the stable activity that distinguishes one tone from another. At 1600ms, each class produces a clearly distinct pattern.
     </p>
 
     <div class="callout">
-      <strong>Generalizable principle:</strong> In streaming BCI, always profile your
-      actual latency before assuming window size is a bottleneck. For convolutional architectures
-      with pooling, the cost scales far less than linearly with input length. History is
-      nearly free; use it.
+      <strong>Worth knowing more broadly:</strong> for convolutional architectures with pooling, input window length and inference time do not scale together. Profile actual latency before treating context window size as a hard constraint.
     </div>
   </div>
 
@@ -1100,9 +1041,7 @@ After Pool2:      ~50 samples (÷8)
     <h2>Final Leaderboard: 91.7 / 100, 22.5 Points Ahead</h2>
 
     <p>
-      Ten teams competed. Our final submission on January 24 scored 91.7 — a 22.5-point gap
-      over second place. The accuracy component alone (47.1/50) accounted for most of the margin;
-      our balanced accuracy of 94.2% was nearly double the second-place team's accuracy score.
+      Ten teams competed. We finished at 91.7, with synapse second at 69.2. The accuracy component drove most of the gap: 47.1 vs 30.9 out of 50 points, corresponding to 94.2% balanced accuracy versus about 62%.
     </p>
 
     <!-- Recreated leaderboard -->
@@ -1169,10 +1108,7 @@ After Pool2:      ~50 samples (÷8)
     </div>
 
     <p>
-      Looking at the score breakdown: our accuracy advantage was the dominant factor (+16.2 pts
-      over 2nd place on accuracy alone). Latency and size were more competitive across the field —
-      most teams got inference under 20ms, but nobody matched our accuracy-to-size ratio.
-      The 1600ms window was our differentiator.
+      On latency and size the field was fairly competitive, with most teams achieving inference under 20ms. The accuracy gap came from the 1600ms context window. No other team ran with that window size.
     </p>
   </div>
 
@@ -1184,9 +1120,7 @@ After Pool2:      ~50 samples (÷8)
     <h2>Code</h2>
 
     <p>
-      The full codebase is public on GitHub. The repo is the fork of the official BrainStorm
-      starter template, with our EEGNet implementation, training scripts, and a benchmark
-      utility that computes all three scoring dimensions against any checkpoint.
+      The full codebase is on GitHub, forked from the official BrainStorm starter template. It includes the EEGNet implementation, training scripts, and a benchmark utility that reports all three sub-scores for any checkpoint.
     </p>
 
     <div class="code-label">// clone and install</div>
@@ -1224,55 +1158,40 @@ model.<span class="fn">reset</span>()              <span class="cm"># clear hist
     <div class="takeaway">
       <div class="takeaway-num">1</div>
       <div class="takeaway-body">
-        <h4>Temporal context is cheap — profile before you assume otherwise</h4>
-        <p>Don't guess that a larger window adds latency. For convolutional architectures with
-        pooling, the cost scales far less than linearly. We went from 128ms to 1600ms with no
-        measurable latency increase. This asymmetry — history is nearly free but dramatically
-        improves accuracy — holds broadly for streaming neural data.</p>
+        <h4>Profile latency before treating context window size as a constraint</h4>
+        <p>For convolutional architectures with pooling, input length and inference time don't scale together. We moved from 128ms to 1600ms with no measurable latency change. The assumption that larger windows are slower is worth verifying before it shapes your architecture decisions.</p>
       </div>
     </div>
 
     <div class="takeaway">
       <div class="takeaway-num">2</div>
       <div class="takeaway-body">
-        <h4>PCA is underrated for high-density arrays</h4>
-        <p>In micro-ECoG recordings, most structured signal lives in a low-dimensional subspace.
-        PCA compression simultaneously reduces model file size, speeds up all downstream
-        computation, and improves generalization by discarding noise-dominated directions.
-        It isn't just a preprocessing trick — it's a core part of the scoring strategy.</p>
+        <h4>PCA does more than reduce dimensionality on high-density arrays</h4>
+        <p>In ECoG, most structured signal occupies a small subspace. PCA compression reduces model file size, speeds up computation, and discards noise-dominated directions simultaneously. On a three-way scoring metric, that combination of effects matters.</p>
       </div>
     </div>
 
     <div class="takeaway">
       <div class="takeaway-num">3</div>
       <div class="takeaway-body">
-        <h4>Class-weighted loss is non-negotiable on imbalanced neural data</h4>
-        <p>67% silence means an unweighted model learns to predict silence. Track balanced
-        accuracy from epoch 1, not just raw accuracy. Weight your loss. The two metrics can
-        diverge by 60+ percentage points on a dataset like this.</p>
+        <h4>Track balanced accuracy from the first epoch on imbalanced data</h4>
+        <p>With 67% silence, raw accuracy and balanced accuracy diverge by 60+ percentage points. An unweighted model will converge to predicting silence. Weight the loss from the start and track the right metric, or you won't notice the problem until it's too late to fix it.</p>
       </div>
     </div>
 
     <div class="takeaway">
       <div class="takeaway-num">4</div>
       <div class="takeaway-body">
-        <h4>Domain-specific architectures beat general ones in small-data regimes</h4>
-        <p>EEGNet's inductive biases — explicit temporal-then-spatial factorization, aggressive
-        pooling — are directly matched to how ECoG data is structured. With 90 seconds of
-        training data, this match matters more than raw model capacity. Transformers, LSTMs,
-        and other general-purpose architectures need substantially more data to overcome
-        the lack of prior structure.</p>
+        <h4>Architecture choice matters more when training data is scarce</h4>
+        <p>EEGNet's structure maps onto the actual properties of ECoG data: temporal before spatial, explicit pooling at appropriate scales. With 90 seconds of training, those built-in assumptions outperformed the flexibility of transformers and LSTMs, which have more capacity but needed more data to use it effectively.</p>
       </div>
     </div>
 
     <div class="takeaway">
       <div class="takeaway-num">5</div>
       <div class="takeaway-body">
-        <h4>Multi-objective scoring requires explicit joint tracking from the start</h4>
-        <p>It's easy to over-optimize accuracy and discover you've blown the size budget
-        with an hour to go. Build a benchmark script on day one that reports all three
-        sub-scores for every run. The scoring formulas are public — use them during development,
-        not just at submission time.</p>
+        <h4>Build the benchmark for all three scoring dimensions on day one</h4>
+        <p>It is easy to optimize accuracy and find out near the end that the model is too large. The scoring formulas were public. We built a script early that reported all three sub-scores per run, which kept the tradeoffs visible throughout.</p>
       </div>
     </div>
   </div>
@@ -1282,7 +1201,7 @@ model.<span class="fn">reset</span>()              <span class="cm"># clear hist
   <!-- ═══ TEAM ═══ -->
   <div class="team-credits">
     <p style="margin-bottom:10px;">
-      <strong>Team MindMeld</strong> — BrainStorm 2026, Track 1: Neural Decoder Challenge
+      <strong>Team MindMeld</strong> · BrainStorm 2026, Track 1: Neural Decoder Challenge
     </p>
     <p style="margin:0;">
       Quilee Simeon &nbsp;·&nbsp;
