@@ -8,7 +8,7 @@ redirect_from:
   - /about.html
 ---
 
-Hi, I'm **Quilee Simeon**, a research engineer trained at MIT working at the intersection of **machine learning**, **neuroscience**, and **scientific computing**. I'm currently Research Computing Technical Staff at MIT's Office of Research Computing and Data, and hold an M.S. in Computational Neuroscience and a B.S. in Computation and Cognition from MIT.
+Hi, I'm **Quilee Simeon**, a research engineer trained at MIT working at the intersection of **machine learning**, **neuroscience**, and **scientific computing**. I'm currently work part-time with MIT's Office of Research Computing and Data, and hold an M.S. in Computational Neuroscience and a B.S. in Computation and Cognition from MIT.
 
 ## 🧠 Research Focus
 
