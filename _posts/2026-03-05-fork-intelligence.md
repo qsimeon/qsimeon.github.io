@@ -3,14 +3,14 @@ title: "Fork Intelligence: How I Exploited a Public-Fork Hackathon (and Why You 
 date: 2026-03-05
 permalink: /blog/fork-intelligence/
 tags: [AI, hackathon, claude-code, security, red-team, agents]
-excerpt: "At a Google DeepMind x Cactus Compute hackathon, I used Claude Code to scrape every competitor's fork, benchmark all 45 modified solutions, and synthesize a top-scoring submission from the best of them."
+excerpt: "At a Google DeepMind x Cactus Compute hackathon, I used Claude Code to scrape every competitor's fork, benchmark all 45 modified solutions, and synthesize a top-scoring submission from the best of them. This is a vulnerability disclosure."
 ---
 
-I didn't win this hackathon. I could have. My pipeline surfaced the top-scoring solution in the entire competition, and I could have submitted it with trivial modifications and taken first place. I didn't do that. What interested me more than winning with someone else's code was the meta-game: the fact that I could systematically harvest, evaluate, and recombine every competitor's approach into something new. The strategy itself was the interesting part, not the points.
+This is a vulnerability disclosure for a class of competition I'll call the **public-fork hackathon**: any coding competition where participants submit by forking a public GitHub repository and pushing their solutions to their fork.
 
-This post is a disclosure. During a hackathon I stumbled into a strategy that works, that felt like a borderline thing to do, and that anyone with an AI coding agent can now replicate in about two hours. I'm writing about it because I think hackathon organizers need to know it's possible, not because I think people should go do it.
+I didn't win this hackathon. I could have. My pipeline surfaced the top-scoring solution in the entire competition, and I could have submitted it with trivial modifications and taken first place. I chose not to. What interested me more than winning with someone else's code was the meta-game: the fact that I could systematically harvest, evaluate, and recombine every competitor's approach into something new. The strategy itself was the interesting part, not the points.
 
-If this has a genre, it's a red team report. The system under test is the public-fork hackathon format.
+I'm writing about it because I think hackathon organizers need to know it's possible, not because I think people should go do it. If this has a genre, it's a red team report. The system under test is the public-fork hackathon format. The finding is that AI coding agents reduce the cost of exploiting publicly visible submissions from "practically infeasible" to "about two hours of mostly idle time."
 
 ---
 
@@ -98,15 +98,19 @@ No single competitor's code was copied wholesale. But the final solution wouldn'
 
 ---
 
-## Is This OK?
+## Threat Assessment
 
-I've gone back and forth on it. Two ways to look at it:
+In security terminology, this is a low-skill, high-impact exploit. The attack requires no specialized knowledge. The tooling is commercially available to anyone with a terminal. The prompts are natural language. The entire pipeline can be reproduced by someone who has never written a scraper before, because the agent writes it for them.
 
-Every fork is public. GitHub's whole thing is open source. Reading other people's implementations and combining good ideas is how software engineering works, full stop. Nobody signed an NDA. Nobody was promised their code would be private. And I still had to understand each approach, evaluate the tradeoffs, and build something that integrated them. There's real engineering in the synthesis step.
+The vulnerability is structural, not behavioral. It doesn't depend on participants being careless. They're following the competition's own instructions: fork the repo, push your code. The problem is that the format makes every submission visible to every other participant by design, and the cost of exploiting that visibility just dropped by orders of magnitude.
 
-But also: the implicit contract of a hackathon is that you're competing on your own ideas. Everyone else was heads-down writing original code, and I was systematically surveilling their work and cherry-picking the best parts. The issue isn't whether the data is technically public. It's whether anyone expected it to be exploited like this. I was playing a different game than the other participants thought we were all playing.
+Two ways to frame the ethics:
 
-I don't think there's a clean answer. But I think the question is now inescapable because of what made this possible.
+Every fork is public. GitHub's whole thing is open source. Reading other people's implementations and combining good ideas is how software engineering works. Nobody signed an NDA. Nobody was promised their code would be private. There's real engineering in the synthesis step.
+
+But the implicit contract of a hackathon is that you're competing on your own ideas. Everyone else was heads-down writing original code while I was systematically surveilling their work and cherry-picking the best parts. The issue isn't whether the data is technically public. It's whether anyone expected it to be exploited like this. I was playing a different game than the other participants thought we were all playing.
+
+I don't think there's a clean answer. But I think the question is now inescapable, and that's why I'm disclosing it.
 
 ---
 
@@ -141,9 +145,9 @@ I submitted both. Neither won. The leaderboard was topped by two teams with 100%
 
 ---
 
-## Recommendations
+## Recommended Mitigations
 
-If you're organizing a hackathon that uses public GitHub forks as the submission mechanism:
+If you're organizing a hackathon that uses public GitHub forks as the submission mechanism, here are five mitigations ranked roughly by effectiveness:
 
 **1. Use private repos or private submission channels.** If forks are private, the attack surface disappears. GitHub doesn't support private forks of public repos natively, but you can have participants clone (not fork) into private repos and submit through a form or CI pipeline.
 
@@ -159,9 +163,11 @@ If you're organizing a hackathon that uses public GitHub forks as the submission
 
 ## Coda
 
-There's a line from [Gwern](https://gwern.net/) I keep coming back to: "The best way to predict the future is to look at what the nerds are doing on weekends." The nerds now have agents that write scrapers, run benchmarks, and synthesize code while they eat lunch. Any system that depends on practical obscurity ("yes the data is public, but nobody would actually go through all of it") is on borrowed time.
+Any system that depends on practical obscurity ("yes the data is public, but nobody would actually go through all of it") is operating on borrowed time. AI agents didn't create new information here. They made existing public information *operationally useful* at a speed that changes the threat model.
 
-I don't think what I did was cheating. I also don't think it was entirely *not* cheating. It was an alternative strategy that exploits a structural vulnerability in the competition format, made feasible by AI tooling that didn't exist a year ago. I'm writing about it because I think the right move is to talk about it openly so people can adapt, not to keep it quiet and let it keep working.
+I don't think what I did was cheating. I also don't think it was entirely clean. It was an alternative strategy that exploits a structural vulnerability in the competition format, made feasible by AI tooling that didn't exist a year ago. I'm disclosing it because I think the responsible move is to talk about it openly so organizers can adapt, not to keep it quiet and let it keep working.
+
+This is not a novel attack. Someone else will do it at the next public-fork hackathon, and the next one after that. The question is whether competition formats evolve to account for it.
 
 If you organize hackathons: the forks are public, and the agents can read all of them.
 
