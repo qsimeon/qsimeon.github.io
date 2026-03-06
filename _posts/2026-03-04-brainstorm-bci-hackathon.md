@@ -1,6 +1,6 @@
 ---
 title: "How We Won a BCI Hackathon: Decoding Brain Signals on the Edge"
-date: 2026-01-24
+date: 2026-03-04
 tags: [neuroscience, machine-learning, bci, signal-processing, hackathon]
 excerpt: "Team MindMeld placed 1st at BrainStorm 2026 by decoding 1024-channel brain recordings in real-time on edge hardware. Here's the full technical breakdown of our winning approach."
 ---
