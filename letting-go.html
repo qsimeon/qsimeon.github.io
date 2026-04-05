@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Letting Go of What You Know</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f0e8;
+    --text: #2a2520;
+    --accent: #8b4513;
+    --muted: #7a7168;
+    --rule: #c4b9a8;
+    --drop: #5c3a1e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: 19px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 80px 24px 120px;
+  }
+
+  .epigraph {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.2s forwards;
+  }
+
+  h1 {
+    font-family: 'Newsreader', Georgia, serif;
+    font-weight: 300;
+    font-size: clamp(36px, 7vw, 52px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--drop);
+    margin-bottom: 12px;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.4s forwards;
+  }
+
+  .byline {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--muted);
+    margin-bottom: 48px;
+    font-style: italic;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.6s forwards;
+  }
+
+  .dropcap::first-letter {
+    float: left;
+    font-size: 4.2em;
+    line-height: 0.8;
+    padding-right: 10px;
+    padding-top: 6px;
+    color: var(--drop);
+    font-weight: 500;
+  }
+
+  p {
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards;
+  }
+
+  .body p:nth-child(1) { animation-delay: 0.8s; }
+  .body p:nth-child(2) { animation-delay: 0.9s; }
+  .body p:nth-child(3) { animation-delay: 1.0s; }
+  .body p:nth-child(4) { animation-delay: 1.1s; }
+  .body p:nth-child(5) { animation-delay: 1.2s; }
+  .body p:nth-child(6) { animation-delay: 1.3s; }
+  .body p:nth-child(7) { animation-delay: 1.4s; }
+  .body p:nth-child(8) { animation-delay: 1.5s; }
+  .body p:nth-child(9) { animation-delay: 1.6s; }
+  .body p:nth-child(10) { animation-delay: 1.7s; }
+  .body p:nth-child(11) { animation-delay: 1.8s; }
+  .body p:nth-child(12) { animation-delay: 1.9s; }
+  .body p:nth-child(13) { animation-delay: 2.0s; }
+  .body p:nth-child(14) { animation-delay: 2.1s; }
+  .body p:nth-child(15) { animation-delay: 2.2s; }
+
+  .section-break {
+    text-align: center;
+    color: var(--rule);
+    font-size: 24px;
+    letter-spacing: 0.5em;
+    margin: 48px 0;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 1.4s forwards;
+  }
+
+  .section-break.two { animation-delay: 1.8s; }
+  .section-break.three { animation-delay: 2.2s; }
+
+  em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .closing {
+    border-top: 1px solid var(--rule);
+    margin-top: 56px;
+    padding-top: 32px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 2.6s forwards;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="epigraph">Essay / April 2026</div>
+
+  <h1>Letting Go of What You Know</h1>
+  <div class="byline">Quilee Simeon</div>
+
+  <div class="body">
+
+    <p class="dropcap">There is a particular kind of panic that visits you at night, after the laptop is closed and the code is no longer compiling. It does not announce itself with drama. It arrives as a question: <em>Was any of it worth it?</em> The years spent learning to think in abstractions, to coerce mathematics into models, to write software that runs and occasionally does something useful. You spent a decade sharpening a blade and now a machine makes blades by the thousands, each one sharper than yours will ever be.</p>
+
+    <p>I went to MIT. People hear that and project an entire mythology onto you. Surely you are a genius. Surely you see the matrix. The truth is more ordinary. I am a person from Saint Lucia who worked very hard, got into a place where other people also worked very hard, and discovered, year after year, that I was mediocre at best in the things I was supposedly there to master. Coding. Mathematics. The abstract gymnastics that academia rewards with degrees and job offers. I was never bad. But I was never the person in the room who made it look easy, either.</p>
+
+    <p>And now the machines make it look easy.</p>
+
+    <div class="section-break">&#183; &#183; &#183;</div>
+
+    <p>Here is the honest version of what a lot of knowledge workers are feeling but not saying out loud: the floor is gone. Not the ceiling, the floor. For years, being "pretty good" at quantitative or technical work was enough to build a life on. You did not need to be Terence Tao. You needed to be competent, persistent, and willing to grind through problems that most people found unpleasant. That gap between "most people find this unpleasant" and "I can tolerate it" was the entire economic moat. AI did not just narrow the moat. It filled it in and built a parking lot.</p>
+
+    <p>The question that follows is the one that really stings: <em>should I keep going?</em> Should I keep banging my head against this wall, hoping to punch through before the wall cracks my skull? Because that is what grinding on hard technical skills has started to feel like. Not a noble struggle toward mastery. A concussion waiting to happen.</p>
+
+    <p>I have spent whole seasons of my life in that loop. Study, fail, study harder, fail less spectacularly, study again, produce something that works but is not elegant, watch someone else (or some model) do it faster and cleaner, feel the ground shift beneath you, study again. There is a version of this story where the protagonist keeps going and the persistence pays off. I am not sure I am living in that version.</p>
+
+    <div class="section-break two">&#183; &#183; &#183;</div>
+
+    <p>But here is the part that nobody wants to say because it sounds like surrender: <em>what if there is a door right there?</em> Not locked. Not even closed, really. Just off to the side, outside the tunnel vision that years of "struggle is the destination" thinking has given you.</p>
+
+    <p>The mythology of intellectual labor is that the suffering is the point. That grinding through hard problems builds character, builds understanding, builds some irreplaceable capacity for insight. And maybe it does, for a small number of people operating at the boundary of what humans can think. For the rest of us, the suffering was mostly just suffering. A tax we paid for a credential and a paycheck and the quiet satisfaction of feeling smarter than we probably were.</p>
+
+    <p>Terence Tao and others have written with real grief about what AI means for mathematics. I understand the grief. I respect it. But I also notice that the grief belongs to people for whom mathematical thinking is a native language, not an acquired one. For those of us who learned it the way you learn a foreign language in adulthood, haltingly and with a permanent accent, the arrival of a fluent translator is not a tragedy. It is a relief.</p>
+
+    <p>Thinking was painful. I am allowed to say that. Not the creative kind, not the daydreaming or the wondering. The <em>grinding</em> kind. The kind where you sit with a problem for hours and your brain just refuses to produce the right shape. The kind where you debug for a day and the error was a misplaced index. The kind where you read a paper four times and still cannot tell if the authors are being profound or just unclear. That kind of thinking was, for me, not a joy. It was labor. And when labor can be automated, the sane response is not to mourn. It is to ask what you were trying to build with that labor in the first place.</p>
+
+    <div class="section-break three">&#183; &#183; &#183;</div>
+
+    <p>I think the answer, for me, was never the thinking itself. It was the outcomes. Understanding a biological system well enough to intervene in it. Building a tool that lets someone see something they could not see before. Connecting an idea in one domain to a problem in another. These were always the real goals. The grinding was just the only path I knew.</p>
+
+    <p>Now there are other paths. Faster ones. Paths that do not require me to be a virtuoso programmer or a gifted mathematician. Paths that ask instead: <em>what do you actually care about? What question keeps you up at night?</em> And then hand you a machine that can do the technical plumbing while you focus on the question.</p>
+
+    <p>This is not the end of expertise. It is the end of expertise as a moat. And for those of us who were never great at the moat part, who were always just good enough to be dangerous, this might be the best thing that ever happened. We are being freed from the pretense that our value was in the technical execution. It never was. It was in knowing what to build and why.</p>
+
+    <p>So I am letting go. Not of curiosity. Not of rigor. Not of the desire to understand. I am letting go of the idea that my worth is measured by whether I can do the hard thing manually. The wall is still there. I am just done hitting my head against it. There is a door. It was always there. I am walking through it.</p>
+
+  </div>
+
+  <div class="closing">Somerville, MA &mdash; 2026</div>
+
+</div>
+</body>
+</html>
