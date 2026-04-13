@@ -1,7 +1,9 @@
 ---
 title: "session-merge: Fixing Claude Code's Split Session Problem"
 date: 2026-02-24
+permalink: /session-merge/
 tags: [claude-code, tools, developer-experience]
+excerpt: "Claude Code sessions silently fragment when you cd between directories or exit and resume. I built session-merge to detect and fix split sessions — merging them back into one continuous conversation."
 ---
 
 If you use Claude Code extensively, you've probably noticed this: you're deep in a session, you `cd` to a different directory or `/exit` and `--resume`, and your single conversation has silently fragmented into two separate sessions. The older one has all your context; the newer one has your latest work. No built-in way to recombine them.
