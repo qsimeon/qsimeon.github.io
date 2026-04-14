@@ -14,3 +14,6 @@ package-lock.json
 # Ignore Mac .DS_Store files
 *.DS_Store
 STATUS.md
+
+# Per-developer rbenv pin
+.ruby-version
