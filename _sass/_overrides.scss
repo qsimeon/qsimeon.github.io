@@ -621,14 +621,11 @@ pre {
 // Footer Styling
 // ===========================
 
-.page__footer {
+.page__footer,
+.footer {
   background-color: $dark-surface-card;
   border-top: 2px solid $dark-accent-gold;
   color: $dark-text-primary;
-}
-
-.footer {
-  @extend .page__footer;
 }
 
 .page__footer-follow {
