@@ -5,8 +5,6 @@ tags: [ai, hardware, hackathon, raspberry-pi, computer-vision, iot]
 excerpt: "At HardMode 2026 at MIT Media Lab, our team built DriftPak — an AI-powered backpack that can see, hear, speak, and know where it is. Here's the full story of how we went from a Pi and a pile of ESP32s to a sentient bag."
 ---
 
-![Team Driftpak at HardMode 2026](/images/driftpak-team.jpg)
-
 Do you guys remember Dora the Explorer's backpack? The one that always had exactly what she needed, spoke when spoken to, and was somehow aware of what was going on?
 
 That's what we were building.
@@ -20,6 +18,8 @@ This is how we built it, what worked, and what the tricky parts actually were.
 ## The Team
 
 ![Team #34: Driftpak](/images/driftpak-team-slide.png)
+
+![The Driftpak team at HardMode 2026](/images/driftpak-team.jpg)
 
 Team #34 — **Driftpak**:
 - **Danlin Huang**
