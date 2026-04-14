@@ -1,6 +1,8 @@
 /*
  * Dark Editorial Theme Overrides
  * Applies dark mode styling with gold accents to Minimal Mistakes theme
+ * when the user's system is set to dark mode. Otherwise, the default
+ * (light) Minimal Mistakes theme is used.
  */
 
 // Color palette
@@ -12,6 +14,8 @@ $dark-text-muted:     #7a7a8a;
 $dark-accent-gold:    #c8a84b;
 $dark-hover-gold:     #dab85f;
 $dark-border-gold:    2px solid $dark-accent-gold;
+
+@media (prefers-color-scheme: dark) {
 
 // ===========================
 // Global Body & Text Styling
@@ -974,6 +978,8 @@ h1, h2, h3 {
   background-color: rgba(200, 168, 75, 0.3);
   color: $dark-text-primary;
 }
+
+} // end @media (prefers-color-scheme: dark)
 
 // ===========================
 // Print Styles
