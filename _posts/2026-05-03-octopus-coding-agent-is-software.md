@@ -32,6 +32,8 @@ Together: `install.sh` drops a coding agent and a folder of markdown files on an
 
 Drop one shell command on a Pi or Mac. ~25 minutes later, every connected peripheral — arm, camera, sensor, GPIO pin — is a typed, agent-callable MCP tool. The agent reads five markdown protocol specs, probes USB / serial / I²C / GPIO, identifies what's plugged in, looks up datasheets, writes a FastMCP server tailored to that exact machine, and exposes a Cloudflare HTTPS tunnel. Same five specs work on a Mac with a completely different discovered tool set.
 
+![The Octopus reference rig](/images/octopus-rig-full.jpeg)
+
 The reference rig: 6-DOF SO-ARM101 (Feetech STS3215 servos, 1 Mbaud serial), LifeCam Studio + Brio 100, Raspberry Pi 4. Every device probed and served by Octopus — no human-written hardware code.
 
 ## How a single install actually flows
