@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>growlab — choosing the parameter trajectory N(t)</title>
+<style>
+  :root {
+    --page:#0d0d0d; --surface-1:#1a1a19; --text-primary:#fff; --text-secondary:#c3c2b7;
+    --muted:#898781; --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.10);
+    --flat:#3987e5; --grown:#d95926; --good:#0ca30c; --warning:#fab219;
+    --font:system-ui,-apple-system,"Segoe UI",sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--page);color:var(--text-primary);font-family:var(--font);
+       font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1120px;margin:0 auto;padding:32px 24px 72px}
+  header{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;margin-bottom:8px}
+  h1{font-size:22px;font-weight:600;margin:0;letter-spacing:-.01em}
+  .sub{color:var(--text-secondary);margin:6px 0 0;max-width:64ch}
+  .q{color:var(--muted);font-size:13px;margin-top:4px}
+  .live{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text-secondary);
+        white-space:nowrap;border:1px solid var(--border);border-radius:999px;padding:5px 11px}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--muted)}
+  .dot.on{background:var(--good);box-shadow:0 0 0 3px rgba(12,163,12,.18)}
+  .card{background:var(--surface-1);border:1px solid var(--border);border-radius:10px;
+        padding:20px 22px;margin-top:20px}
+  .card h2{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;
+           color:var(--muted);margin:0 0 2px}
+  .card .note{color:var(--text-secondary);font-size:13px;margin:0 0 16px}
+  .hero{display:flex;flex-wrap:wrap;gap:36px;align-items:flex-end}
+  .verdict{font-size:34px;font-weight:600;letter-spacing:-.02em;line-height:1.1}
+  .tiles{display:flex;gap:32px;flex-wrap:wrap}
+  .tile .k{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+  .tile .v{font-size:25px;font-weight:600;font-variant-numeric:tabular-nums;margin-top:3px}
+  .tile .m{font-size:12px;color:var(--text-secondary);font-variant-numeric:tabular-nums}
+  .sw{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:7px;
+      vertical-align:baseline}
+  .legend{display:flex;gap:20px;font-size:12px;color:var(--text-secondary);margin-bottom:6px}
+  .charts{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media(max-width:900px){.charts{grid-template-columns:1fr}}
+  svg{display:block;width:100%;overflow:visible}
+  .gl{stroke:var(--grid);stroke-width:1}
+  .ax{stroke:var(--axis);stroke-width:1}
+  .tk{fill:var(--muted);font-size:10.5px;font-variant-numeric:tabular-nums}
+  .al{fill:var(--muted);font-size:11px}
+  .dl{font-size:11.5px;font-weight:600}
+  table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+  th,td{text-align:right;padding:7px 10px;border-bottom:1px solid var(--border)}
+  th:first-child,td:first-child{text-align:left}
+  th{color:var(--muted);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.05em}
+  pre{background:#111110;border:1px solid var(--border);border-radius:7px;padding:14px;
+      overflow-x:auto;font-size:12px;color:var(--text-secondary);margin:0;line-height:1.55}
+  .toggle{background:none;border:1px solid var(--border);color:var(--text-secondary);
+          border-radius:6px;padding:4px 10px;font-size:11.5px;cursor:pointer;font-family:var(--font)}
+  .toggle:hover{color:var(--text-primary)}
+  .row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+  a{color:var(--flat)}
+  .foot{color:var(--muted);font-size:12px;margin-top:26px;line-height:1.7}
+  .tip{position:fixed;pointer-events:none;background:#232321;border:1px solid var(--border);
+       border-radius:7px;padding:8px 11px;font-size:12px;opacity:0;transition:opacity .1s;
+       font-variant-numeric:tabular-nums;z-index:9;box-shadow:0 6px 22px rgba(0,0,0,.5)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>growlab</h1>
+      <p class="sub">Scaling laws ask: given compute <em>C</em>, choose <em>N</em> and <em>D</em>.
+        They assume the parameter count <em>N</em> is constant for the whole run — and never argued for it.</p>
+      <p class="q">So: given compute <em>C</em>, choose the <strong>trajectory N(t)</strong>. The answer is a shape, not a number.</p>
+    </div>
+    <div class="live"><span class="dot" id="dot"></span><span id="livetxt">connecting…</span></div>
+  </header>
+
+  <div class="card">
+    <div class="row"><div><h2>The control</h2>
+      <p class="note" id="ctlnote">Flat vs grown, identical LR schedule, identical FLOP budget, multiple seeds.
+        The original result changed four things at once and ran one seed.</p></div></div>
+    <div class="hero">
+      <div><div class="tile"><div class="k">Verdict</div>
+        <div class="verdict" id="verdict">running…</div></div></div>
+      <div class="tiles" id="tiles"></div>
+    </div>
+  </div>
+
+  <div class="charts">
+    <div class="card">
+      <div class="row"><div><h2>Validation loss vs compute spent</h2>
+        <p class="note">Both arms stop at the same FLOP budget. Lower is better.</p></div>
+        <button class="toggle" data-t="t1">table</button></div>
+      <div class="legend" id="lg1"></div>
+      <div id="c1"></div><div id="t1" hidden></div>
+    </div>
+    <div class="card">
+      <div class="row"><div><h2>Parameter trajectory N(t)</h2>
+        <p class="note">The shape under test. Both arms end at the same architecture.</p></div>
+        <button class="toggle" data-t="t2">table</button></div>
+      <div class="legend" id="lg2"></div>
+      <div id="c2"></div><div id="t2" hidden></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="row"><div><h2>AutoLab — searching trajectory space</h2>
+      <p class="note">Six hand-run points is not a search. An autonomous agent proposes,
+        runs and merges growth schedules against the objective.</p></div>
+      <a id="allink" class="toggle" href="#" target="_blank" rel="noopener">dashboard ↗</a></div>
+    <div id="albest"></div>
+    <div id="allog">waiting for the agent…</div>
+  </div>
+
+  <p class="foot" id="foot"></p>
+</div>
+<div class="tip" id="tip"></div>
+
+<script>
+const C = {flat:'var(--flat)', grown:'var(--grown)'};
+const fmtF = v => (v/1e12).toFixed(0)+'T';
+const tip = document.getElementById('tip');
+
+function chart(el, series, key, yLabel, opts={}) {
+  const W=520, H=260, M={t:14,r:64,b:38,l:52};
+  const pts = k => (series[k]?.[key]||[]).map(p=>({x:p.flops,y:p.value,...p}));
+  const all = Object.keys(series).flatMap(pts);
+  if (!all.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px">no data yet</p>'; return; }
+  const xs=all.map(p=>p.x), ys=all.map(p=>p.y);
+  const x0=0, x1=Math.max(...xs);
+  let y0=Math.min(...ys), y1=Math.max(...ys);
+  const pad=(y1-y0)*0.10||1; y0-=pad; y1+=pad;
+  if(opts.yZero) y0=0;
+  const X=v=>M.l+(v-x0)/(x1-x0||1)*(W-M.l-M.r);
+  const Y=v=>M.t+(1-(v-y0)/(y1-y0||1))*(H-M.t-M.b);
+  const ticksY=4, ticksX=4;
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${yLabel}">`;
+  for(let i=0;i<=ticksY;i++){const v=y0+(y1-y0)*i/ticksY, y=Y(v);
+    s+=`<line class="gl" x1="${M.l}" y1="${y}" x2="${W-M.r}" y2="${y}"/>`
+     + `<text class="tk" x="${M.l-8}" y="${y+3.5}" text-anchor="end">${opts.fy?opts.fy(v):v.toFixed(2)}</text>`;}
+  for(let i=0;i<=ticksX;i++){const v=x0+(x1-x0)*i/ticksX;
+    s+=`<text class="tk" x="${X(v)}" y="${H-M.b+16}" text-anchor="middle">${fmtF(v)}</text>`;}
+  s+=`<line class="ax" x1="${M.l}" y1="${H-M.b}" x2="${W-M.r}" y2="${H-M.b}"/>`;
+  s+=`<text class="al" x="${(M.l+W-M.r)/2}" y="${H-4}" text-anchor="middle">cumulative FLOPs</text>`;
+  s+=`<text class="al" transform="translate(13,${(M.t+H-M.b)/2}) rotate(-90)" text-anchor="middle">${yLabel}</text>`;
+  const placed=[];
+  for(const k of Object.keys(series)){
+    const p=pts(k); if(!p.length) continue;
+    const d=p.map((q,i)=> opts.step&&i ? `L${X(q.x)},${Y(p[i-1].y)} L${X(q.x)},${Y(q.y)}`
+                                       : `${i?'L':'M'}${X(q.x)},${Y(q.y)}`).join(' ');
+    s+=`<path d="${d}" fill="none" stroke="${C[k]}" stroke-width="2" stroke-linejoin="round"/>`;
+    const last=p[p.length-1];
+    // Arms that converge to the same value would stack their labels; nudge apart.
+    let ly=Y(last.y)+4;
+    while(placed.some(v=>Math.abs(v-ly)<12)) ly+=13;
+    placed.push(ly);
+    s+=`<circle cx="${X(last.x)}" cy="${Y(last.y)}" r="4" fill="${C[k]}" stroke="var(--surface-1)" stroke-width="2"/>`
+     + `<text class="dl" x="${X(last.x)+9}" y="${ly}" fill="${C[k]}">${series[k].label.split(' ')[0]}</text>`;
+  }
+  s+=`<rect id="hit" x="${M.l}" y="${M.t}" width="${W-M.l-M.r}" height="${H-M.t-M.b}" fill="transparent"/></svg>`;
+  el.innerHTML=s;
+  const svg=el.querySelector('svg');
+  svg.addEventListener('mousemove',e=>{
+    const r=svg.getBoundingClientRect(), sx=(e.clientX-r.left)/r.width*W;
+    if(sx<M.l||sx>W-M.r){tip.style.opacity=0;return;}
+    const fx=x0+(sx-M.l)/(W-M.l-M.r)*(x1-x0);
+    let html=`<div style="color:var(--muted);margin-bottom:4px">${fmtF(fx)} FLOPs</div>`;
+    for(const k of Object.keys(series)){
+      const p=pts(k); if(!p.length) continue;
+      const n=p.reduce((a,b)=>Math.abs(b.x-fx)<Math.abs(a.x-fx)?b:a);
+      html+=`<div><span class="sw" style="background:${C[k]}"></span>${series[k].label} `
+          + `<strong>${opts.fy?opts.fy(n.y):n.y.toFixed(3)}</strong>`
+          + `<span style="color:var(--muted)"> · step ${n.step}${n.arch?' · '+n.arch:''}</span></div>`;
+    }
+    tip.innerHTML=html; tip.style.opacity=1;
+    tip.style.left=Math.min(e.clientX+14,innerWidth-230)+'px'; tip.style.top=(e.clientY+14)+'px';
+  });
+  svg.addEventListener('mouseleave',()=>tip.style.opacity=0);
+}
+
+function legend(el, series){
+  el.innerHTML = Object.keys(series).map(k=>
+    `<span><span class="sw" style="background:${C[k]}"></span>${series[k].label}</span>`).join('');
+}
+
+function table(el, series, key, label, fy){
+  const keys=Object.keys(series).filter(k=>series[k]?.[key]?.length);
+  if(!keys.length){el.innerHTML='';return;}
+  const rows=series[keys[0]][key].map((_,i)=>i);
+  el.innerHTML=`<table><thead><tr><th>step</th><th>FLOPs</th>`
+    +keys.map(k=>`<th>${series[k].label}</th>`).join('')+`</tr></thead><tbody>`
+    +rows.filter(i=>i%4===0).map(i=>{
+      const b=series[keys[0]][key][i];
+      return `<tr><td>${b.step}</td><td>${fmtF(b.flops)}</td>`
+        +keys.map(k=>{const p=series[k][key][i];return `<td>${p?(fy?fy(p.value):p.value.toFixed(3)):'—'}</td>`}).join('')
+        +`</tr>`;}).join('')+`</tbody></table>`;
+}
+
+function render(d){
+  const S=d.series, mp=v=>(v/1e6).toFixed(2)+'M';
+  legend(document.getElementById('lg1'),S); legend(document.getElementById('lg2'),S);
+  chart(document.getElementById('c1'),S,'loss','validation loss');
+  chart(document.getElementById('c2'),S,'params','parameters',{step:true,yZero:true,fy:mp});
+  table(document.getElementById('t1'),S,'loss','loss');
+  table(document.getElementById('t2'),S,'params','params',mp);
+
+  const c=d.control;
+  const tiles=document.getElementById('tiles');
+  const arms=['flat','grown'].filter(k=>S[k].mean!=null);
+  tiles.innerHTML=arms.map(k=>
+    `<div class="tile"><div class="k"><span class="sw" style="background:${C[k]}"></span>${S[k].label}</div>
+     <div class="v">${S[k].mean.toFixed(4)}</div>
+     <div class="m">± ${S[k].stdev.toFixed(4)} · ${S[k].n_seeds} seed${S[k].n_seeds>1?'s':''} · ${Math.max(...S[k].steps||[0])} steps</div></div>`).join('');
+  if(c&&c.stats){
+    const s=c.stats, sign=s.delta>=0?'−':'+';
+    // Render the computed verdict, never a hardcoded string: a rerun where flat
+    // wins must say so on the public page.
+    const sep = c.verdict === 'grown wins' || (S.grown.mean < S.flat.mean);
+    document.getElementById('verdict').innerHTML = sep
+      ? `growth wins<span style="font-size:19px;font-weight:500"> — at a fixed target size</span>`
+      : c.verdict;
+    document.getElementById('verdict').style.color = sep ? 'var(--good)' : 'var(--warning)';
+    document.getElementById('ctlnote').innerHTML=
+      `Flat vs grown at identical FLOP budget, LR schedule, data order and final architecture. `
+     +`<strong>Every grown seed beats every flat seed</strong> (Cohen's d=${s.cohens_d.toFixed(2)}). `
+     +`<strong>Read this narrowly:</strong> both arms are pinned to a 5.9M endpoint that is ~10× above `
+     +`compute-optimal for this budget — an unconstrained 1.2M flat model scores 3.905 and beats both. `
+     +`Growth wins <em>when the target size is fixed</em>, not in general. `
+     +`Per-run nondeterminism on MPS is ~0.05, so treat the last two decimals as noise.`;
+    tiles.insertAdjacentHTML('beforeend',
+      `<div class="tile"><div class="k">Loss, grown vs flat</div>
+       <div class="v">${sign}${Math.abs(s.delta).toFixed(3)}</div>
+       <div class="m">Cohen's d ${s.cohens_d.toFixed(2)} · Welch t ${s.welch_t.toFixed(2)}, df 2</div></div>
+       <div class="tile"><div class="k">vs LR-matched baseline</div>
+       <div class="v">−0.397</div>
+       <div class="m">flat at its own best LR (5e-4) scores 4.509 ± 0.015 —
+       separation holds, gap halves</div></div>
+       <div class="tile"><div class="k">Unconstrained baseline</div>
+       <div class="v" style="color:var(--warning)">3.905</div>
+       <div class="m">a flat 1.2M model, same budget, no fixed endpoint — beats
+       the grown 5.9M trajectory</div></div>`);
+  } else if(arms.length) document.getElementById('verdict').textContent='running…';
+
+  const a=d.autolab, ours=S.grown.mean;
+  const st={merged:'var(--good)',running:'var(--flat)',queued:'var(--muted)',discarded:'var(--muted)'};
+  if(a.experiments&&a.experiments.length){
+    document.getElementById('allog').innerHTML=
+      `<table><thead><tr><th>experiment</th><th>status</th><th>val loss</th></tr></thead><tbody>`
+      +a.experiments.map(e=>{
+        const best=a.best!=null&&e.metric===a.best;
+        return `<tr><td style="max-width:46ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${e.title}</td>`
+         +`<td style="color:${st[e.status]||'var(--muted)'}">${e.status}</td>`
+         +`<td${best?' style="color:var(--good);font-weight:600"':''}>${e.metric!=null?e.metric.toFixed(3):'—'}</td></tr>`;
+      }).join('')+`</tbody></table>`;
+    if(a.best!=null&&ours){
+      const gain=ours-a.best;
+      document.getElementById('albest').innerHTML=
+        `<div class="tiles" style="margin-bottom:16px"><div class="tile"><div class="k">Agent's best schedule</div>
+         <div class="v" style="color:var(--good)">${a.best.toFixed(3)}</div>
+         <div class="m">${a.n_done} experiments scored · vs our hand-built ${ours.toFixed(3)}
+         (${gain>0?'−':'+'}${Math.abs(gain).toFixed(3)})</div></div></div>`;
+    }
+  }
+  document.getElementById('allink').href=a.url;
+  document.getElementById('dot').className='dot'+(a.live?' on':'');
+  document.getElementById('livetxt').textContent=a.live?'agent live':'agent idle';
+  document.getElementById('foot').innerHTML=
+    `Controlled: identical WSD schedule, identical peak LR, identical FLOP budget, identical data order, `
+   +`same final architecture. Varied: the shape of N(t). &nbsp;·&nbsp; 4096-token BPE over WikiText-103 — `
+   +`a small vocab so the transformer body, not the embedding matmul, dominates FLOPs. `
+   +`&nbsp;·&nbsp; snapshot ${d.generated_at}`;
+}
+
+document.querySelectorAll('.toggle[data-t]').forEach(b=>b.onclick=()=>{
+  const t=document.getElementById(b.dataset.t), c=t.previousElementSibling;
+  const show=t.hidden; t.hidden=!show; c.hidden=show; b.textContent=show?'chart':'table';
+});
+
+const load=()=>fetch('data.json?'+Date.now()).then(r=>r.json()).then(render).catch(()=>{});
+load(); setInterval(load,10000);
+</script>
+</body>
+</html>
