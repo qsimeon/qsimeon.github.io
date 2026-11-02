@@ -854,6 +854,19 @@ table {
   }
 }
 
+// The per-brand icon colors in _utilities.scss are set on the <i> itself, so they beat the
+// link colors above. GitHub's #171516 is invisible against the dark background — let it
+// inherit instead. Other brands (ORCID green, LinkedIn blue) stay legible as-is.
+.author__urls,
+.social-icons,
+.page__footer-follow {
+  .fa-github,
+  .fa-github-alt,
+  .fa-github-square {
+    color: inherit;
+  }
+}
+
 // ===========================
 // Image Styling
 // ===========================

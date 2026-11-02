@@ -1,4 +1,8 @@
 ---
+# Upstream Academic Pages reference copy. Kept for reference only — it declares the same
+# permalink (/cv/) and redirect_from (/resume) as cv.md, so publishing both makes the live
+# CV depend on Jekyll's file write order. Do not set this to true.
+published: false
 layout: archive
 title: "CV"
 permalink: /cv/

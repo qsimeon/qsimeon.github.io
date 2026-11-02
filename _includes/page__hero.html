@@ -1,5 +1,11 @@
 {% include base_path %}
 
+{% comment %}
+  page.header.image / page.header.overlay_image expect a BARE FILENAME (e.g. "driftpak-team.jpg"),
+  not a path: "/images/" is prepended below (and again in _includes/seo.html). Writing
+  "/images/foo.jpg" yields the broken "/images//images/foo.jpg".
+{% endcomment %}
+
 {% if page.header.image contains "://" %}
   {% capture img_path %}{{ page.header.image }}{% endcapture %}
 {% else %}

@@ -13,7 +13,12 @@ package-lock.json
 
 # Ignore Mac .DS_Store files
 *.DS_Store
+
+# Local working notes, not site content
 STATUS.md
+
+# Playwright MCP screenshots/snapshots from local render checks
+.playwright-mcp/
 
 # Per-developer rbenv pin
 .ruby-version

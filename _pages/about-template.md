@@ -1,4 +1,8 @@
 ---
+# Upstream Academic Pages reference copy. Kept for reference only — it declares the same
+# permalink (/) and redirect_from as about.md, so publishing both makes the site's HOMEPAGE
+# depend on Jekyll's file write order. Do not set this to true.
+published: false
 permalink: /
 title: "Academic Pages is a ready-to-fork GitHub Pages template for academic personal websites"
 author_profile: true

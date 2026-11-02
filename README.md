@@ -1,42 +1,61 @@
+# qsimeon.github.io
 
-# Academic Pages
+Personal academic website of **Quilee Simeon** — research engineer working at the intersection of
+machine learning, neuroscience, and scientific computing.
 
-![pages-build-deployment](https://github.com/academicpages/academicpages.github.io/actions/workflows/pages/pages-build-deployment/badge.svg)
+**Live site:** <https://qsimeon.github.io/>
 
-Academic Pages is a Github Pages template for academic websites.
+Jekyll site built on the [Academic Pages](https://github.com/academicpages/academicpages.github.io)
+template (itself derived from [Minimal Mistakes](https://mmistakes.github.io/minimal-mistakes/)),
+served by GitHub Pages from the `master` branch.
 
+## Running locally
 
-# Getting Started
+Requires Ruby (see `.ruby-version`, currently 3.2.4) and Bundler.
 
-1. Register a GitHub account if you don't have one and confirm your e-mail (required!)
-1. Click the "Use this template" button in the top right.
-1. On the "New repository" page, enter your repository name as "[your GitHub username].github.io", which will also be your website's URL.
-1. Set site-wide configuration and add your content.
-1. Upload any files (like PDFs, .zip files, etc.) to the `files/` directory. They will appear at https://[your GitHub username].github.io/files/example.pdf.  
-1. Check status by going to the repository settings, in the "GitHub pages" section
-1. (Optional) Use the Jupyter notebooks or python scripts in the `markdown_generator` folder to generate markdown files for publications and talks from a TSV file.
+```bash
+bundle install
+bundle exec jekyll serve --livereload
+```
 
-See more info at https://academicpages.github.io/
+The site is then at <http://localhost:4000>. Always use `bundle exec` so the pinned
+`github-pages` gem — which mirrors what GitHub Pages actually runs — is the version building
+your preview. To check a build without serving: `bundle exec jekyll build`.
 
-## Running Locally
+`Gemfile.lock` is gitignored; if `bundle install` fails, delete it and retry.
 
-When you are initially working your website, it is very useful to be able to preview the changes locally before pushing them to GitHub. To work locally you will need to:
+## Where content lives
 
-1. Clone the repository and made updates as detailed above.
-1. Make sure you have ruby-dev, bundler, and nodejs installed: `sudo apt install ruby-dev ruby-bundler nodejs`
-1. Run `bundle install` to install ruby dependencies. If you get errors, delete Gemfile.lock and try again.
-1. Run `jekyll serve -l -H localhost` to generate the HTML and serve it from `localhost:4000` the local server will automatically rebuild and refresh the pages on change.
+| Path | Contents |
+|------|----------|
+| `_posts/` | Blog posts (`YYYY-MM-DD-slug.md`) |
+| `_pages/` | Standalone pages — about (`/`), CV, publications, talks, teaching |
+| `_publications/`, `_talks/`, `_portfolio/`, `_teaching/` | Collection entries, one file each |
+| `_data/navigation.yml` | Top navigation menu |
+| `_config.yml` | Site-wide config: title, author, social links, collections |
+| `images/`, `files/` | Images and downloadable assets (PDFs, slides) |
+| `_sass/`, `assets/` | Styles, including the dark-mode overrides |
+| `_archive/` | Retired posts and standalone pages — not built (Jekyll skips `_`-prefixed dirs) |
 
-If you are running on Linux it may be necessary to install some additional dependencies prior to being able to run locally: `sudo apt install build-essential gcc make`
+## Conventions worth knowing
 
-# Maintenance 
+- **Hero images take a bare filename.** `header.image: driftpak-team.jpg`, *not*
+  `/images/driftpak-team.jpg` — `_includes/page__hero.html` and `_includes/seo.html` prepend
+  `/images/` themselves, so a path produces the broken `/images//images/...`.
+- **Dark mode follows the OS.** The editorial theme lives inside a
+  `@media (prefers-color-scheme: dark)` block in `_sass/`. Sass `@extend` cannot cross a
+  `@media` boundary — use a combined selector instead, or the build fails.
+- **The `*-template.md` pages are upstream reference copies** and are marked `published: false`.
+  They declare the same permalinks as the real `about.md` / `cv.md`; publishing them makes the
+  live page depend on Jekyll's file write order.
+- **Long-form HTML posts** (`letting-go.html`, `brainstorm_bci_blog.html`) are hand-styled
+  standalone pages at the repo root, linked from their Markdown counterparts in `_posts/`.
 
-Bug reports and feature requests to the template  should be [submitted via GitHub](https://github.com/academicpages/academicpages.github.io/issues/new/choose). For questions concerning how to style the template, please feel free to start a [new discussion on GitHub](https://github.com/academicpages/academicpages.github.io/discussions).
+## Template tooling
 
-This repository was forked (then detached) by [Stuart Geiger](https://github.com/staeiou) from the [Minimal Mistakes Jekyll Theme](https://mmistakes.github.io/minimal-mistakes/), which is © 2016 Michael Rose and released under the MIT License (see LICENSE.md). It is currently being maintained by [Robert Zupko](https://github.com/rjzupkoii) and additional maintainers would be welcomed.
+`markdown_generator/` and `talkmap.py` are Academic Pages utilities for generating publication
+and talk entries from TSV files. Unused here, kept from the template.
 
-## Bugfixes and enhancements
+## License
 
-If you have bugfixes and enhancements that you would like to submit as a pull request, you will need to [fork](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo) this repository as opposed to using it as a template. This will also allow you to [synchronize your copy](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/syncing-a-fork) of template to your fork as well.
-
-Unfortunately, one logistical issue with a template theme like Academic Pages that makes it a little tricky to get bug fixes and updates to the core theme. If you use this template and customize it, you will probably get merge conflicts if you attempt to synchronize. If you want to save your various .yml configuration files and markdown files, you can delete the repository and fork it again. Or you can manually patch.
+MIT — see `LICENSE`.
