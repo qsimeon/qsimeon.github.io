@@ -2,7 +2,7 @@
 title: "Octopus Protocol: One-Shot Hardware Discovery and Control for AI Agents via Infrastructure-as-Prompts"
 permalink: /publication/2026-05-09-octopus-protocol
 date: 2026-05-09
-venue: arXiv:2605.09055 (cs.RO)
+venue: NeurIPS 2026 Workshop on Agentic Web (accepted) · arXiv:2605.09055
 authors: Q. Simeon, J. M. Wei, Y. Fan
 paperurl: https://arxiv.org/abs/2605.09055
 links:
