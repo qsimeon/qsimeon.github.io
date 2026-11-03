@@ -30,9 +30,9 @@ experience:
     place: Menlo Park, CA
     dates: Jun – Sep 2025
     year: "2025"
-    short: Growing pretrained language models from 70M to 1.2B parameters.
+    short: Growing pretrained language models from 70M to 1.4B parameters.
     points:
-      - Designed a knowledge-preserving method to grow pretrained LLMs from 70M to 1.2B parameters, with distributed multi-GPU training, W&B tracking, and automated evaluation; projected 1.5–2× compute savings.
+      - Designed a knowledge-preserving method to grow pretrained LLMs from 70M to 1.4B parameters, with distributed multi-GPU training, W&B tracking, and automated evaluation; projected 1.5–2× compute savings.
       - Explored sparse training for efficient LLM inference, reaching ~2× speedup on CPU and wafer-scale hardware.
 
   - role: Graduate Researcher
