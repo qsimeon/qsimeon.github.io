@@ -9,7 +9,7 @@
     {%- if item.blurb %}<p class="card-blurb">{{ item.blurb }}</p>{% endif %}
     {%- if item.links %}
     <div class="card-links">
-      {%- for link in item.links %}<a class="chip" href="{{ link.url | relative_url }}">{{ link.label }} ↗</a>{% endfor %}
+      {%- for link in item.links %}<a class="chip" href="{{ link.url | relative_url }}">{{ link.label }}{% if link.url contains '://' %} ↗{% endif %}</a>{% endfor %}
     </div>
     {%- endif %}
   </div>

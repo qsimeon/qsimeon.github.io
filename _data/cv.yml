@@ -3,13 +3,13 @@
 
 experience:
   - role: Applied Scientist
-    org: Amazon FAI (formerly AGI)
+    org: Amazon FAI (formerly Amazon AGI)
     place: Boston, MA
     dates: May 2026 – Present
     year: "2026–"
     short: LLM evaluation, expert-data quality, and RL environments for frontier models.
     points:
-      - Build agent-based pipelines that automatically assess the quality of STEM expert data (math, physics, chemistry, biology, computer science), replacing much of the first-pass manual expert review.
+      - Build agent-based pipelines that automatically assess the quality of STEM expert data (math, physics, chemistry, biology, computer science), cutting the time experts spend on manual review.
       - Develop LLM-as-a-judge graders with critical and non-critical rubric checks, calibrated against expert labels (Cohen's κ, MCC), that catch defective expert data before it reaches training.
       - Build RL environments and evaluation harnesses (Harbor, Docker) spanning software engineering, STEM reasoning, and agentic tool use, graded by automated verifiers.
       - Write task rubrics and guidelines with STEM domain experts and deliver quality feedback to data vendors.
@@ -40,7 +40,7 @@ experience:
     place: Cambridge, MA
     dates: Sep 2021 – Dec 2025
     year: "2021–25"
-    short: Neural-network models of whole nervous systems, and the data to train them.
+    short: Neural-network models of the C. elegans nervous system, and the datasets to train them.
     points:
       - Published scaling laws for neural-network models of the C. elegans nervous system (IEEE SoutheastCon 2024), then released the training data, 11 public datasets (~900 animals) unified on Hugging Face.
       - Built end-to-end HPC pipelines for high-dimensional neural data, covering preprocessing, multimodal alignment, simulation, and forecasting.
@@ -98,7 +98,7 @@ honors:
     year: "2021"
 
 teaching:
-  - role: Teaching assistant, ORCD workshops on GPU computing, CUDA & distributed deep learning
+  - role: Teaching Assistant, ORCD workshops on GPU computing, CUDA & distributed deep learning
     where: MIT Office of Research Computing and Data
     dates: 2025 – 2026
   - role: Teaching Assistant, Emergent Computations Within Distributed Neural Circuits (9.53)
@@ -107,12 +107,12 @@ teaching:
   - role: Teaching Assistant, Principles of Neural Computation in Brains and Machines
     where: MIT Brain & Cognitive Sciences
     dates: "2023"
-  - role: Instructor, MIT Global Teaching Labs
-    where: Cardiff, Wales
-    dates: Jan 2020
   - role: Instructor, SPISE computer programming
     where: Caribbean Science Foundation
     dates: Summer 2020
+  - role: Instructor, MIT Global Teaching Labs
+    where: Cardiff, Wales
+    dates: Jan 2020
   - role: Instructor, MIT Global Teaching Labs
     where: Johannesburg, South Africa
     dates: Jan 2019

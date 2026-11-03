@@ -3,7 +3,7 @@ title: "Scaling Properties For ANN Models of C. elegans"
 collection: talks
 type: "Talk"
 permalink: /talks/2023-10-02-yang-tan-lunch
-venue: "MIT, McGovern Institute for Brain Research, Room 46-3189"
+venue: "Yang Tan Collective, MIT McGovern Institute"
 date: 2023-10-02
 location: "Cambridge, Massachusetts"
 ---

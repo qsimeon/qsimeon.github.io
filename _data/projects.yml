@@ -6,7 +6,7 @@ work:
   - title: Octopus Protocol
     year: 2026
     kind: Agents · Hardware
-    blurb: Plug in a device and a coding agent figures out what it is, then writes, tests, and serves an MCP server for it, in about 25 minutes. Accepted at the NeurIPS 2026 Agentic Web Workshop.
+    blurb: Plug in a device and a coding agent figures out what it is, then writes, tests, and serves an MCP server for it, in about 25 minutes. Accepted at the NeurIPS 2026 Workshop on Agentic Web.
     url: /octopus-coding-agent-is-software/
     links:
       - { label: Website, url: "https://octopusprotocol.ai" }
@@ -18,7 +18,7 @@ work:
   - title: GrowLab
     year: 2026
     kind: Scaling · Autonomous research
-    blurb: What if model size grew during training? A harness that makes the growth schedule searchable, plus an honest account of which claims broke.
+    blurb: What if model size grew during training? We built a harness that makes the growth schedule searchable, then tried to break our own result. Two of three claims didn't survive.
     url: /blog/growlab/
     links:
       - { label: Dashboard, url: /growlab/ }
@@ -56,7 +56,7 @@ work:
   - title: Claude Code tooling
     year: 2026
     kind: Developer tools
-    blurb: Skills and CLIs I use every day, including session-merge, which stitches fragmented Claude Code sessions back together.
+    blurb: Skills and CLIs for Claude Code, including session-merge, which stitches fragmented sessions back together.
     url: /session-merge/
     links:
       - { label: Code, url: "https://github.com/qsimeon/session-merge" }
@@ -83,7 +83,7 @@ work:
   - title: Fork Intelligence
     year: 2026
     kind: Agents · Security
-    blurb: Using Claude Code to benchmark every public fork in a hackathon, and why organizers should care.
+    blurb: At a hackathon where every entry was a public GitHub fork, I used Claude Code to benchmark all 45 modified solutions, then wrote it up as a vulnerability disclosure.
     url: /blog/fork-intelligence/
     visual: forks
 
@@ -101,10 +101,6 @@ press:
     year: 2024
     url: /portfolio/portfolio-1/
     visual: spotlight-1.png
-  - title: Bernstein Conference 2024 poster
-    year: 2024
-    url: /portfolio/portfolio-3/
-    visual: bernstein-poster.jpg
   - title: "Brain Scan: Interdisciplinary emergence"
     year: 2024
     url: /portfolio/portfolio-2/

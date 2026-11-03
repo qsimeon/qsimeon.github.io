@@ -1,17 +1,11 @@
 ---
 title: "Envisioning the Future of Computing Prize"
-excerpt: "Honorable Mention for visionary essay on ethical identity and future digital selves, awarded by MIT SERC."
+excerpt: "Honorable Mentions in 2025 and 2026 in MIT SERC's essay prize on the future of computing."
 collection: portfolio
 ---
 
-In 2025, I was awarded an **Honorable Mention** in the [Envisioning the Future of Computing Prize, MIT SERC](https://computing.mit.edu/cross-cutting/social-and-ethical-responsibilities-of-computing/envisioning-the-future-of-computing-prize/envisioning-the-future-of-computing-prize-2025-winners/). The competition, hosted by MIT's Schwarzman College of Computing, received 67 highly competitive entries across multiple departments.
+I received an Honorable Mention in MIT SERC's Envisioning the Future of Computing Prize in 2025 and again in 2026. The competition is hosted by MIT's Schwarzman College of Computing.
 
-My submission, entitled [*The Future of Computing Was Inside You All Along: Integrating Your Life’s Blueprint with Your Digital Fingerprint*](https://computing.mit.edu/wp-content/uploads/2025/05/The-Future-of-Computing-Was-Inside-You-All-Along.pdf), explores speculative but ethically grounded futures for digital identity, where behavioral and neural data could be securely and responsibly integrated to augment our personal computing systems.
+**2025.** [*The Future of Computing Was Inside You All Along: Integrating Your Life's Blueprint with Your Digital Fingerprint*](https://computing.mit.edu/wp-content/uploads/2025/05/The-Future-of-Computing-Was-Inside-You-All-Along.pdf) explores futures for digital identity in which behavioral and neural data could be securely and responsibly integrated into personal computing. That year's competition had 67 entries, and the Honorable Mention came with a $1,000 prize. [2025 winners](https://computing.mit.edu/cross-cutting/social-and-ethical-responsibilities-of-computing/envisioning-the-future-of-computing-prize/envisioning-the-future-of-computing-prize-2025-winners/)
 
-This recognition came with a $1,000 prize and publication on the MIT SERC website. The essay was praised for its blend of scientific realism and long-term imagination around responsible neurodata use.
-
----
-
-📎 [Read the full essay (PDF)](https://computing.mit.edu/wp-content/uploads/2025/05/The-Future-of-Computing-Was-Inside-You-All-Along.pdf)
-
-🌐 [View full list of winners](https://computing.mit.edu/cross-cutting/social-and-ethical-responsibilities-of-computing/envisioning-the-future-of-computing-prize/envisioning-the-future-of-computing-prize-2025-winners/)
+**2026.** [*MessAIah: AI-Led Spiritual Communities and the Future of Cultural Infrastructure*](https://computing.mit.edu/wp-content/uploads/2026/05/MessAIah.pdf) imagines an AI system serving as the spiritual leader of a large congregation, and argues it could do more good than harm if it is built with transparency rules, protection for confessional data, and interfaith oversight. [2026 winners](https://computing.mit.edu/cross-cutting/social-and-ethical-responsibilities-of-computing/envisioning-the-future-of-computing-prize/envisioning-the-future-of-computing-prize-2026-winners/)

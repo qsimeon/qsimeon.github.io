@@ -4,9 +4,9 @@
 title: Quilee Simeon
 tagline: Applied Scientist at Amazon FAI
 description: >-
-  Applied Scientist at Amazon FAI working on expert-data quality and evaluation for frontier LLMs.
-  Previously computational neuroscience at MIT and LLM efficiency at Numenta. Writing about agents,
-  evals, and the tools in between.
+  Applied Scientist at Amazon FAI (formerly Amazon AGI) working on evaluation and expert-data quality
+  for frontier language models. Previously computational neuroscience research at MIT and LLM
+  efficiency research at Numenta.
 url: https://qsimeon.github.io
 baseurl: ""
 repository: qsimeon/qsimeon.github.io

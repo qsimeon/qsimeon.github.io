@@ -8,4 +8,4 @@ location: Frankfurt, Germany
 ---
 
 Poster presenting the unified *C. elegans* datasets as a foundation for training whole-nervous-system models.
-More on the [poster page](/portfolio/portfolio-3/).
+[See the poster](/portfolio/portfolio-3/).

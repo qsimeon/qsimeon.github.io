@@ -12,5 +12,6 @@ citation: 'Simeon, Q., Venâncio, L., Skuhersky, M., Nayebi, A., Boyden, E. S., 
 ---
 
 We trained a range of neural-network architectures to predict whole-brain activity in *C. elegans* and measured how
-prediction quality scales with the amount of data, the number of parameters, and the choice of architecture. The
-results characterize when more data helps, when bigger models help, and where the curves flatten.
+prediction quality scales with the amount of data, the number of parameters, and the choice of architecture. Prediction
+error falls logarithmically as training data grows, consistently across datasets, while model size has a nonlinear
+effect.

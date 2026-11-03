@@ -2,7 +2,7 @@
 title: "The Time Is Ripe to Reverse Engineer an Entire Nervous System: Simulating Behavior from Neural Interactions"
 permalink: /publication/2023-08-01-reverse-engineer-nervous-system
 date: 2023-08-12
-venue: arXiv:2308.06578 (opinion paper)
+venue: arXiv:2308.06578 (position paper)
 authors: G. Haspel, …, Q. Simeon, … (37 authors)
 paperurl: https://arxiv.org/abs/2308.06578
 excerpt: A community roadmap for simulating C. elegans behavior from the interactions of all of its neurons.

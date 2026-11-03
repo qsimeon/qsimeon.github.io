@@ -3,7 +3,7 @@ title: "C. elegans as a Platform for Multimodal Neural Data"
 collection: talks
 type: "Talk"
 permalink: /talks/2025-05-12-neurolunch-multimodal
-venue: "MIT, Department of Brain & Cognitive Sciences, Room 46-3310"
+venue: "NeuroLunch, MIT Brain & Cognitive Sciences"
 date: 2025-05-12
 location: "Cambridge, Massachusetts"
 ---
