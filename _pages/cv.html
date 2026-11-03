@@ -22,7 +22,7 @@ redirect_from:
     {%- for x in cv.experience %}
     <li class="cv-item">
       <div class="cv-item-head">
-        <span><span class="cv-item-title">{{ x.role }}</span> <span class="cv-item-org">· {{ x.org }}{% if x.place %}, {{ x.place }}{% endif %}</span></span>
+        <span><span class="cv-item-title">{{ x.role }}</span> <span class="cv-item-org">· {{ x.org }}{% if x.place %}, <span class="nowrap">{{ x.place }}</span>{% endif %}</span></span>
         <span class="cv-item-date">{{ x.dates }}</span>
       </div>
       {%- if x.points %}
