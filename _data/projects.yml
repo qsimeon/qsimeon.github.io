@@ -1,0 +1,111 @@
+# Curated work shown on the home page (featured: true) and on /portfolio/.
+# visual: an image filename in /images/, or one of the built-in drawings in _includes/visual.html
+# span:   grid width on the home bento (wide | half | default third)
+
+work:
+  - title: Octopus Protocol
+    year: 2026
+    kind: Agents · Hardware
+    blurb: Plug in a device and a coding agent figures out what it is, then writes, tests, and serves an MCP server for it, in about 25 minutes.
+    url: /octopus-coding-agent-is-software/
+    links:
+      - { label: arXiv, url: "https://arxiv.org/abs/2605.09055" }
+      - { label: Code, url: "https://github.com/qsimeon/octopus-hw" }
+    visual: octopus-rig-full.jpeg
+    featured: true
+    span: wide
+
+  - title: GrowLab
+    year: 2026
+    kind: Scaling · Autonomous research
+    blurb: What if model size grew during training? A harness that makes the growth schedule searchable, plus an honest account of which claims broke.
+    url: /blog/growlab/
+    links:
+      - { label: Dashboard, url: /growlab/ }
+      - { label: Slides, url: /growlab/slides.html }
+    visual: growth
+    featured: true
+
+  - title: MindMeld
+    year: 2026
+    kind: BCI · 1st place
+    blurb: Our team of six took 1st place in the decoding track at BrainStorm 2026 with a 0.2 MB real-time decoder for 1,024-channel brain recordings.
+    url: /brainstorm-bci-hackathon/
+    visual: brainstorm-team.jpg
+    featured: true
+
+  - title: DriftPak
+    year: 2026
+    kind: Hardware · Hackathon
+    blurb: A backpack that sees, hears, speaks, and knows where it is, built by a team of six in 24 hours at HardMode 2026, MIT Media Lab.
+    url: /driftpak-hardmode-hackathon/
+    visual: driftpak-team.jpg
+    featured: true
+
+  - title: Scaling laws for a nervous system
+    year: 2024
+    kind: Neuro-AI · IEEE
+    blurb: How neural-network models of the 302-neuron C. elegans brain improve with data, parameters, and architecture.
+    url: /publication/2024-02-17-scaling-properties-ann-models
+    links:
+      - { label: Paper, url: "https://ieeexplore.ieee.org/document/10500049" }
+      - { label: Dataset, url: "https://huggingface.co/datasets/qsimeon/celegans_neural_data" }
+    visual: scaling
+    featured: true
+
+  - title: Claude Code tooling
+    year: 2026
+    kind: Developer tools
+    blurb: Skills and CLIs I use every day, including session-merge, which stitches fragmented Claude Code sessions back together.
+    url: /session-merge/
+    links:
+      - { label: Code, url: "https://github.com/qsimeon/session-merge" }
+    visual: terminal
+    featured: true
+    span: half
+
+  - title: Growing sparse LLMs
+    year: 2025
+    kind: Efficiency · Numenta
+    blurb: Growing a pretrained 70M-parameter model to 1.2B without throwing away what it already knew.
+    url: /portfolio/numenta-sparse-llms/
+    visual: numenta_sparse_llms.png
+    featured: true
+    span: half
+
+  - title: ChatMerge
+    year: 2026
+    kind: Full-stack · RAG
+    blurb: What if you could merge two AI conversations? A cross-provider app that does it with embeddings.
+    url: /blog/chat-merge-app/
+    visual: merge
+
+  - title: Fork Intelligence
+    year: 2026
+    kind: Agents · Security
+    blurb: Using Claude Code to benchmark every public fork in a hackathon, and why organizers should care.
+    url: /blog/fork-intelligence/
+    visual: forks
+
+
+press:
+  - title: "MIT Spectrum: Unlocking AI's mysteries using insights from brain research"
+    year: 2026
+    url: /portfolio/spectrum-feature/
+    visual: spectrum_feature.jpg
+  - title: Envisioning the Future of Computing Prize, Honorable Mention
+    year: 2025
+    url: /portfolio/portfolio-4/
+    visual: quote
+  - title: Graduate Research Spotlight, The Bridge (IEEE-HKN)
+    year: 2024
+    url: /portfolio/portfolio-1/
+    visual: spotlight-1.png
+  - title: Bernstein Conference 2024 poster
+    year: 2024
+    url: /portfolio/portfolio-3/
+    visual: bernstein-poster.jpg
+  - title: "Brain Scan: Interdisciplinary emergence"
+    year: 2024
+    url: /portfolio/portfolio-2/
+    visual: brainscan-1.png

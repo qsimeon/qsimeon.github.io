@@ -1,5 +1,5 @@
 ---
-title: "Using C. elegans as a Platform for Multimodal Neural Data"
+title: "C. elegans as a Platform for Multimodal Neural Data"
 collection: talks
 type: "Talk"
 permalink: /talks/2025-05-12-neurolunch-multimodal

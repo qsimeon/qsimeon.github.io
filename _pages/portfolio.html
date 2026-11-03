@@ -1,13 +1,29 @@
 ---
-layout: archive
-title: "Portfolio"
+title: Work
 permalink: /portfolio/
-author_profile: true
+section: work
+eyebrow: Work
+heading: Projects, papers, and <em>prototypes.</em>
+lede: Things I've built at work, in the lab, and at a lot of hackathons. Most link to a full write-up.
+wide: true
+prose: false
 ---
+<ul class="work-grid" role="list">
+  {%- for item in site.data.projects.work %}
+  <li data-reveal>{% include card.html item=item %}</li>
+  {%- endfor %}
+</ul>
 
-{% include base_path %}
-
-
-{% for post in site.portfolio %}
-{% include archive-single.html %}
-{% endfor %}
+<section class="section">
+  <div class="section-head" data-reveal>
+    <div>
+      <p class="eyebrow">Press &amp; recognition</p>
+      <h2 class="section-title">In other people's <em>words.</em></h2>
+    </div>
+  </div>
+  <ul class="press-grid" role="list">
+    {%- for item in site.data.projects.press %}
+    <li data-reveal>{% include card.html item=item %}</li>
+    {%- endfor %}
+  </ul>
+</section>

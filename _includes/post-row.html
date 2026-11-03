@@ -1,0 +1,9 @@
+{%- assign post = include.post -%}
+<a class="post-row" href="{{ post.url | relative_url }}">
+  <time class="post-date" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %-d, %Y" }}</time>
+  <div>
+    <h3 class="post-title">{{ post.title }}</h3>
+    <p class="post-excerpt">{{ post.excerpt | strip_html | normalize_whitespace | truncate: 240 }}</p>
+  </div>
+  <span class="post-arrow">{% include icon.html name="arrow-up-right" %}</span>
+</a>

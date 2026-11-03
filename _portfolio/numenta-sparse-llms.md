@@ -1,6 +1,6 @@
 ---
 title: "Growing Sparse Large Language Models"
-excerpt: "Knowledge-preserving model expansion from 70M to 1.2B parameters at Numenta.<br/><img src='/images/numenta_sparse_llms.png'>"
+excerpt: "Knowledge-preserving model expansion from 70M to 1.2B parameters at Numenta."
 collection: portfolio
 ---
 

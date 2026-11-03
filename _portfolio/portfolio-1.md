@@ -1,6 +1,6 @@
 ---
 title: "HKN Graduate Research Spotlight"
-excerpt: "Neural Computation in _C. elegans_<br/><img src='/images/spotlight-1.png'>"
+excerpt: "Neural Computation in _C. elegans_"
 collection: portfolio
 ---
 

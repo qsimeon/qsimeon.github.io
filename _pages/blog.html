@@ -1,0 +1,23 @@
+---
+title: Writing
+permalink: /blog/
+section: writing
+eyebrow: Writing
+heading: Notes from the <em>build log.</em>
+lede: Essays and technical write-ups on agents, evaluation, hardware hacks, and neuroscience, including what didn't work.
+wide: true
+prose: false
+redirect_from:
+  - /year-archive/
+  - /wordpress/blog-posts/
+---
+<p class="page-tools"><a class="btn btn-sm" href="{{ '/feed.xml' | relative_url }}">{% include icon.html name="rss" %} RSS feed</a></p>
+{%- assign years = site.posts | group_by_exp: "post", "post.date | date: '%Y'" %}
+{%- for year in years %}
+<h2 class="year-label">{{ year.name }}</h2>
+<ul class="post-list" role="list">
+  {%- for post in year.items %}
+  <li data-reveal>{% include post-row.html post=post %}</li>
+  {%- endfor %}
+</ul>
+{%- endfor %}

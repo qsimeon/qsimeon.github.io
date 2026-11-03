@@ -1,61 +1,60 @@
 # qsimeon.github.io
 
-Personal academic website of **Quilee Simeon** — research engineer working at the intersection of
-machine learning, neuroscience, and scientific computing.
+Personal site of **Quilee Simeon**: Applied Scientist at Amazon FAI, previously computational
+neuroscience at MIT. Live at <https://qsimeon.github.io/>.
 
-**Live site:** <https://qsimeon.github.io/>
-
-Jekyll site built on the [Academic Pages](https://github.com/academicpages/academicpages.github.io)
-template (itself derived from [Minimal Mistakes](https://mmistakes.github.io/minimal-mistakes/)),
-served by GitHub Pages from the `master` branch.
+Plain Jekyll, built by GitHub Pages from `master`. No theme gem, no Sass, no jQuery, no build step:
+hand-written layouts, two CSS files, and two small vanilla JS files.
 
 ## Running locally
 
-Requires Ruby (see `.ruby-version`, currently 3.2.4) and Bundler.
+Requires Ruby (see `.ruby-version`) and Bundler.
 
 ```bash
 bundle install
 bundle exec jekyll serve --livereload
 ```
 
-The site is then at <http://localhost:4000>. Always use `bundle exec` so the pinned
-`github-pages` gem — which mirrors what GitHub Pages actually runs — is the version building
-your preview. To check a build without serving: `bundle exec jekyll build`.
+The site is then at <http://localhost:4000>. Always use `bundle exec`, so the pinned `github-pages` gem
+(Jekyll 3.10, the same as production) builds the preview.
 
-`Gemfile.lock` is gitignored; if `bundle install` fails, delete it and retry.
+## How it fits together
 
-## Where content lives
+```
+_data/cv.yml        ─┬─▶ home "Path" timeline, /cv/, /teaching/
+_data/projects.yml  ─┼─▶ home bento (featured: true), /portfolio/ (work + press)
+_posts/             ─┼─▶ home "Writing", /blog/, _layouts/post.html
+_publications/      ─┼─▶ /publications/, /cv/, _layouts/entry.html
+_talks/, _portfolio/ ┘   (also rendered by entry.html)
+
+assets/css/tokens.css   design tokens: every color is a light-dark() pair
+assets/css/site.css     everything else, in layers: reset → base → layout → components → pages → prose
+assets/js/site.js       theme toggle, mobile nav, scroll reveal, card spotlight
+assets/js/connectome.js the animated neural graph behind the home hero (pages opt in via `scripts:`)
+```
 
 | Path | Contents |
 |------|----------|
-| `_posts/` | Blog posts (`YYYY-MM-DD-slug.md`) |
-| `_pages/` | Standalone pages — about (`/`), CV, publications, talks, teaching |
-| `_publications/`, `_talks/`, `_portfolio/`, `_teaching/` | Collection entries, one file each |
-| `_data/navigation.yml` | Top navigation menu |
-| `_config.yml` | Site-wide config: title, author, social links, collections |
-| `images/`, `files/` | Images and downloadable assets (PDFs, slides) |
-| `_sass/`, `assets/` | Styles, including the dark-mode overrides |
-| `_archive/` | Retired posts and standalone pages — not built (Jekyll skips `_`-prefixed dirs) |
+| `_pages/` | Home (`/`), about, blog index, work, publications, talks, teaching, CV, 404 |
+| `_layouts/` | `default` (shell), `page`, `post`, `entry` (collection items) |
+| `_includes/` | head, header, footer, `card`, `post-row`, `visual` (card artwork), `icon` (inline SVG) |
+| `letting-go.html`, `brainstorm_bci_blog.html`, `growlab/` | Standalone showcase pages. They load `tokens.css` so they share the palette and theme |
+| `files/` | Downloadables; `qsimeon_resume.pdf` is built from the LaTeX resume (public variant, no phone number) |
+| `_archive/` | Retired posts and pages. Not built, because Jekyll skips `_`-prefixed dirs |
 
 ## Conventions worth knowing
 
-- **Hero images take a bare filename.** `header.image: driftpak-team.jpg`, *not*
-  `/images/driftpak-team.jpg` — `_includes/page__hero.html` and `_includes/seo.html` prepend
-  `/images/` themselves, so a path produces the broken `/images//images/...`.
-- **Dark mode follows the OS.** The editorial theme lives inside a
-  `@media (prefers-color-scheme: dark)` block in `_sass/`. Sass `@extend` cannot cross a
-  `@media` boundary — use a combined selector instead, or the build fails.
-- **The `*-template.md` pages are upstream reference copies** and are marked `published: false`.
-  They declare the same permalinks as the real `about.md` / `cv.md`; publishing them makes the
-  live page depend on Jekyll's file write order.
-- **Long-form HTML posts** (`letting-go.html`, `brainstorm_bci_blog.html`) are hand-styled
-  standalone pages at the repo root, linked from their Markdown counterparts in `_posts/`.
-
-## Template tooling
-
-`markdown_generator/` and `talkmap.py` are Academic Pages utilities for generating publication
-and talk entries from TSV files. Unused here, kept from the template.
+- **Theme.** `tokens.css` sets `color-scheme: light dark`, and the inline script in `_includes/head.html` sets
+  `data-theme` before first paint, so there's no flash. `light-dark()` values are *unresolved* inside custom
+  properties: JS that needs a real color (e.g. canvas) must resolve it through a probe element (see `connectome.js`).
+- **No Sass.** GitHub Pages runs Ruby Sass 3.7, which can't compile `clamp()`/`min()` with mixed units. The CSS files
+  have no front matter and are served as-is.
+- **Active nav** comes from `section` (set per page or via `defaults` in `_config.yml`) matching `_data/navigation.yml`.
+- **Card artwork** (`visual:` in `projects.yml`) is an image path under `/images/`, or one of the inline drawings in
+  `_includes/visual.html` (`growth`, `scaling`, `terminal`, `merge`, `forks`, `quote`).
+- **Math.** Add `math: true` to a post's front matter to load MathJax on that page only.
+- **Plugins** must be on the GitHub Pages whitelist: feed, sitemap, seo-tag, redirect-from.
 
 ## License
 
-MIT — see `LICENSE`.
+MIT, see `LICENSE`.

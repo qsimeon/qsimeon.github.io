@@ -1,0 +1,30 @@
+---
+title: Publications
+permalink: /publications/
+section: about
+eyebrow: Research
+heading: <em>Publications</em>
+lede: Papers and preprints on agentic systems, neural data, and neural-network models of nervous systems.
+wide: true
+prose: false
+---
+<p class="page-tools">
+  <a class="btn btn-sm" href="{{ site.author.scholar }}">{% include icon.html name="scholar" %} Google Scholar</a>
+  <a class="btn btn-sm" href="{{ site.author.orcid }}">ORCID</a>
+</p>
+<ul class="entry-list" role="list">
+  {%- assign pubs = site.publications | sort: "date" | reverse %}
+  {%- for pub in pubs %}
+  <li data-reveal>
+    <span class="entry-year">{{ pub.date | date: "%Y" }}</span>
+    <div>
+      <h2 class="entry-title"><a href="{{ pub.url | relative_url }}">{{ pub.title }}</a></h2>
+      <p class="entry-meta">{{ pub.authors | replace: "Q. Simeon", "<span class='me'>Q. Simeon</span>" }}</p>
+      <p class="entry-meta">{{ pub.venue }}</p>
+      {%- if pub.paperurl %}
+      <div class="entry-links"><a class="chip" href="{{ pub.paperurl }}">Paper ↗</a>{% for link in pub.links %}<a class="chip" href="{{ link.url }}">{{ link.label }} ↗</a>{% endfor %}</div>
+      {%- endif %}
+    </div>
+  </li>
+  {%- endfor %}
+</ul>

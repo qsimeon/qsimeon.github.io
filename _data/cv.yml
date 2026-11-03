@@ -1,0 +1,140 @@
+# Single source of truth for the CV page, the home-page timeline, and /teaching/.
+# Keep in sync with the LaTeX resume (~/Documents/Career/Resume/src/resume.tex).
+
+experience:
+  - role: Applied Scientist
+    org: Amazon FAI (formerly AGI)
+    place: Boston, MA
+    dates: May 2026 – Present
+    year: "2026–"
+    short: LLM evaluation, expert-data quality, and RL environments for frontier models.
+    points:
+      - Build agent-based pipelines that automatically assess the quality of STEM expert data (math, physics, chemistry, biology, computer science), replacing much of the first-pass manual expert review.
+      - Develop LLM-as-a-judge graders with critical and non-critical rubric checks, calibrated against expert labels (Cohen's κ, MCC), that catch defective expert data before it reaches training.
+      - Build RL environments and evaluation harnesses (Harbor, Docker) spanning software engineering, STEM reasoning, and agentic tool use, graded by automated verifiers.
+      - Write task rubrics and guidelines with STEM domain experts and deliver quality feedback to data vendors.
+
+  - role: Research Computing Technical Staff (part-time)
+    org: MIT Office of Research Computing and Data
+    place: Cambridge, MA
+    dates: Nov 2025 – May 2026
+    year: "2025–26"
+    short: AI-agent tooling and HPC support for MIT's 3,000+ cluster users.
+    points:
+      - Supported MIT's 3,000+ cluster users on Slurm scheduling, Apptainer containers, and software environments; advised researchers on parallel computing and resource allocation.
+      - Built tooling for running LLM agents on MIT's supercomputers and wrote the reference recipe for deploying OpenClaw on HPC (Apptainer isolation, SSH tunneling, Lmod).
+      - TA'd 6 workshops on parallel programming, GPU computing (CUDA), and distributed deep learning.
+
+  - role: Machine Learning Intern
+    org: Numenta
+    place: Menlo Park, CA
+    dates: Jun – Sep 2025
+    year: "2025"
+    short: Growing pretrained language models from 70M to 1.2B parameters.
+    points:
+      - Designed a knowledge-preserving method to grow pretrained LLMs from 70M to 1.2B parameters, with distributed multi-GPU training, W&B tracking, and automated evaluation; projected 1.5–2× compute savings.
+      - Explored sparse training for efficient LLM inference, reaching ~2× speedup on CPU and wafer-scale hardware.
+
+  - role: Graduate Researcher
+    org: MIT Brain & Cognitive Sciences (Boyden Lab, McGovern Institute)
+    place: Cambridge, MA
+    dates: Sep 2021 – Dec 2025
+    year: "2021–25"
+    short: Neural-network models of whole nervous systems, and the data to train them.
+    points:
+      - Published scaling laws for neural-network models of the C. elegans nervous system (IEEE SoutheastCon 2024), then released the training data, 11 public datasets (~900 animals) unified on Hugging Face.
+      - Built end-to-end HPC pipelines for high-dimensional neural data, covering preprocessing, multimodal alignment, simulation, and forecasting.
+      - Rebuilt light-sheet and diSPIM microscopes for whole-brain imaging (Onshape CAD, optomechanics) and a 35-script analysis pipeline for 1 TB+ recordings.
+
+  - role: Bioinformatics & Software Development Intern
+    org: Triplet Therapeutics
+    place: Cambridge, MA
+    dates: 2019, 2021
+    year: "2019, 2021"
+    short: RNA-seq pipelines on AWS and models for oligonucleotide efficacy.
+    points:
+      - Automated RNA-sequence analysis on AWS EC2 across 10+ concurrent instances, cutting processing time 40%.
+      - Deployed neural networks predicting siRNA and ASO knockdown efficacy, improving candidate-selection accuracy by 15%.
+
+
+  - role: Quality Assurance Analyst
+    org: Saint Lucia Distillers
+    place: Castries, St. Lucia
+    dates: 2016 – 2017
+
+education:
+  - degree: M.S., Computational Neuroscience
+    school: Massachusetts Institute of Technology
+    year: "2025"
+    note: "Thesis: C. elegans as a Platform for Multimodal Neural Data Integration"
+  - degree: B.S., Computation & Cognition
+    school: Massachusetts Institute of Technology
+    year: "2021"
+    note: Minor in Statistics & Data Science · GPA 4.9/5.0
+
+honors:
+  - title: 1st Place, Neural Decoding Challenge, BrainStorm BCI Hackathon
+    by: Precision Neuroscience
+    year: "2026"
+  - title: "Featured in MIT Spectrum: “Unlocking AI’s Mysteries Using Insights from Brain Research”"
+    url: https://betterworld.mit.edu/spectrum/issues/spring-2026/unlocking-ais-mysteries-using-insights-from-brain-research/
+    year: "2026"
+  - title: K. Lisa Yang ICoN Graduate Fellowship
+    by: MIT
+    year: "2025–26"
+  - title: Honorable Mention, Envisioning the Future of Computing Prize
+    by: MIT SERC
+    url: https://computing.mit.edu/cross-cutting/social-and-ethical-responsibilities-of-computing/envisioning-the-future-of-computing-prize/envisioning-the-future-of-computing-prize-2025-winners/
+    year: "2025"
+  - title: Graduate Research Spotlight, The Bridge
+    by: IEEE-HKN
+    url: https://magazines.ieee.org/hkn/library/page/issue_2_2024/28/
+    year: "2024"
+  - title: Henry E. Singleton (1940) Fellowship
+    by: MIT
+    year: "2023–24"
+  - title: Rhodes Scholarship Finalist
+    by: Jamaica & Commonwealth Caribbean
+    year: "2021"
+
+teaching:
+  - role: Teaching assistant, ORCD workshops on GPU computing, CUDA & distributed deep learning
+    where: MIT Office of Research Computing and Data
+    dates: 2025 – 2026
+  - role: Teaching Assistant, Emergent Computations in Distributed Neural Circuits
+    where: MIT Brain & Cognitive Sciences
+    dates: Fall 2023
+  - role: Teaching Assistant, Principles of Neural Computation in Brains and Machines
+    where: MIT Brain & Cognitive Sciences
+    dates: Spring 2023
+  - role: Instructor, MIT Global Teaching Labs
+    where: Cardiff, Wales
+    dates: Jan 2020
+  - role: Instructor, SPISE computer programming
+    where: Caribbean Science Foundation
+    dates: Summer 2020
+  - role: Instructor, MIT Global Teaching Labs
+    where: Johannesburg, South Africa
+    dates: Jan 2019
+  - role: Lab Assistant, Introduction to Neural Computation
+    where: MIT Brain & Cognitive Sciences
+    dates: Spring 2019
+  - role: Tutor & Lab Assistant, Fundamentals of Programming
+    where: MIT EECS
+    dates: Fall 2018
+
+skills:
+  - area: Evaluation
+    items: LLM-as-judge, rubric design, inter-annotator agreement (κ, MCC), benchmark and task design, error analysis
+  - area: Agents & LLMs
+    items: Claude Code and coding agents, MCP, multi-agent workflows, Anthropic / OpenAI / Gemini / Bedrock APIs
+  - area: ML engineering
+    items: Python, PyTorch, Hugging Face, distributed multi-GPU training, Weights & Biases, scikit-learn
+  - area: Infrastructure
+    items: Docker, Harbor, AWS (Bedrock, S3, EC2, Lambda, Batch), Slurm/HPC, Apptainer, Linux, Git, CI
+
+community:
+  - Builder, Sundai Club weekly AI hackathons (2025 – Present)
+  - Co-President, IEEE-HKN Beta Theta Chapter at MIT (2020 – 2022)
+  - Secretary, Beta Chapter of Theta Chi at MIT (2017 – 2021)
+  - Social Chair, MIT Black Student Union (2018 – 2019)

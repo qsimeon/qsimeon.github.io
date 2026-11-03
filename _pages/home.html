@@ -1,0 +1,130 @@
+---
+layout: default
+permalink: /
+title: Quilee Simeon
+section: home
+scripts: [connectome]
+recognition:
+  - "<strong>1st place</strong> · BrainStorm BCI Hackathon 2026, decoding track"
+  - "Featured in <strong>MIT Spectrum</strong>"
+  - "<strong>K. Lisa Yang ICoN</strong> Graduate Fellowship, 2025–26"
+  - "Featured in IEEE-HKN <strong>The Bridge</strong>"
+  - "MIT SERC <strong>Envisioning the Future of Computing Prize</strong>, Honorable Mention"
+  - "<strong>Henry E. Singleton</strong> Fellowship, 2023–24"
+  - "<strong>Rhodes Scholarship</strong> Finalist"
+---
+{%- assign a = site.author -%}
+<section class="hero">
+  <canvas class="hero-canvas" data-connectome aria-hidden="true"></canvas>
+  <div class="container">
+    <div class="hero-inner">
+      <a class="now-pill" href="{{ '/about/' | relative_url }}" data-reveal>
+        <img class="avatar" src="{{ '/images/portrait-sm.jpg' | relative_url }}" alt="">
+        <span class="pulse" aria-hidden="true"></span>
+        <span><strong>Now</strong> · Applied Scientist at Amazon FAI</span>
+      </a>
+      <h1 class="hero-title" data-reveal>From brains to <em>benchmarks.</em></h1>
+      <p class="hero-lede" data-reveal>
+        I'm <strong>Quilee Simeon</strong>. I work on the expert data and evaluations that frontier language
+        models are trained and measured on. I trained as a computational neuroscientist at MIT, and these days
+        I build evals, agents, and the tools in between.
+      </p>
+      <div class="hero-actions" data-reveal>
+        <a class="btn btn-primary" href="{{ '/portfolio/' | relative_url }}">See the work {% include icon.html name="arrow" %}</a>
+        <a class="btn" href="{{ '/blog/' | relative_url }}">Read the writing</a>
+        <a class="btn btn-ghost" href="{{ '/cv/' | relative_url }}">CV</a>
+      </div>
+      <ul class="hero-meta" data-reveal>
+        <li>{% include icon.html name="pin" %} Boston, MA</li>
+        <li>{% include icon.html name="briefcase" %} Amazon FAI · previously MIT &amp; Numenta</li>
+        <li>{% include icon.html name="cap" %} MIT B.S. ’21, M.S. ’25</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="work">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <div>
+        <p class="eyebrow">Selected work</p>
+        <h2 class="section-title">Things I've <em>built</em> lately.</h2>
+      </div>
+      <a class="link-arrow" href="{{ '/portfolio/' | relative_url }}">All work {% include icon.html name="arrow" %}</a>
+    </div>
+    <ul class="bento" role="list">
+      {%- for item in site.data.projects.work %}{% if item.featured %}
+      <li class="{% if item.span %}span-{{ item.span }}{% endif %}" data-reveal>{% include card.html item=item %}</li>
+      {%- endif %}{% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="section" aria-label="Recognition">
+  <div class="marquee">
+    <ul class="marquee-track" role="list">
+      {%- for r in page.recognition %}<li>{{ r }}</li>{% endfor %}
+      {%- for r in page.recognition %}<li aria-hidden="true">{{ r }}</li>{% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="section" id="path">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <div>
+        <p class="eyebrow">Path</p>
+        <h2 class="section-title">From neurons to <em>language models.</em></h2>
+        <p class="section-lede">I spent years building models of real nervous systems. The questions turned out to be the same ones I now ask of LLMs: what does it know, how would you check, and what breaks at scale?</p>
+      </div>
+      <a class="link-arrow" href="{{ '/cv/' | relative_url }}">Full CV {% include icon.html name="arrow" %}</a>
+    </div>
+    <ol class="timeline" role="list">
+      {%- for x in site.data.cv.experience %}{% if x.short %}
+      <li data-reveal>
+        <span class="tl-year">{{ x.year }}</span>
+        <span class="tl-role">{{ x.role }}<span class="tl-org">{{ x.org }}</span></span>
+        <span class="tl-short">{{ x.short }}</span>
+      </li>
+      {%- endif %}{% endfor %}
+      <li data-reveal>
+        <span class="tl-year">2017–25</span>
+        <span class="tl-role">B.S. &amp; M.S.<span class="tl-org">Massachusetts Institute of Technology</span></span>
+        <span class="tl-short">Computation &amp; Cognition, then Computational Neuroscience. By way of St. Lucia.</span>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<section class="section" id="writing">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <div>
+        <p class="eyebrow">Writing</p>
+        <h2 class="section-title">Notes from the <em>build log.</em></h2>
+      </div>
+      <a class="link-arrow" href="{{ '/blog/' | relative_url }}">All posts {% include icon.html name="arrow" %}</a>
+    </div>
+    <ul class="post-list" role="list">
+      {%- for post in site.posts limit: 5 %}
+      <li data-reveal>{% include post-row.html post=post %}</li>
+      {%- endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="section" id="contact">
+  <div class="container">
+    <div class="contact" data-reveal>
+      <p class="eyebrow">Say hello</p>
+      <h2 class="contact-title">Always up for a good <em>conversation.</em></h2>
+      <p>About evals, agents, brains, or whatever you're building. Email is the fastest way to reach me.</p>
+      <div class="contact-actions">
+        <a class="btn btn-primary" href="mailto:{{ a.email }}">{% include icon.html name="mail" %} {{ a.email }}</a>
+        <a class="btn" href="https://github.com/{{ a.github }}">{% include icon.html name="github" %} GitHub</a>
+        <a class="btn" href="{{ a.linkedin }}">{% include icon.html name="linkedin" %} LinkedIn</a>
+        <a class="btn" href="{{ a.scholar }}">{% include icon.html name="scholar" %} Scholar</a>
+      </div>
+    </div>
+  </div>
+</section>

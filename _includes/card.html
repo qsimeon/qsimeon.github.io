@@ -1,0 +1,17 @@
+{%- assign item = include.item -%}
+<article class="card">
+  {%- if item.visual %}
+  <div class="card-visual">{% include visual.html visual=item.visual %}</div>
+  {%- endif %}
+  <div class="card-body">
+    <p class="card-kind"><span>{{ item.kind }}</span><span>{{ item.year }}</span></p>
+    <h3 class="card-title">{{ item.title }}</h3>
+    {%- if item.blurb %}<p class="card-blurb">{{ item.blurb }}</p>{% endif %}
+    {%- if item.links %}
+    <div class="card-links">
+      {%- for link in item.links %}<a class="chip" href="{{ link.url | relative_url }}">{{ link.label }} ↗</a>{% endfor %}
+    </div>
+    {%- endif %}
+  </div>
+  <a class="card-link" href="{{ item.url | relative_url }}"><span class="visually-hidden">{{ item.title }}</span></a>
+</article>

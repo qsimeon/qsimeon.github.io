@@ -3,6 +3,7 @@ title: "Towards the Platonic Representation via Multimodal Contrastive Alignment
 date: 2024-12-16
 permalink: /blog/multimodal-alignment/
 excerpt: 'MIT Deep Learning final project exploring whether pre-trained unimodal encoders can be aligned into a shared multimodal latent space using lightweight adapters.'
+math: true
 tags:
   - deep learning
   - multimodal learning

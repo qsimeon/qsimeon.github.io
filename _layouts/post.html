@@ -1,0 +1,32 @@
+---
+layout: default
+---
+{%- assign words = content | number_of_words -%}
+{%- assign minutes = words | divided_by: 230 | at_least: 1 -%}
+<div class="progress" aria-hidden="true"></div>
+<article>
+  <header class="post-head container container--prose">
+    <a class="back-link" href="{{ '/blog/' | relative_url }}">{% include icon.html name="arrow" %} Writing</a>
+    <h1 class="post-title-lg">{{ page.title }}</h1>
+    <div class="post-meta">
+      <span class="author"><img class="avatar" src="{{ '/images/portrait-sm.jpg' | relative_url }}" alt="">Quilee Simeon</span>
+      <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %-d, %Y" }}</time>
+      <span>{{ minutes }} min read</span>
+      {%- if page.tags.size > 0 %}
+      <ul class="chips" role="list">{% for tag in page.tags limit: 3 %}<li class="chip">{{ tag | downcase }}</li>{% endfor %}</ul>
+      {%- endif %}
+    </div>
+  </header>
+  <div class="container container--prose">
+    <div class="prose">{{ content }}</div>
+    <footer class="post-foot">
+      <a class="link-arrow" href="{{ '/feed.xml' | relative_url }}">{% include icon.html name="rss" %} Subscribe via RSS</a>
+      {%- if page.previous or page.next %}
+      <nav class="post-nav" aria-label="More writing">
+        {%- if page.previous %}<a class="prev" href="{{ page.previous.url | relative_url }}"><small>Older</small><span>{{ page.previous.title }}</span></a>{% endif %}
+        {%- if page.next %}<a class="next" href="{{ page.next.url | relative_url }}"><small>Newer</small><span>{{ page.next.title }}</span></a>{% endif %}
+      </nav>
+      {%- endif %}
+    </footer>
+  </div>
+</article>

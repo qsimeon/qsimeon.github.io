@@ -1,6 +1,6 @@
 ---
 title: "Towards the Platonic Representation via Multimodal Contrastive Alignment"
-excerpt: "MIT Deep Learning final project exploring multimodal representation learning through contrastive alignment of frozen encoders.<br/><img src='/images/deep_learning_project/conceptual_contrastive.jpg'>"
+excerpt: "MIT Deep Learning final project exploring multimodal representation learning through contrastive alignment of frozen encoders."
 collection: portfolio
 ---
 

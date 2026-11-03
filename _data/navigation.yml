@@ -1,16 +1,5 @@
-# main links links
 main:
-  - title: "Publications"
-    url: /publications/
-
-  - title: "Talks"
-    url: /talks/
-
-  - title: "Portfolio"
-    url: /portfolio/
-
-  - title: "Blog"
-    url: /year-archive/
-
-  - title: "CV"
-    url: /cv/
+  - { title: Work, url: /portfolio/, section: work }
+  - { title: Writing, url: /blog/, section: writing }
+  - { title: About, url: /about/, section: about }
+  - { title: CV, url: /cv/, section: cv }

@@ -1,0 +1,79 @@
+---
+title: About
+permalink: /about/
+section: about
+eyebrow: About
+heading: Hi, I'm <em>Quilee.</em>
+lede: Applied Scientist at Amazon FAI. Computational neuroscientist by training. Builder by habit.
+wide: true
+prose: false
+image: /images/portrait-about.jpg
+redirect_from:
+  - /about.html
+---
+{%- assign a = site.author -%}
+<div class="about-grid">
+  <div class="prose" data-reveal>
+    <p>
+      I'm an Applied Scientist at Amazon FAI (formerly AGI), where I work on the quality of the expert-sourced
+      data and evaluations that frontier language models are trained and measured on. Most days that means
+      building agent-based pipelines and LLM judges that audit STEM expert data, calibrating those judges against
+      human experts, and building RL environments for coding, STEM reasoning, and tool use. The common thread is
+      finding the places where a dataset, or a model, is quietly wrong.
+    </p>
+    <p>
+      I came to this through neuroscience. I grew up in St.&nbsp;Lucia, came to MIT for a B.S. in Computation and
+      Cognition, and stayed for graduate work in Ed Boyden's Synthetic Neurobiology Group, where I earned an M.S. in
+      Computational Neuroscience. There I built neural-network models of the <em>C.&nbsp;elegans</em> nervous system, measured
+      <a href="{{ '/publication/2024-02-17-scaling-properties-ann-models' | relative_url }}">how they scale</a> with data
+      and parameters, and assembled an <a href="https://huggingface.co/datasets/qsimeon/celegans_neural_data">open dataset</a>
+      that unifies neural activity and connectivity across roughly 900 worms. I also spent a lot of time rebuilding a
+      light-sheet microscope.
+    </p>
+    <p>
+      Two detours pulled me toward AI engineering. At <a href="{{ '/portfolio/numenta-sparse-llms/' | relative_url }}">Numenta</a>
+      I grew pretrained language models from 70 million to 1.2 billion parameters without throwing away what
+      they already knew. At MIT's Office of Research Computing and Data I built the tooling that lets researchers run AI
+      agents on the university's supercomputers. Somewhere in there I noticed I liked building the instruments more than
+      running the experiments.
+    </p>
+    <p>
+      Now I mostly build: an agent that <a href="{{ '/octopus-coding-agent-is-software/' | relative_url }}">writes its own
+      hardware drivers</a>, a harness that lets a research agent <a href="{{ '/blog/growlab/' | relative_url }}">search
+      training schedules</a>, and the Claude Code tooling I use every day. I <a href="{{ '/blog/' | relative_url }}">write
+      about it here</a>, including the parts that didn't work.
+    </p>
+    <p>
+      Outside of work I read a lot of fiction, hike when I can, and travel to understand how other people live.
+    </p>
+
+    <h2>Community</h2>
+    <ul>
+      {%- for c in site.data.cv.community %}<li>{{ c }}</li>{% endfor %}
+      <li>Mentor and advocate for open science and for underrepresented students in STEM</li>
+    </ul>
+
+    <h2>Research archive</h2>
+    <p>
+      The academic record lives on its own pages: <a href="{{ '/publications/' | relative_url }}">publications</a>,
+      <a href="{{ '/talks/' | relative_url }}">talks</a>, <a href="{{ '/teaching/' | relative_url }}">teaching</a>, and
+      the full <a href="{{ '/cv/' | relative_url }}">CV</a>.
+    </p>
+  </div>
+
+  <aside class="about-portrait" data-reveal>
+    <img src="{{ '/images/portrait-about.jpg' | relative_url }}" alt="Quilee Simeon on a yellow stairwell at MIT" width="1000" height="1250">
+    <ul class="facts" role="list">
+      <li><span>Now</span><span>Amazon FAI, Boston</span></li>
+      <li><span>Before</span><span>MIT ORCD · Numenta · MIT McGovern</span></li>
+      <li><span>Education</span><span>MIT B.S. ’21, M.S. ’25</span></li>
+      <li><span>From</span><span>St. Lucia</span></li>
+      <li><span>Email</span><span><a href="mailto:{{ a.email }}">{{ a.email }}</a></span></li>
+    </ul>
+    <div class="page-actions">
+      <a class="btn btn-sm" href="https://github.com/{{ a.github }}">{% include icon.html name="github" %} GitHub</a>
+      <a class="btn btn-sm" href="{{ a.linkedin }}">{% include icon.html name="linkedin" %} LinkedIn</a>
+      <a class="btn btn-sm" href="{{ a.scholar }}">{% include icon.html name="scholar" %} Scholar</a>
+    </div>
+  </aside>
+</div>

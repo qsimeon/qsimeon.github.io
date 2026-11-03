@@ -3,13 +3,30 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<script>
+  (function () {
+    var root = document.documentElement, saved = localStorage.getItem("theme");
+    root.dataset.theme = saved || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    root.classList.add("js");
+  })();
+</script>
+<meta name="theme-color" content="#f8f7f4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a0a0c" media="(prefers-color-scheme: dark)">
 <title>GrowLab — a model that grows while it learns</title>
+<link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+<link rel="stylesheet" href="/assets/css/tokens.css">
 <style>
+  /* Page palette mapped onto the site tokens (assets/css/tokens.css). Series colors keep the
+     blog-post figures' blue/orange; light halves are darkened to >=4.5:1 on the light page bg. */
   :root{
-    --page:#0d0d0d; --surface:#151514; --ink:#fff; --ink2:#c3c2b7; --muted:#8b8983;
-    --grid:#242422; --axis:#3a3a37; --border:rgba(255,255,255,.09);
-    --flat:#3987e5; --grown:#d95926; --good:#0ca30c;
-    --font:system-ui,-apple-system,"Segoe UI",Inter,sans-serif;
+    --page:var(--bg); --surface:var(--bg-raised); --ink:var(--fg); --ink2:var(--fg-2); --muted:var(--fg-3);
+    --grid:var(--line); --axis:var(--line-strong); --border:var(--line);
+    --flat:light-dark(#1f6bc7,#3987e5); --grown:light-dark(#b8461a,#d95926);
+    --good:light-dark(#0a7d0a,#0ca30c); --warning:light-dark(#8f6200,#fab219);
+    --font:var(--font-sans);
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
@@ -23,8 +40,8 @@
   h2{font-size:clamp(21px,2.6vw,36px);font-weight:600;letter-spacing:-.02em;line-height:1.18;
      margin-bottom:14px;max-width:34ch}
   h2.w{max-width:26ch}
-  .kicker{font-size:11.5px;text-transform:uppercase;letter-spacing:.17em;color:var(--muted);
-          margin-bottom:16px;font-weight:600}
+  .kicker{font-family:var(--font-mono);font-size:11.5px;text-transform:uppercase;letter-spacing:.17em;color:var(--muted);
+          margin-bottom:16px;font-weight:500}
   p{font-size:clamp(14px,1.28vw,19px);color:var(--ink2);line-height:1.6;max-width:52ch}
   .lead{font-size:clamp(16px,1.6vw,24px);color:var(--ink);line-height:1.45;max-width:36ch;font-weight:400}
   strong{color:var(--ink);font-weight:600}
@@ -42,16 +59,16 @@
   .sl{font-size:12.5px;font-weight:600}
   .stat{font-size:clamp(28px,3.3vw,46px);font-weight:600;letter-spacing:-.025em;
         font-variant-numeric:tabular-nums;line-height:1}
-  .stat-k{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:7px}
+  .stat-k{font-family:var(--font-mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:7px}
   .stat-m{font-size:12.5px;color:var(--ink2);margin-top:7px;line-height:1.45}
   .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,1.7vw,24px);margin-top:6px}
-  .card{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:20px}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
   .card h3{font-size:clamp(14px,1.3vw,19px);font-weight:600;margin:14px 0 7px;letter-spacing:-.01em}
   .card p{font-size:clamp(12.5px,1.05vw,15px);line-height:1.5;max-width:none}
   a.link{display:inline-flex;align-items:center;gap:9px;font-size:clamp(13px,1.1vw,16px);
          border:1px solid var(--border);border-radius:11px;padding:13px 18px;color:var(--ink);
          text-decoration:none;margin:8px 10px 0 0;transition:border-color .15s,background .15s}
-  a.link:hover{border-color:rgba(255,255,255,.3);background:#1c1c1a}
+  a.link:hover{border-color:var(--fg-3);background:var(--bg-hover)}
   a.link .t{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.08em;
             display:block;margin-bottom:3px}
   a.link .u{color:var(--ink)}
@@ -73,17 +90,39 @@
   section.on .rise:nth-of-type(2){animation-delay:.45s}
   section.on .rise:nth-of-type(3){animation-delay:.7s}
   @keyframes rise{to{opacity:1;transform:none}}
+  /* back-to-site pill + theme toggle; mirrors the site header's brand mark and toggle */
+  .qs-pill{position:fixed;top:16px;left:16px;z-index:100;display:flex;align-items:center;gap:2px;padding:4px;
+    border:1px solid var(--line-strong);border-radius:var(--radius-pill);
+    background:color-mix(in srgb,var(--bg-raised) 82%,transparent);
+    -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:var(--shadow-sm);
+    font:500 12px/1 var(--font-sans);letter-spacing:0}
+  .qs-pill a{display:inline-flex;align-items:center;gap:8px;padding:3px 11px 3px 3px;border-radius:var(--radius-pill);
+    color:var(--fg-2);text-decoration:none;transition:color var(--dur-fast),background-color var(--dur-fast)}
+  .qs-pill a:hover{color:var(--fg);background:var(--bg-hover);text-decoration:none}
+  .qs-mark{display:grid;place-items:center;width:22px;height:22px;border-radius:7px;
+    background:var(--accent);color:var(--accent-ink);font:italic 400 15px/1 var(--font-serif)}
+  .qs-pill button{display:grid;place-items:center;width:30px;height:30px;padding:0;border:0;border-radius:50%;
+    background:none;color:var(--fg-2);cursor:pointer;transition:color var(--dur-fast),background-color var(--dur-fast)}
+  .qs-pill button:hover{color:var(--fg);background:var(--bg-hover)}
+  .qs-pill :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .qs-pill svg{display:block;width:15px;height:15px}
+  .qs-pill .i-moon{display:none}
+  :root[data-theme="dark"] .qs-pill .i-sun{display:none}
+  :root[data-theme="dark"] .qs-pill .i-moon{display:block}
+  /* bottom-left, mirroring the slide counter; dimmed so it stays out of the deck's way */
+  .qs-pill{top:auto;bottom:14px;left:18px;opacity:.55;transition:opacity var(--dur-fast)}
+  .qs-pill:hover,.qs-pill:focus-within{opacity:1}
   /* Print / PDF export: lay every slide out as its own landscape page with
      all entrance animations resolved to their finished state. */
   @page{size:1440px 810px;margin:0}
   @media print{
-    html,body{height:auto;overflow:visible;background:#0d0d0d}
+    html,body{height:auto;overflow:visible;background:var(--page)}
     body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
     .deck{height:auto}
     section{position:relative;inset:auto;display:flex!important;opacity:1!important;
             width:1440px;height:810px;page-break-after:always;break-after:page}
     section:last-child{page-break-after:auto;break-after:auto}
-    .bar,.nav{display:none!important}
+    .bar,.nav,.qs-pill{display:none!important}
     .draw{stroke-dashoffset:0!important;animation:none!important}
     .fade,.rise{opacity:1!important;transform:none!important;animation:none!important}
   }
@@ -91,6 +130,28 @@
 </head>
 <body>
 <div class="bar" id="bar"></div>
+<nav class="qs-pill" aria-label="Site">
+  <a href="/blog/growlab/"><span class="qs-mark" aria-hidden="true">q</span>Back to post</a>
+  <button type="button" data-theme-toggle aria-label="Toggle dark mode">
+    <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+    <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+  </button>
+</nav>
+<script>
+  // Same contract as assets/js/site.js: data-theme on <html>, persisted in localStorage.theme.
+  (function () {
+    var root = document.documentElement;
+    document.querySelector("[data-theme-toggle]").addEventListener("click", function () {
+      var next = root.dataset.theme === "dark" ? "light" : "dark";
+      root.dataset.theme = next;
+      localStorage.setItem("theme", next);
+    });
+    matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function (e) {
+      if (!localStorage.getItem("theme")) root.dataset.theme = e.matches ? "dark" : "light";
+    });
+  })();
+</script>
+
 <div class="deck" id="deck">
 
 <!-- 1 · TITLE -->
@@ -105,12 +166,12 @@
     <figure>
       <svg viewBox="0 0 400 220">
         <defs><linearGradient id="t1" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#d95926" stop-opacity=".4"/>
-          <stop offset="1" stop-color="#d95926" stop-opacity=".04"/></linearGradient></defs>
+          <stop offset="0" stop-color="var(--grown)" stop-opacity=".4"/>
+          <stop offset="1" stop-color="var(--grown)" stop-opacity=".04"/></linearGradient></defs>
         <line class="ax" x1="34" y1="182" x2="384" y2="182"/>
         <path class="fade d1" d="M36,158 L106,158 L106,130 L176,130 L176,92 L246,92 L246,70 L316,70 L316,46 L382,46 L382,182 L36,182 Z" fill="url(#t1)"/>
         <path class="draw" d="M36,158 L106,158 L106,130 L176,130 L176,92 L246,92 L246,70 L316,70 L316,46 L382,46"
-              stroke="#d95926" stroke-width="3" fill="none" stroke-linejoin="round"/>
+              stroke="var(--grown)" stroke-width="3" fill="none" stroke-linejoin="round"/>
         <text class="lb" x="209" y="205" text-anchor="middle">training time</text>
         <text class="lb" x="18" y="110" transform="rotate(-90 18 110)" text-anchor="middle">model size</text>
       </svg>
@@ -131,23 +192,23 @@
       <svg viewBox="0 0 460 190">
         <text class="lb" x="14" y="20">HOW MODELS ARE BUILT TODAY</text>
         <g class="fade">
-          <rect x="14" y="34" width="200" height="52" rx="8" fill="#3987e5" fill-opacity=".12" stroke="#3987e5" stroke-opacity=".4"/>
-          <text x="34" y="58" fill="#fff" font-size="13" font-weight="600">Pick a size</text>
-          <text x="34" y="76" fill="#8b8983" font-size="11.5">from a scaling law</text>
+          <rect x="14" y="34" width="200" height="52" rx="8" fill="var(--flat)" fill-opacity=".12" stroke="var(--flat)" stroke-opacity=".4"/>
+          <text x="34" y="58" fill="var(--ink)" font-size="13" font-weight="600">Pick a size</text>
+          <text x="34" y="76" fill="var(--muted)" font-size="11.5">from a scaling law</text>
         </g>
-        <path class="fade d1" d="M222,60 L250,60" stroke="#8b8983" stroke-width="1.6" marker-end="url(#a1)"/>
+        <path class="fade d1" d="M222,60 L250,60" stroke="var(--muted)" stroke-width="1.6" marker-end="url(#a1)"/>
         <g class="fade d1">
-          <rect x="258" y="34" width="188" height="52" rx="8" fill="#151514" stroke="#3a3a37"/>
-          <text x="278" y="58" fill="#fff" font-size="13" font-weight="600">Train at that size</text>
-          <text x="278" y="76" fill="#8b8983" font-size="11.5">for every single step</text>
+          <rect x="258" y="34" width="188" height="52" rx="8" fill="var(--surface)" stroke="var(--axis)"/>
+          <text x="278" y="58" fill="var(--ink)" font-size="13" font-weight="600">Train at that size</text>
+          <text x="278" y="76" fill="var(--muted)" font-size="11.5">for every single step</text>
         </g>
         <text class="lb fade d2" x="14" y="126">WHAT WE ASK INSTEAD</text>
         <g class="fade d3">
-          <rect x="14" y="138" width="432" height="44" rx="8" fill="#d95926" fill-opacity=".12" stroke="#d95926" stroke-opacity=".45"/>
-          <text x="34" y="166" fill="#fff" font-size="14" font-weight="600">What if the size is allowed to change as it learns?</text>
+          <rect x="14" y="138" width="432" height="44" rx="8" fill="var(--grown)" fill-opacity=".12" stroke="var(--grown)" stroke-opacity=".45"/>
+          <text x="34" y="166" fill="var(--ink)" font-size="14" font-weight="600">What if the size is allowed to change as it learns?</text>
         </g>
         <defs><marker id="a1" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
-          <path d="M0,0 L7,3.5 L0,7 z" fill="#8b8983"/></marker></defs>
+          <path d="M0,0 L7,3.5 L0,7 z" fill="var(--muted)"/></marker></defs>
       </svg>
     </figure>
   </div>
@@ -161,13 +222,13 @@
     <figure>
       <svg viewBox="0 0 400 200">
         <defs><linearGradient id="gf" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#3987e5" stop-opacity=".38"/>
-          <stop offset="1" stop-color="#3987e5" stop-opacity=".05"/></linearGradient></defs>
+          <stop offset="0" stop-color="var(--flat)" stop-opacity=".38"/>
+          <stop offset="1" stop-color="var(--flat)" stop-opacity=".05"/></linearGradient></defs>
         <line class="ax" x1="46" y1="164" x2="386" y2="164"/>
         <line class="ax" x1="46" y1="22" x2="46" y2="164"/>
         <rect class="fade" x="47" y="48" width="338" height="116" fill="url(#gf)"/>
-        <path class="draw" d="M47,48 L385,48" stroke="#3987e5" stroke-width="2.5" fill="none"/>
-        <text class="sl" x="216" y="112" fill="#3987e5" text-anchor="middle">full cost, every step</text>
+        <path class="draw" d="M47,48 L385,48" stroke="var(--flat)" stroke-width="2.5" fill="none"/>
+        <text class="sl" x="216" y="112" fill="var(--flat)" text-anchor="middle">full cost, every step</text>
         <text class="lb" x="20" y="93" transform="rotate(-90 20 93)" text-anchor="middle">parameters</text>
         <text class="lb" x="216" y="188" text-anchor="middle">training time</text>
       </svg>
@@ -176,14 +237,14 @@
     <figure>
       <svg viewBox="0 0 400 200">
         <defs><linearGradient id="gg" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#d95926" stop-opacity=".38"/>
-          <stop offset="1" stop-color="#d95926" stop-opacity=".05"/></linearGradient></defs>
+          <stop offset="0" stop-color="var(--grown)" stop-opacity=".38"/>
+          <stop offset="1" stop-color="var(--grown)" stop-opacity=".05"/></linearGradient></defs>
         <line class="ax" x1="46" y1="164" x2="386" y2="164"/>
         <line class="ax" x1="46" y1="22" x2="46" y2="164"/>
         <path class="fade d1" d="M47,142 L114,142 L114,120 L182,120 L182,86 L250,86 L250,66 L318,66 L318,48 L385,48 L385,164 L47,164 Z" fill="url(#gg)"/>
         <path class="draw b" d="M47,142 L114,142 L114,120 L182,120 L182,86 L250,86 L250,66 L318,66 L318,48 L385,48"
-              stroke="#d95926" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
-        <text class="sl fade d3" x="72" y="40" fill="#d95926">less area, same finish</text>
+              stroke="var(--grown)" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
+        <text class="sl fade d3" x="72" y="40" fill="var(--grown)">less area, same finish</text>
         <text class="lb" x="20" y="93" transform="rotate(-90 20 93)" text-anchor="middle">parameters</text>
         <text class="lb" x="216" y="188" text-anchor="middle">training time</text>
       </svg>
@@ -200,53 +261,53 @@
   <div class="kicker">How we built it · the two platforms</div>
   <h2 class="w">One agent runs the research. The other puts it in front of you.</h2>
   <div class="split" style="margin-top:12px;grid-template-columns:1fr 1fr;gap:26px">
-    <figure style="border-color:rgba(217,89,38,.35)">
+    <figure style="border-color:color-mix(in srgb,var(--grown) 35%,transparent)">
       <svg viewBox="0 0 420 176">
-        <text x="6" y="16" fill="#d95926" font-size="12.5" font-weight="600">AUTOLAB — runs the science</text>
+        <text x="6" y="16" fill="var(--grown)" font-size="12.5" font-weight="600">AUTOLAB — runs the science</text>
         <g class="fade">
-          <rect x="6" y="32" width="184" height="74" rx="9" fill="#151514" stroke="#3a3a37"/>
-          <text x="24" y="58" fill="#fff" font-size="12.5" font-weight="600">Research agent</text>
-          <text x="24" y="78" fill="#8b8983" font-size="11">invents a growth plan,</text>
-          <text x="24" y="94" fill="#8b8983" font-size="11">reads the score, decides</text>
+          <rect x="6" y="32" width="184" height="74" rx="9" fill="var(--surface)" stroke="var(--axis)"/>
+          <text x="24" y="58" fill="var(--ink)" font-size="12.5" font-weight="600">Research agent</text>
+          <text x="24" y="78" fill="var(--muted)" font-size="11">invents a growth plan,</text>
+          <text x="24" y="94" fill="var(--muted)" font-size="11">reads the score, decides</text>
         </g>
         <g class="fade d1">
-          <rect x="232" y="32" width="184" height="74" rx="9" fill="#151514" stroke="#3a3a37"/>
-          <text x="250" y="58" fill="#fff" font-size="12.5" font-weight="600">Our machine</text>
-          <text x="250" y="78" fill="#8b8983" font-size="11">trains the models and</text>
-          <text x="250" y="94" fill="#8b8983" font-size="11">returns one number</text>
+          <rect x="232" y="32" width="184" height="74" rx="9" fill="var(--surface)" stroke="var(--axis)"/>
+          <text x="250" y="58" fill="var(--ink)" font-size="12.5" font-weight="600">Our machine</text>
+          <text x="250" y="78" fill="var(--muted)" font-size="11">trains the models and</text>
+          <text x="250" y="94" fill="var(--muted)" font-size="11">returns one number</text>
         </g>
-        <path class="fade d2" d="M194,58 L226,58" stroke="#d95926" stroke-width="1.8" marker-end="url(#ao)"/>
-        <path class="fade d2" d="M228,88 L196,88" stroke="#8b8983" stroke-width="1.8" marker-end="url(#ag2)"/>
-        <text class="fade d2" x="210" y="50" fill="#d95926" font-size="10" text-anchor="middle">plan</text>
-        <text class="fade d2" x="210" y="106" fill="#8b8983" font-size="10" text-anchor="middle">result</text>
-        <text class="fade d3" x="6" y="140" fill="#c3c2b7" font-size="12">It ran <tspan fill="#fff" font-weight="600">8 experiments on its own</tspan> while we built the site.</text>
-        <text class="fade d3" x="6" y="160" fill="#c3c2b7" font-size="12">No human chose what to try after the first one.</text>
+        <path class="fade d2" d="M194,58 L226,58" stroke="var(--grown)" stroke-width="1.8" marker-end="url(#ao)"/>
+        <path class="fade d2" d="M228,88 L196,88" stroke="var(--muted)" stroke-width="1.8" marker-end="url(#ag2)"/>
+        <text class="fade d2" x="210" y="50" fill="var(--grown)" font-size="10" text-anchor="middle">plan</text>
+        <text class="fade d2" x="210" y="106" fill="var(--muted)" font-size="10" text-anchor="middle">result</text>
+        <text class="fade d3" x="6" y="140" fill="var(--ink2)" font-size="12">It ran <tspan fill="var(--ink)" font-weight="600">8 experiments on its own</tspan> while we built the site.</text>
+        <text class="fade d3" x="6" y="160" fill="var(--ink2)" font-size="12">No human chose what to try after the first one.</text>
         <defs><marker id="ao" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
-          <path d="M0,0 L7,3.5 L0,7 z" fill="#d95926"/></marker>
+          <path d="M0,0 L7,3.5 L0,7 z" fill="var(--grown)"/></marker>
           <marker id="ag2" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
-          <path d="M0,0 L7,3.5 L0,7 z" fill="#8b8983"/></marker></defs>
+          <path d="M0,0 L7,3.5 L0,7 z" fill="var(--muted)"/></marker></defs>
       </svg>
     </figure>
-    <figure style="border-color:rgba(57,135,229,.35)">
+    <figure style="border-color:color-mix(in srgb,var(--flat) 35%,transparent)">
       <svg viewBox="0 0 420 176">
-        <text x="6" y="16" fill="#3987e5" font-size="12.5" font-weight="600">MARITIME — shows the world</text>
+        <text x="6" y="16" fill="var(--flat)" font-size="12.5" font-weight="600">MARITIME — shows the world</text>
         <g class="fade d1">
-          <rect x="6" y="32" width="184" height="74" rx="9" fill="#151514" stroke="#3a3a37"/>
-          <text x="24" y="58" fill="#fff" font-size="12.5" font-weight="600">Always-on machine</text>
-          <text x="24" y="78" fill="#8b8983" font-size="11">serves the live results</text>
-          <text x="24" y="94" fill="#8b8983" font-size="11">page, day and night</text>
+          <rect x="6" y="32" width="184" height="74" rx="9" fill="var(--surface)" stroke="var(--axis)"/>
+          <text x="24" y="58" fill="var(--ink)" font-size="12.5" font-weight="600">Always-on machine</text>
+          <text x="24" y="78" fill="var(--muted)" font-size="11">serves the live results</text>
+          <text x="24" y="94" fill="var(--muted)" font-size="11">page, day and night</text>
         </g>
         <g class="fade d2">
-          <rect x="232" y="32" width="184" height="74" rx="9" fill="#3987e5" fill-opacity=".1" stroke="#3987e5" stroke-opacity=".4"/>
-          <text x="250" y="58" fill="#fff" font-size="12.5" font-weight="600">Anyone, anywhere</text>
-          <text x="250" y="78" fill="#8b8983" font-size="11">watches the experiments</text>
-          <text x="250" y="94" fill="#8b8983" font-size="11">as they finish</text>
+          <rect x="232" y="32" width="184" height="74" rx="9" fill="var(--flat)" fill-opacity=".1" stroke="var(--flat)" stroke-opacity=".4"/>
+          <text x="250" y="58" fill="var(--ink)" font-size="12.5" font-weight="600">Anyone, anywhere</text>
+          <text x="250" y="78" fill="var(--muted)" font-size="11">watches the experiments</text>
+          <text x="250" y="94" fill="var(--muted)" font-size="11">as they finish</text>
         </g>
-        <path class="fade d3" d="M194,68 L226,68" stroke="#3987e5" stroke-width="1.8" marker-end="url(#ab)"/>
-        <text class="fade d3" x="6" y="140" fill="#c3c2b7" font-size="12">Our laptop can close. The results stay up.</text>
-        <text class="fade d3" x="6" y="160" fill="#c3c2b7" font-size="12">That is what makes this a demo and not a folder.</text>
+        <path class="fade d3" d="M194,68 L226,68" stroke="var(--flat)" stroke-width="1.8" marker-end="url(#ab)"/>
+        <text class="fade d3" x="6" y="140" fill="var(--ink2)" font-size="12">Our laptop can close. The results stay up.</text>
+        <text class="fade d3" x="6" y="160" fill="var(--ink2)" font-size="12">That is what makes this a demo and not a folder.</text>
         <defs><marker id="ab" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
-          <path d="M0,0 L7,3.5 L0,7 z" fill="#3987e5"/></marker></defs>
+          <path d="M0,0 L7,3.5 L0,7 z" fill="var(--flat)"/></marker></defs>
       </svg>
     </figure>
   </div>
@@ -259,23 +320,23 @@
     <figure>
       <svg viewBox="0 0 470 250">
         <g class="fade">
-          <rect x="6" y="10" width="212" height="60" rx="9" fill="#3987e5" fill-opacity=".1" stroke="#3987e5" stroke-opacity=".45"/>
-          <text x="24" y="36" fill="#3987e5" font-size="12.5" font-weight="600">BASELINE</text>
-          <text x="24" y="57" fill="#fff" font-size="12">full size from step 0</text>
+          <rect x="6" y="10" width="212" height="60" rx="9" fill="var(--flat)" fill-opacity=".1" stroke="var(--flat)" stroke-opacity=".45"/>
+          <text x="24" y="36" fill="var(--flat)" font-size="12.5" font-weight="600">BASELINE</text>
+          <text x="24" y="57" fill="var(--ink)" font-size="12">full size from step 0</text>
         </g>
         <g class="fade d1">
-          <rect x="252" y="10" width="212" height="60" rx="9" fill="#d95926" fill-opacity=".1" stroke="#d95926" stroke-opacity=".45"/>
-          <text x="270" y="36" fill="#d95926" font-size="12.5" font-weight="600">OURS</text>
-          <text x="270" y="57" fill="#fff" font-size="12">grows 1.2M → 5.9M</text>
+          <rect x="252" y="10" width="212" height="60" rx="9" fill="var(--grown)" fill-opacity=".1" stroke="var(--grown)" stroke-opacity=".45"/>
+          <text x="270" y="36" fill="var(--grown)" font-size="12.5" font-weight="600">OURS</text>
+          <text x="270" y="57" fill="var(--ink)" font-size="12">grows 1.2M → 5.9M</text>
         </g>
         <text class="lb fade d2" x="6" y="102">HELD IDENTICAL FOR BOTH</text>
-        <g class="fade d2" font-size="12" fill="#c3c2b7">
+        <g class="fade d2" font-size="12" fill="var(--ink2)">
           <text x="20" y="128">◆  the same compute budget, counted in operations</text>
           <text x="20" y="152">◆  the same data, in the same order — WikiText-103</text>
           <text x="20" y="176">◆  the same final architecture at the finish line</text>
           <text x="20" y="200">◆  3 models trained per side, to separate signal from luck</text>
         </g>
-        <text class="fade d3" x="6" y="234" fill="#8b8983" font-size="11.5">Measured by validation loss — how surprised the model is by text it has never seen.</text>
+        <text class="fade d3" x="6" y="234" fill="var(--muted)" font-size="11.5">Measured by validation loss — how surprised the model is by text it has never seen.</text>
       </svg>
     </figure>
     <div>
@@ -324,18 +385,18 @@
       <svg viewBox="0 0 460 214">
         <text class="lb" x="6" y="14">FIRST NUMBER WE GOT</text>
         <g class="fade">
-          <rect x="6" y="24" width="448" height="40" rx="8" fill="#0ca30c" fill-opacity=".1" stroke="#0ca30c" stroke-opacity=".35"/>
-          <text x="24" y="49" fill="#fff" font-size="13">0.91 nats better &nbsp;·&nbsp; “102× more stable”</text>
+          <rect x="6" y="24" width="448" height="40" rx="8" fill="var(--good)" fill-opacity=".1" stroke="var(--good)" stroke-opacity=".35"/>
+          <text x="24" y="49" fill="var(--ink)" font-size="13">0.91 nats better &nbsp;·&nbsp; “102× more stable”</text>
         </g>
         <text class="lb fade d1" x="6" y="92">WHAT SURVIVED THE AUDIT</text>
         <g class="fade d2">
-          <rect x="6" y="102" width="448" height="40" rx="8" fill="#d95926" fill-opacity=".12" stroke="#d95926" stroke-opacity=".45"/>
-          <text x="24" y="127" fill="#fff" font-size="13">0.40 nats better, still no overlap</text>
+          <rect x="6" y="102" width="448" height="40" rx="8" fill="var(--grown)" fill-opacity=".12" stroke="var(--grown)" stroke-opacity=".45"/>
+          <text x="24" y="127" fill="var(--ink)" font-size="13">0.40 nats better, still no overlap</text>
         </g>
         <g class="fade d3">
-          <rect x="6" y="152" width="448" height="54" rx="8" fill="#fab219" fill-opacity=".09" stroke="#fab219" stroke-opacity=".4"/>
-          <text x="24" y="174" fill="#fab219" font-size="12" font-weight="600">…and one claim died outright</text>
-          <text x="24" y="194" fill="#c3c2b7" font-size="11.5">an unconstrained 1.2M flat model scores 3.905 — better than either</text>
+          <rect x="6" y="152" width="448" height="54" rx="8" fill="var(--warning)" fill-opacity=".09" stroke="var(--warning)" stroke-opacity=".4"/>
+          <text x="24" y="174" fill="var(--warning)" font-size="12" font-weight="600">…and one claim died outright</text>
+          <text x="24" y="194" fill="var(--ink2)" font-size="11.5">an unconstrained 1.2M flat model scores 3.905 — better than either</text>
         </g>
       </svg>
       <figcaption>We ran the checks we had only named, and reported what came back.</figcaption>
@@ -380,10 +441,10 @@
   <div class="cards">
     <div class="card rise">
       <svg viewBox="0 0 200 76">
-        <path d="M8,62 C40,62 46,30 74,30 C102,30 108,62 140,62" stroke="#8b8983" stroke-width="2" fill="none"/>
-        <line x1="74" y1="12" x2="74" y2="68" stroke="#d95926" stroke-width="2" stroke-dasharray="4 4"/>
-        <circle cx="74" cy="30" r="5" fill="#d95926"/>
-        <text x="86" y="22" fill="#d95926" font-size="11" font-weight="600">grow here</text>
+        <path d="M8,62 C40,62 46,30 74,30 C102,30 108,62 140,62" stroke="var(--muted)" stroke-width="2" fill="none"/>
+        <line x1="74" y1="12" x2="74" y2="68" stroke="var(--grown)" stroke-width="2" stroke-dasharray="4 4"/>
+        <circle cx="74" cy="30" r="5" fill="var(--grown)"/>
+        <text x="86" y="22" fill="var(--grown)" font-size="11" font-weight="600">grow here</text>
       </svg>
       <h3>Let the model choose the moment</h3>
       <p>Growth runs on a fixed timetable today. It should fire when progress stalls — the sign that the
@@ -391,12 +452,12 @@
     </div>
     <div class="card rise">
       <svg viewBox="0 0 200 76">
-        <rect x="14" y="30" width="52" height="34" rx="4" fill="none" stroke="#8b8983" stroke-width="2"/>
-        <rect x="82" y="30" width="34" height="34" rx="4" fill="none" stroke="#d95926" stroke-width="2"/>
-        <rect x="82" y="12" width="34" height="14" rx="4" fill="none" stroke="#d95926" stroke-width="2"/>
-        <text x="26" y="22" fill="#8b8983" font-size="11">wider</text>
-        <text x="130" y="22" fill="#d95926" font-size="11">deeper</text>
-        <text x="130" y="52" fill="#8b8983" font-size="11">?</text>
+        <rect x="14" y="30" width="52" height="34" rx="4" fill="none" stroke="var(--muted)" stroke-width="2"/>
+        <rect x="82" y="30" width="34" height="34" rx="4" fill="none" stroke="var(--grown)" stroke-width="2"/>
+        <rect x="82" y="12" width="34" height="14" rx="4" fill="none" stroke="var(--grown)" stroke-width="2"/>
+        <text x="26" y="22" fill="var(--muted)" font-size="11">wider</text>
+        <text x="130" y="22" fill="var(--grown)" font-size="11">deeper</text>
+        <text x="130" y="52" fill="var(--muted)" font-size="11">?</text>
       </svg>
       <h3>Let it pick wider or deeper</h3>
       <p>The agent showed alternating beats widening first. A model could try both and keep whichever
@@ -404,11 +465,11 @@
     </div>
     <div class="card rise">
       <svg viewBox="0 0 200 76">
-        <circle cx="30" cy="52" r="9" fill="#8b8983" opacity=".5"/>
-        <circle cx="74" cy="46" r="15" fill="#d95926" opacity=".6"/>
-        <circle cx="140" cy="38" r="26" fill="#d95926" opacity=".85"/>
-        <text x="14" y="74" fill="#8b8983" font-size="10">today</text>
-        <text x="120" y="74" fill="#d95926" font-size="10">useful scale</text>
+        <circle cx="30" cy="52" r="9" fill="var(--muted)" opacity=".5"/>
+        <circle cx="74" cy="46" r="15" fill="var(--grown)" opacity=".6"/>
+        <circle cx="140" cy="38" r="26" fill="var(--grown)" opacity=".85"/>
+        <text x="14" y="74" fill="var(--muted)" font-size="10">today</text>
+        <text x="120" y="74" fill="var(--grown)" font-size="10">useful scale</text>
       </svg>
       <h3>Prove it at a real scale</h3>
       <p>These are small models trained briefly. If growth still wins on a model people would actually
@@ -459,13 +520,13 @@ function lossChart(){
   s+=`<text class="lb" x="${(M.l+W-M.r)/2}" y="${H-8}" text-anchor="middle">compute spent</text>`;
   s+=`<text class="lb" x="14" y="${(M.t+H-M.b)/2}" transform="rotate(-90 14 ${(M.t+H-M.b)/2})" text-anchor="middle">validation loss</text>`;
   const path=d=>d.map((p,i)=>`${i?'L':'M'}${X(p[0])},${Y(p[1])}`).join(' ');
-  s+=`<path class="draw" d="${path(FLAT)}" stroke="#3987e5" stroke-width="2.5" fill="none"/>`;
-  s+=`<path class="draw b" d="${path(GROWN)}" stroke="#d95926" stroke-width="2.5" fill="none"/>`;
+  s+=`<path class="draw" d="${path(FLAT)}" stroke="var(--flat)" stroke-width="2.5" fill="none"/>`;
+  s+=`<path class="draw b" d="${path(GROWN)}" stroke="var(--grown)" stroke-width="2.5" fill="none"/>`;
   const lf=FLAT[FLAT.length-1], lg=GROWN[GROWN.length-1];
-  s+=`<circle class="fade d2" cx="${X(lf[0])}" cy="${Y(lf[1])}" r="4.5" fill="#3987e5"/>`
-    +`<text class="fade d2 sl" x="${X(lf[0])+10}" y="${Y(lf[1])+4}" fill="#3987e5">baseline</text>`;
-  s+=`<circle class="fade d3" cx="${X(lg[0])}" cy="${Y(lg[1])}" r="4.5" fill="#d95926"/>`
-    +`<text class="fade d3 sl" x="${X(lg[0])+10}" y="${Y(lg[1])+4}" fill="#d95926">growing</text>`;
+  s+=`<circle class="fade d2" cx="${X(lf[0])}" cy="${Y(lf[1])}" r="4.5" fill="var(--flat)"/>`
+    +`<text class="fade d2 sl" x="${X(lf[0])+10}" y="${Y(lf[1])+4}" fill="var(--flat)">baseline</text>`;
+  s+=`<circle class="fade d3" cx="${X(lg[0])}" cy="${Y(lg[1])}" r="4.5" fill="var(--grown)"/>`
+    +`<text class="fade d3 sl" x="${X(lg[0])+10}" y="${Y(lg[1])+4}" fill="var(--grown)">growing</text>`;
   document.getElementById('losschart').innerHTML=s;
 }
 function searchChart(){
@@ -479,13 +540,13 @@ function searchChart(){
   s+=`<text class="lb" x="${(M.l+W-M.r)/2}" y="${H-12}" text-anchor="middle">experiments, in the order the agent ran them</text>`;
   s+=`<text class="lb" x="16" y="${(M.t+H-M.b)/2}" transform="rotate(-90 16 ${(M.t+H-M.b)/2})" text-anchor="middle">validation loss</text>`;
   let best=Infinity; const bl=SEARCH.map(v=>(best=Math.min(best,v)));
-  s+=`<path class="draw" d="${bl.map((v,i)=>`${i?'L':'M'}${X(i)},${Y(v)}`).join(' ')}" stroke="#0ca30c" stroke-width="2" fill="none"/>`;
+  s+=`<path class="draw" d="${bl.map((v,i)=>`${i?'L':'M'}${X(i)},${Y(v)}`).join(' ')}" stroke="var(--good)" stroke-width="2" fill="none"/>`;
   const mn=Math.min(...SEARCH);
   SEARCH.forEach((v,i)=>{
     const isBest=v===mn;
-    s+=`<circle class="fade d1" cx="${X(i)}" cy="${Y(v)}" r="${isBest?6.5:4.5}" fill="${isBest?'#0ca30c':'#8b8983'}"/>`;
-    if(i===0) s+=`<text class="fade d2 sl" x="${X(i)+4}" y="${Y(v)-13}" fill="#c3c2b7">our plan</text>`;
-    if(isBest) s+=`<text class="fade d3 sl" x="${X(i)}" y="${Y(v)+24}" text-anchor="middle" fill="#0ca30c">agent beat it</text>`;
+    s+=`<circle class="fade d1" cx="${X(i)}" cy="${Y(v)}" r="${isBest?6.5:4.5}" fill="${isBest?'var(--good)':'var(--muted)'}"/>`;
+    if(i===0) s+=`<text class="fade d2 sl" x="${X(i)+4}" y="${Y(v)-13}" fill="var(--ink2)">our plan</text>`;
+    if(isBest) s+=`<text class="fade d3 sl" x="${X(i)}" y="${Y(v)+24}" text-anchor="middle" fill="var(--good)">agent beat it</text>`;
   });
   document.getElementById('searchchart').innerHTML=s;
 }

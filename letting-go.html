@@ -3,26 +3,39 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+  (function () {
+    var root = document.documentElement, saved = localStorage.getItem("theme");
+    root.dataset.theme = saved || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    root.classList.add("js");
+  })();
+</script>
+<meta name="theme-color" content="#f8f7f4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a0a0c" media="(prefers-color-scheme: dark)">
 <title>Letting Go of What You Know</title>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+<link rel="stylesheet" href="/assets/css/tokens.css">
 <style>
+  /* Page palette mapped onto the site tokens (assets/css/tokens.css). */
   :root {
-    --bg: #f5f0e8;
-    --text: #2a2520;
-    --accent: #8b4513;
-    --muted: #7a7168;
-    --rule: #c4b9a8;
-    --drop: #5c3a1e;
+    --text: var(--fg);
+    --muted: var(--fg-3);
+    --rule: var(--line-strong);
+    --drop: var(--accent);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
+  /* Instrument Serif is condensed, so the body runs a size larger to stay comfortable to read. */
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: 'Newsreader', Georgia, serif;
-    font-size: 19px;
-    line-height: 1.75;
+    font-family: var(--font-serif);
+    font-size: 21px;
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
   }
 
@@ -33,7 +46,7 @@
   }
 
   .epigraph {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 11px;
     font-weight: 300;
     letter-spacing: 0.12em;
@@ -45,19 +58,19 @@
   }
 
   h1 {
-    font-family: 'Newsreader', Georgia, serif;
-    font-weight: 300;
-    font-size: clamp(36px, 7vw, 52px);
-    line-height: 1.15;
-    letter-spacing: -0.02em;
-    color: var(--drop);
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: clamp(40px, 7.5vw, 58px);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--fg);
     margin-bottom: 12px;
     opacity: 0;
     animation: fadeUp 1s ease 0.4s forwards;
   }
 
   .byline {
-    font-size: 14px;
+    font-size: 17px;
     font-weight: 400;
     color: var(--muted);
     margin-bottom: 48px;
@@ -73,7 +86,7 @@
     padding-right: 10px;
     padding-top: 6px;
     color: var(--drop);
-    font-weight: 500;
+    font-weight: 400;
   }
 
   p {
@@ -100,7 +113,7 @@
 
   .section-break {
     text-align: center;
-    color: var(--rule);
+    color: var(--fg-3);
     font-size: 24px;
     letter-spacing: 0.5em;
     margin: 48px 0;
@@ -120,7 +133,7 @@
     border-top: 1px solid var(--rule);
     margin-top: 56px;
     padding-top: 32px;
-    font-family: 'JetBrains Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 11px;
     font-weight: 300;
     letter-spacing: 0.08em;
@@ -130,6 +143,28 @@
     animation: fadeUp 0.8s ease 2.6s forwards;
   }
 
+  /* back-to-site pill + theme toggle; mirrors the site header's brand mark and toggle */
+  .qs-pill{position:fixed;top:16px;left:16px;z-index:100;display:flex;align-items:center;gap:2px;padding:4px;
+    border:1px solid var(--line-strong);border-radius:var(--radius-pill);
+    background:color-mix(in srgb,var(--bg-raised) 82%,transparent);
+    -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:var(--shadow-sm);
+    font:500 12px/1 var(--font-sans);letter-spacing:0}
+  .qs-pill a{display:inline-flex;align-items:center;gap:8px;padding:3px 11px 3px 3px;border-radius:var(--radius-pill);
+    color:var(--fg-2);text-decoration:none;transition:color var(--dur-fast),background-color var(--dur-fast)}
+  .qs-pill a:hover{color:var(--fg);background:var(--bg-hover);text-decoration:none}
+  .qs-mark{display:grid;place-items:center;width:22px;height:22px;border-radius:7px;
+    background:var(--accent);color:var(--accent-ink);font:italic 400 15px/1 var(--font-serif)}
+  .qs-pill button{display:grid;place-items:center;width:30px;height:30px;padding:0;border:0;border-radius:50%;
+    background:none;color:var(--fg-2);cursor:pointer;transition:color var(--dur-fast),background-color var(--dur-fast)}
+  .qs-pill button:hover{color:var(--fg);background:var(--bg-hover)}
+  .qs-pill :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .qs-pill svg{display:block;width:15px;height:15px}
+  .qs-pill .i-moon{display:none}
+  :root[data-theme="dark"] .qs-pill .i-sun{display:none}
+  :root[data-theme="dark"] .qs-pill .i-moon{display:block}
+  /* fixed only where the margin beside the 640px column can hold it; otherwise it scrolls away */
+  @media (max-width: 62rem) { .qs-pill { position: absolute; } }
+
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(14px); }
     to { opacity: 1; transform: translateY(0); }
@@ -137,6 +172,28 @@
 </style>
 </head>
 <body>
+<nav class="qs-pill" aria-label="Site">
+  <a href="/blog/letting-go/"><span class="qs-mark" aria-hidden="true">q</span>Back to post</a>
+  <button type="button" data-theme-toggle aria-label="Toggle dark mode">
+    <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+    <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+  </button>
+</nav>
+<script>
+  // Same contract as assets/js/site.js: data-theme on <html>, persisted in localStorage.theme.
+  (function () {
+    var root = document.documentElement;
+    document.querySelector("[data-theme-toggle]").addEventListener("click", function () {
+      var next = root.dataset.theme === "dark" ? "light" : "dark";
+      root.dataset.theme = next;
+      localStorage.setItem("theme", next);
+    });
+    matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function (e) {
+      if (!localStorage.getItem("theme")) root.dataset.theme = e.matches ? "dark" : "light";
+    });
+  })();
+</script>
+
 <div class="page">
 
   <div class="epigraph">Essay / April 2026</div>

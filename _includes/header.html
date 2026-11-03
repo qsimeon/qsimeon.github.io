@@ -1,0 +1,22 @@
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="{{ '/' | relative_url }}" aria-label="Quilee Simeon, home">
+      <span class="brand-mark" aria-hidden="true">q</span><span>Quilee Simeon</span>
+    </a>
+    <nav id="site-nav" class="site-nav" aria-label="Primary">
+      <ul>
+        {%- for item in site.data.navigation.main %}
+        <li><a href="{{ item.url | relative_url }}"{% if page.section == item.section %} aria-current="page"{% endif %}>{{ item.title }}</a></li>
+        {%- endfor %}
+      </ul>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Toggle dark mode">
+        {% include icon.html name="sun" class="icon-sun" %}{% include icon.html name="moon" class="icon-moon" %}
+      </button>
+      <button class="icon-btn menu-btn" type="button" data-menu-toggle aria-controls="site-nav" aria-expanded="false" aria-label="Open menu">
+        {% include icon.html name="menu" %}
+      </button>
+    </div>
+  </div>
+</header>

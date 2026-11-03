@@ -1,5 +1,5 @@
 ---
-title: "Fork Intelligence: How I Exploited a Public-Fork Hackathon (and Why You Should Know About It)"
+title: "Fork Intelligence: Red-Teaming the Public-Fork Hackathon Format"
 date: 2026-03-05
 permalink: /blog/fork-intelligence/
 tags: [AI, hackathon, claude-code, security, red-team, agents]

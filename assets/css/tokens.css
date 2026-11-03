@@ -1,0 +1,84 @@
+/* Design tokens — the one place colors, type, and motion are defined.
+   Loaded by the Jekyll site AND by the standalone pages (letting-go.html, brainstorm_bci_blog.html,
+   growlab/), so everything reads as one system. Plain CSS on purpose: GitHub Pages' Ruby Sass 3.7
+   cannot compile clamp()/min() with mixed units.
+
+   Theming: every color is a light-dark() pair. color-scheme decides which half applies, and
+   [data-theme] (set by the inline script in _includes/head.html) overrides the OS preference. */
+
+:root {
+  color-scheme: light dark;
+
+  /* surfaces */
+  --bg:          light-dark(#f8f7f4, #0a0a0c);
+  --bg-raised:   light-dark(#ffffff, #121216);
+  --bg-sunken:   light-dark(#efede8, #060608);
+  --bg-hover:    light-dark(#f2f0eb, #17171c);
+
+  /* text */
+  --fg:          light-dark(#16161a, #ececef);
+  --fg-2:        light-dark(#45454e, #b0b0b9);
+  --fg-3:        light-dark(#6b6b75, #85858f);
+
+  /* lines */
+  --line:        light-dark(rgba(22, 22, 26, 0.09), rgba(255, 255, 255, 0.075));
+  --line-strong: light-dark(rgba(22, 22, 26, 0.17), rgba(255, 255, 255, 0.14));
+
+  /* accent: gold, carried over from the old editorial theme */
+  --accent:      light-dark(#8f5f00, #e3b55a);
+  --accent-2:    light-dark(#b07a12, #f2cd80);
+  --accent-ink:  light-dark(#ffffff, #1b1407);
+  --accent-soft: light-dark(rgba(143, 95, 0, 0.08), rgba(227, 181, 90, 0.11));
+  --glow:        light-dark(rgba(214, 160, 40, 0.20), rgba(227, 181, 90, 0.14));
+  /* secondary signal color, used sparingly (connectome spikes, charts) */
+  --signal:      light-dark(#1f7a72, #5fd3c6);
+  --signal-soft: light-dark(rgba(31, 122, 114, 0.10), rgba(95, 211, 198, 0.12));
+
+  --shadow-color: light-dark(rgba(24, 22, 18, 0.08), rgba(0, 0, 0, 0.55));
+  --shadow-sm: 0 1px 2px var(--shadow-color);
+  --shadow:    0 1px 2px var(--shadow-color), 0 12px 32px -12px var(--shadow-color);
+  --shadow-lg: 0 2px 4px var(--shadow-color), 0 28px 64px -24px var(--shadow-color);
+
+  /* type */
+  --font-sans:  "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-serif: "Instrument Serif", ui-serif, Georgia, "Times New Roman", serif;
+  --font-mono:  "Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --text-xs:   0.75rem;
+  --text-sm:   0.875rem;
+  --text-base: 1rem;
+  --text-prose: 1.0625rem;
+  --text-lg:   clamp(1.125rem, 1.05rem + 0.3vw, 1.25rem);
+  --text-xl:   clamp(1.35rem, 1.2rem + 0.6vw, 1.65rem);
+  --text-2xl:  clamp(1.75rem, 1.35rem + 1.5vw, 2.5rem);
+  --text-3xl:  clamp(2.25rem, 1.55rem + 2.9vw, 3.75rem);
+  --text-hero: clamp(2.9rem, 1.4rem + 6vw, 6.25rem);
+
+  --leading-tight: 1.08;
+  --leading-snug:  1.3;
+  --leading:       1.65;
+  --tracking-tight: -0.035em;
+  --tracking-mono:  0.02em;
+
+  /* layout */
+  --max:     74rem;
+  --prose:   42rem;
+  --gutter:  clamp(1.25rem, 4vw, 2.5rem);
+  --section: clamp(4.5rem, 3rem + 6vw, 9rem);
+  --header-h: 4rem;
+
+  --radius-sm:   8px;
+  --radius:      14px;
+  --radius-lg:   22px;
+  --radius-pill: 999px;
+
+  /* motion */
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 160ms;
+  --dur:      320ms;
+  --dur-slow: 700ms;
+}
+
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"]  { color-scheme: dark; }

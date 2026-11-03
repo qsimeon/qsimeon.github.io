@@ -1,41 +1,36 @@
-{% include base_path %}
-
 <meta charset="utf-8">
-
-{% include seo.html %}
-
-<link href="{% if site.atom_feed.path %}{{ site.atom_feed.path }}{% else %}{{ base_path }}/feed.xml{% endif %}" type="application/atom+xml" rel="alternate" title="{{ site.title }} Feed">
-
-<!-- http://t.co/dKP3o1e -->
-<meta name="HandheldFriendly" content="True">
-<meta name="MobileOptimized" content="320">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{%- comment -%} Runs before first paint so there is no light/dark flash. site.js handles the toggle. {%- endcomment %}
 <script>
-  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  (function () {
+    var root = document.documentElement, saved = localStorage.getItem("theme");
+    root.dataset.theme = saved || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    root.classList.add("js");
+  })();
 </script>
-
-<!-- For all browsers -->
-<link rel="stylesheet" href="{{ base_path }}/assets/css/main.css">
-
-<meta http-equiv="cleartype" content="on">
-
-<!-- MathJax support for LaTeX equations -->
+<meta name="theme-color" content="#f8f7f4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a0a0c" media="(prefers-color-scheme: dark)">
+{% seo %}
+{% feed_meta %}
+<link rel="icon" href="{{ '/images/favicon.svg' | relative_url }}" type="image/svg+xml">
+<link rel="icon" href="{{ '/images/favicon.ico' | relative_url }}" sizes="32x32">
+<link rel="apple-touch-icon" href="{{ '/images/apple-touch-icon.png' | relative_url }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+{%- assign v = site.time | date: "%s" %}
+<link rel="stylesheet" href="{{ '/assets/css/tokens.css' | relative_url }}?v={{ v }}">
+<link rel="stylesheet" href="{{ '/assets/css/site.css' | relative_url }}?v={{ v }}">
+<script src="{{ '/assets/js/site.js' | relative_url }}?v={{ v }}" defer></script>
+{%- for script in page.scripts %}
+<script src="{{ '/assets/js/' | append: script | append: '.js' | relative_url }}?v={{ v }}" defer></script>
+{%- endfor %}
+{%- if page.math %}
 <script>
   window.MathJax = {
-    tex: {
-      inlineMath: [['$', '$'], ['\\(', '\\)']],
-      displayMath: [['$$', '$$'], ['\\[', '\\]']],
-      processEscapes: true,
-      processEnvironments: true,
-      tags: 'ams'
-    },
-    options: {
-      ignoreHtmlClass: 'tex2jax_ignore',
-      processHtmlClass: 'tex2jax_process'
-    }
+    tex: { inlineMath: [["$", "$"], ["\\(", "\\)"]], displayMath: [["$$", "$$"], ["\\[", "\\]"]], processEscapes: true, tags: "ams" },
+    options: { ignoreHtmlClass: "tex2jax_ignore", processHtmlClass: "tex2jax_process" }
   };
 </script>
-<script type="text/javascript" id="MathJax-script" async
-  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
-</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+{%- endif %}

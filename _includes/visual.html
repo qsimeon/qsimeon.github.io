@@ -1,0 +1,77 @@
+{%- comment -%}
+  Card artwork. include.visual is either an image path under /images/ or the name of a drawing below.
+  Drawings use pathLength="1" so .draw-path can animate them in when the card is revealed.
+{%- endcomment -%}
+{%- assign v = include.visual -%}
+{%- if v contains "." -%}
+<img src="{{ '/images/' | append: v | relative_url }}" alt="" loading="lazy" decoding="async">
+{%- elsif v == "growth" -%}
+<div class="visual-draw">
+  <svg viewBox="0 0 240 135" fill="none" aria-hidden="true">
+    <path class="grid" d="M24 36H228M24 62H228M24 88H228"/>
+    <path class="axis" d="M24 12V112H228"/>
+    <path class="stroke-signal" stroke-width="1.75" stroke-dasharray="4 4" d="M24 56H228"/>
+    <path class="stroke-accent draw-path" pathLength="1" stroke-width="2.5" stroke-linecap="round" d="M24 104C80 104 108 100 134 72S190 30 228 28"/>
+    <text x="28" y="9">N(t)</text>
+    <text x="196" y="52">flat</text>
+    <text x="190" y="22">grown</text>
+    <text x="150" y="127">training steps →</text>
+  </svg>
+</div>
+{%- elsif v == "scaling" -%}
+<div class="visual-draw">
+  <svg viewBox="0 0 240 135" fill="none" aria-hidden="true">
+    <path class="grid" d="M70 12V112M116 12V112M162 12V112M208 12V112M24 37H228M24 62H228M24 87H228"/>
+    <path class="axis" d="M24 12V112H228"/>
+    <path class="stroke-signal draw-path" pathLength="1" stroke-width="1.75" d="M34 26L222 100"/>
+    <g class="fill-accent">
+      <circle cx="46" cy="33" r="3.2"/><circle cx="70" cy="40" r="3.2"/><circle cx="94" cy="52" r="3.2"/>
+      <circle cx="118" cy="57" r="3.2"/><circle cx="142" cy="70" r="3.2"/><circle cx="166" cy="75" r="3.2"/>
+      <circle cx="190" cy="89" r="3.2"/><circle cx="212" cy="94" r="3.2"/>
+    </g>
+    <text x="28" y="9">loss</text>
+    <text x="140" y="127">parameters (log) →</text>
+  </svg>
+</div>
+{%- elsif v == "merge" -%}
+<div class="visual-draw">
+  <svg viewBox="0 0 240 135" fill="none" aria-hidden="true">
+    <path class="stroke-signal draw-path" pathLength="1" stroke-width="2" stroke-linecap="round" d="M20 32C80 32 96 67 136 67"/>
+    <path class="stroke-accent draw-path" pathLength="1" stroke-width="2" stroke-linecap="round" d="M20 102C80 102 96 67 136 67"/>
+    <path class="stroke-accent draw-path" pathLength="1" stroke-width="3" stroke-linecap="round" d="M136 67H220"/>
+    <g class="fill-accent"><circle cx="44" cy="102" r="3.5"/><circle cx="78" cy="98" r="3.5"/><circle cx="170" cy="67" r="3.5"/><circle cx="198" cy="67" r="3.5"/></g>
+    <g fill="currentColor"><circle cx="44" cy="32" r="3.5"/><circle cx="78" cy="36" r="3.5"/><circle cx="184" cy="67" r="3.5"/></g>
+    <text x="20" y="20">chat A</text>
+    <text x="20" y="124">chat B</text>
+    <text x="176" y="54">merged</text>
+  </svg>
+</div>
+{%- elsif v == "forks" -%}
+<div class="visual-draw">
+  <svg viewBox="0 0 240 135" fill="none" aria-hidden="true">
+    <path class="axis" stroke-width="1.5" d="M18 67H70M70 67C100 67 100 20 130 20H210M70 67C100 67 100 44 130 44H190M70 67H200M70 67C100 67 100 90 130 90H180M70 67C100 67 100 114 130 114H196"/>
+    <path class="stroke-accent draw-path" pathLength="1" stroke-width="2.5" stroke-linecap="round" d="M18 67H70C100 67 100 44 130 44H222"/>
+    <g fill="currentColor"><circle cx="210" cy="20" r="3"/><circle cx="200" cy="67" r="3"/><circle cx="180" cy="90" r="3"/><circle cx="196" cy="114" r="3"/></g>
+    <circle class="fill-accent" cx="222" cy="44" r="4.5"/>
+    <text x="18" y="58">upstream</text>
+    <text x="150" y="38">best fork</text>
+  </svg>
+</div>
+{%- elsif v == "quote" -%}
+<div class="visual-draw">
+  <svg viewBox="0 0 240 135" aria-hidden="true">
+    <text class="quote-mark" x="120" y="112" text-anchor="middle">“</text>
+  </svg>
+</div>
+{%- elsif v == "terminal" -%}
+<div class="visual-draw">
+  <div class="terminal" aria-hidden="true">
+    <div class="terminal-bar"><i></i><i></i><i></i></div>
+<pre><span class="t-prompt">$</span> session-merge --scan
+<span class="t-ok">✓</span> split sessions found
+<span class="t-prompt">$</span> session-merge --apply
+<span class="t-ok">✓</span> one continuous history
+<span class="t-prompt">$</span> <span class="t-caret"></span></pre>
+  </div>
+</div>
+{%- endif -%}

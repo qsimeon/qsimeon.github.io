@@ -1,15 +1,32 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<script>
+  (function () {
+    var root = document.documentElement, saved = localStorage.getItem("theme");
+    root.dataset.theme = saved || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    root.classList.add("js");
+  })();
+</script>
+<meta name="theme-color" content="#f8f7f4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a0a0c" media="(prefers-color-scheme: dark)">
 <title>growlab — choosing the parameter trajectory N(t)</title>
+<link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+<link rel="stylesheet" href="/assets/css/tokens.css">
 <style>
+  /* Page palette mapped onto the site tokens (assets/css/tokens.css). Series colors keep the
+     blog-post figures' blue/orange; light halves are darkened to >=4.5:1 on the light page bg. */
   :root {
-    --page:#0d0d0d; --surface-1:#1a1a19; --text-primary:#fff; --text-secondary:#c3c2b7;
-    --muted:#898781; --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.10);
-    --flat:#3987e5; --grown:#d95926; --good:#0ca30c; --warning:#fab219;
-    --font:system-ui,-apple-system,"Segoe UI",sans-serif;
+    --page:var(--bg); --surface-1:var(--bg-raised); --text-primary:var(--fg); --text-secondary:var(--fg-2);
+    --muted:var(--fg-3); --grid:var(--line); --axis:var(--line-strong); --border:var(--line);
+    --flat:light-dark(#1f6bc7,#3987e5); --grown:light-dark(#b8461a,#d95926);
+    --good:light-dark(#0a7d0a,#0ca30c); --warning:light-dark(#8f6200,#fab219);
+    --font:var(--font-sans);
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--page);color:var(--text-primary);font-family:var(--font);
@@ -22,16 +39,16 @@
   .live{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text-secondary);
         white-space:nowrap;border:1px solid var(--border);border-radius:999px;padding:5px 11px}
   .dot{width:7px;height:7px;border-radius:50%;background:var(--muted)}
-  .dot.on{background:var(--good);box-shadow:0 0 0 3px rgba(12,163,12,.18)}
-  .card{background:var(--surface-1);border:1px solid var(--border);border-radius:10px;
+  .dot.on{background:var(--good);box-shadow:0 0 0 3px color-mix(in srgb,var(--good) 18%,transparent)}
+  .card{background:var(--surface-1);border:1px solid var(--border);border-radius:var(--radius);
         padding:20px 22px;margin-top:20px}
-  .card h2{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;
+  .card h2{font-family:var(--font-mono);font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;
            color:var(--muted);margin:0 0 2px}
   .card .note{color:var(--text-secondary);font-size:13px;margin:0 0 16px}
   .hero{display:flex;flex-wrap:wrap;gap:36px;align-items:flex-end}
   .verdict{font-size:34px;font-weight:600;letter-spacing:-.02em;line-height:1.1}
   .tiles{display:flex;gap:32px;flex-wrap:wrap}
-  .tile .k{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+  .tile .k{font-family:var(--font-mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
   .tile .v{font-size:25px;font-weight:600;font-variant-numeric:tabular-nums;margin-top:3px}
   .tile .m{font-size:12px;color:var(--text-secondary);font-variant-numeric:tabular-nums}
   .sw{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:7px;
@@ -49,7 +66,7 @@
   th,td{text-align:right;padding:7px 10px;border-bottom:1px solid var(--border)}
   th:first-child,td:first-child{text-align:left}
   th{color:var(--muted);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.05em}
-  pre{background:#111110;border:1px solid var(--border);border-radius:7px;padding:14px;
+  pre{background:var(--bg-sunken);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;
       overflow-x:auto;font-size:12px;color:var(--text-secondary);margin:0;line-height:1.55}
   .toggle{background:none;border:1px solid var(--border);color:var(--text-secondary);
           border-radius:6px;padding:4px 10px;font-size:11.5px;cursor:pointer;font-family:var(--font)}
@@ -57,13 +74,56 @@
   .row{display:flex;justify-content:space-between;align-items:center;gap:12px}
   a{color:var(--flat)}
   .foot{color:var(--muted);font-size:12px;margin-top:26px;line-height:1.7}
-  .tip{position:fixed;pointer-events:none;background:#232321;border:1px solid var(--border);
-       border-radius:7px;padding:8px 11px;font-size:12px;opacity:0;transition:opacity .1s;
-       font-variant-numeric:tabular-nums;z-index:9;box-shadow:0 6px 22px rgba(0,0,0,.5)}
+  .tip{position:fixed;pointer-events:none;background:var(--bg-raised);border:1px solid var(--line-strong);
+       border-radius:var(--radius-sm);padding:8px 11px;font-size:12px;opacity:0;transition:opacity .1s;
+       font-variant-numeric:tabular-nums;z-index:9;box-shadow:var(--shadow)}
+  /* back-to-site pill + theme toggle; mirrors the site header's brand mark and toggle */
+  .qs-pill{position:fixed;top:16px;left:16px;z-index:100;display:flex;align-items:center;gap:2px;padding:4px;
+    border:1px solid var(--line-strong);border-radius:var(--radius-pill);
+    background:color-mix(in srgb,var(--bg-raised) 82%,transparent);
+    -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:var(--shadow-sm);
+    font:500 12px/1 var(--font-sans);letter-spacing:0}
+  .qs-pill a{display:inline-flex;align-items:center;gap:8px;padding:3px 11px 3px 3px;border-radius:var(--radius-pill);
+    color:var(--fg-2);text-decoration:none;transition:color var(--dur-fast),background-color var(--dur-fast)}
+  .qs-pill a:hover{color:var(--fg);background:var(--bg-hover);text-decoration:none}
+  .qs-mark{display:grid;place-items:center;width:22px;height:22px;border-radius:7px;
+    background:var(--accent);color:var(--accent-ink);font:italic 400 15px/1 var(--font-serif)}
+  .qs-pill button{display:grid;place-items:center;width:30px;height:30px;padding:0;border:0;border-radius:50%;
+    background:none;color:var(--fg-2);cursor:pointer;transition:color var(--dur-fast),background-color var(--dur-fast)}
+  .qs-pill button:hover{color:var(--fg);background:var(--bg-hover)}
+  .qs-pill :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .qs-pill svg{display:block;width:15px;height:15px}
+  .qs-pill .i-moon{display:none}
+  :root[data-theme="dark"] .qs-pill .i-sun{display:none}
+  :root[data-theme="dark"] .qs-pill .i-moon{display:block}
+  /* in-flow at the top: a fixed corner pill would sit on the header */
+  .qs-pill{position:static;display:inline-flex;margin-bottom:22px}
 </style>
 </head>
 <body>
 <div class="wrap">
+<nav class="qs-pill" aria-label="Site">
+  <a href="/blog/growlab/"><span class="qs-mark" aria-hidden="true">q</span>Back to post</a>
+  <button type="button" data-theme-toggle aria-label="Toggle dark mode">
+    <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+    <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+  </button>
+</nav>
+<script>
+  // Same contract as assets/js/site.js: data-theme on <html>, persisted in localStorage.theme.
+  (function () {
+    var root = document.documentElement;
+    document.querySelector("[data-theme-toggle]").addEventListener("click", function () {
+      var next = root.dataset.theme === "dark" ? "light" : "dark";
+      root.dataset.theme = next;
+      localStorage.setItem("theme", next);
+    });
+    matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function (e) {
+      if (!localStorage.getItem("theme")) root.dataset.theme = e.matches ? "dark" : "light";
+    });
+  })();
+</script>
+
   <header>
     <div>
       <h1>growlab</h1>

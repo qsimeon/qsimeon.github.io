@@ -1,0 +1,37 @@
+---
+layout: default
+---
+{%- comment -%} Single item from the publications, talks, or portfolio collections. {%- endcomment -%}
+{%- case page.collection -%}
+  {%- when "publications" -%}{%- assign back_url = "/publications/" -%}{%- assign back_label = "Publications" -%}
+  {%- when "talks" -%}{%- assign back_url = "/talks/" -%}{%- assign back_label = "Talks" -%}
+  {%- else -%}{%- assign back_url = "/portfolio/" -%}{%- assign back_label = "Work" -%}
+{%- endcase -%}
+<article>
+  <header class="post-head container container--prose">
+    <a class="back-link" href="{{ back_url | relative_url }}">{% include icon.html name="arrow" %} {{ back_label }}</a>
+    <h1 class="post-title-lg">{{ page.title }}</h1>
+    {%- if page.venue or page.collection == "publications" or page.collection == "talks" %}
+    <div class="post-meta">
+      {%- if page.venue %}<span>{{ page.venue }}</span>{% endif %}
+      {%- if page.date %}<time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %Y" }}</time>{% endif %}
+      {%- if page.location %}<span>{{ page.location }}</span>{% endif %}
+    </div>
+    {%- endif %}
+    {%- if page.paperurl or page.links %}
+    <div class="page-actions">
+      {%- if page.paperurl %}<a class="btn btn-primary" href="{{ page.paperurl }}">Read the paper {% include icon.html name="arrow-up-right" %}</a>{% endif %}
+      {%- for link in page.links %}<a class="btn" href="{{ link.url | relative_url }}">{{ link.label }}</a>{% endfor %}
+    </div>
+    {%- endif %}
+  </header>
+  <div class="container container--prose">
+    <div class="prose">{{ content }}</div>
+    {%- if page.citation %}
+    <footer class="post-foot">
+      <p class="eyebrow eyebrow--plain">Citation</p>
+      <p class="entry-meta">{{ page.citation }}</p>
+    </footer>
+    {%- endif %}
+  </div>
+</article>

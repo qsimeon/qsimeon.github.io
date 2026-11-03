@@ -1,0 +1,101 @@
+---
+title: CV
+permalink: /cv/
+section: cv
+eyebrow: Curriculum vitae
+heading: <em>CV</em>
+lede: Applied Scientist at Amazon FAI. Previously MIT ORCD, Numenta, and the MIT McGovern Institute.
+wide: true
+prose: false
+redirect_from:
+  - /resume
+---
+{%- assign cv = site.data.cv -%}
+<p class="page-tools">
+  <a class="btn btn-primary btn-sm" href="{{ '/files/qsimeon_resume.pdf' | relative_url }}">{% include icon.html name="download" %} Download resume (PDF)</a>
+  <a class="btn btn-sm" href="{{ site.author.linkedin }}">{% include icon.html name="linkedin" %} LinkedIn</a>
+</p>
+
+<section class="cv-section" data-reveal>
+  <h2>Experience</h2>
+  <ol class="cv-items" role="list">
+    {%- for x in cv.experience %}
+    <li class="cv-item">
+      <div class="cv-item-head">
+        <span><span class="cv-item-title">{{ x.role }}</span> <span class="cv-item-org">· {{ x.org }}{% if x.place %}, {{ x.place }}{% endif %}</span></span>
+        <span class="cv-item-date">{{ x.dates }}</span>
+      </div>
+      {%- if x.points %}
+      <ul>{% for p in x.points %}<li>{{ p }}</li>{% endfor %}</ul>
+      {%- endif %}
+    </li>
+    {%- endfor %}
+  </ol>
+</section>
+
+<section class="cv-section" data-reveal>
+  <h2>Education</h2>
+  <ol class="cv-items" role="list">
+    {%- for e in cv.education %}
+    <li class="cv-item">
+      <div class="cv-item-head">
+        <span><span class="cv-item-title">{{ e.degree }}</span> <span class="cv-item-org">· {{ e.school }}</span></span>
+        <span class="cv-item-date">{{ e.year }}</span>
+      </div>
+      <ul><li>{{ e.note }}</li></ul>
+    </li>
+    {%- endfor %}
+  </ol>
+</section>
+
+<section class="cv-section" data-reveal>
+  <h2>Publications</h2>
+  <ol class="cv-simple" role="list">
+    {%- assign pubs = site.publications | sort: "date" | reverse %}
+    {%- for pub in pubs %}
+    <li><a href="{{ pub.url | relative_url }}">{{ pub.title }}</a><span class="cv-item-date">{{ pub.date | date: "%Y" }}</span></li>
+    {%- endfor %}
+  </ol>
+</section>
+
+<section class="cv-section" data-reveal>
+  <h2>Honors</h2>
+  <ol class="cv-simple" role="list">
+    {%- for h in cv.honors %}
+    <li><span>{% if h.url %}<a href="{{ h.url }}">{{ h.title }}</a>{% else %}{{ h.title }}{% endif %}{% if h.by %} <span class="cv-item-org">· {{ h.by }}</span>{% endif %}</span><span class="cv-item-date">{{ h.year }}</span></li>
+    {%- endfor %}
+  </ol>
+</section>
+
+<section class="cv-section" data-reveal>
+  <h2>Talks &amp; posters</h2>
+  <ol class="cv-simple" role="list">
+    {%- assign talks = site.talks | sort: "date" | reverse %}
+    {%- for talk in talks %}
+    <li><span><a href="{{ talk.url | relative_url }}">{{ talk.title }}</a> <span class="cv-item-org">· {{ talk.venue }}</span></span><span class="cv-item-date">{{ talk.date | date: "%Y" }}</span></li>
+    {%- endfor %}
+  </ol>
+</section>
+
+<section class="cv-section" data-reveal>
+  <h2>Teaching</h2>
+  <ol class="cv-simple" role="list">
+    {%- for t in cv.teaching %}
+    <li><span>{{ t.role }} <span class="cv-item-org">· {{ t.where }}</span></span><span class="cv-item-date">{{ t.dates }}</span></li>
+    {%- endfor %}
+  </ol>
+</section>
+
+<section class="cv-section" data-reveal>
+  <h2>Skills</h2>
+  <dl class="skills-table">
+    {%- for s in cv.skills %}<dt>{{ s.area }}</dt><dd>{{ s.items }}</dd>{% endfor %}
+  </dl>
+</section>
+
+<section class="cv-section" data-reveal>
+  <h2>Community</h2>
+  <ul class="cv-simple" role="list">
+    {%- for c in cv.community %}<li>{{ c }}</li>{% endfor %}
+  </ul>
+</section>

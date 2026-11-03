@@ -1,12 +1,21 @@
 ---
-layout: archive
-title: "Teaching"
+title: Teaching
 permalink: /teaching/
-author_profile: true
+section: about
+eyebrow: Research
+heading: <em>Teaching</em>
+lede: Labs, workshops, and courses I've taught, from MIT lab sections to programming camps in the Caribbean.
+wide: true
+prose: false
 ---
-
-{% include base_path %}
-
-{% for post in site.teaching reversed %}
-  {% include archive-single.html %}
-{% endfor %}
+<ul class="entry-list" role="list">
+  {%- for t in site.data.cv.teaching %}
+  <li data-reveal>
+    <span class="entry-year">{{ t.dates }}</span>
+    <div>
+      <h2 class="entry-title">{{ t.role }}</h2>
+      <p class="entry-meta">{{ t.where }}</p>
+    </div>
+  </li>
+  {%- endfor %}
+</ul>

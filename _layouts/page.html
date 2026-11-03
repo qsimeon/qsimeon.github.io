@@ -1,0 +1,20 @@
+---
+layout: default
+---
+{%- comment -%}
+  Front matter: eyebrow, heading (may contain <em>), lede, wide (true for full-width pages),
+  prose (false to skip prose styling for custom markup).
+{%- endcomment -%}
+{%- capture wrap %}container{% unless page.wide %} container--prose{% endunless %}{% endcapture -%}
+<header class="page-head {{ wrap }}">
+  {%- if page.eyebrow %}<p class="eyebrow">{{ page.eyebrow }}</p>{% endif %}
+  <h1 class="page-title">{{ page.heading | default: page.title }}</h1>
+  {%- if page.lede %}<p class="page-lede">{{ page.lede }}</p>{% endif %}
+</header>
+<div class="{{ wrap }}">
+  {%- if page.prose == false %}
+  {{ content }}
+  {%- else %}
+  <div class="prose">{{ content }}</div>
+  {%- endif %}
+</div>

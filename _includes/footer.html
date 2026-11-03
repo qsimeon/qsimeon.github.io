@@ -1,22 +1,41 @@
-{% include base_path %}
-
-{% if site.author.github or site.author.bitbucket or site.atom_feed.hide != true %}
-<div class="page__footer-follow">
-  <ul class="social-icons">
-    {% if site.data.ui-text[site.locale].follow_label %}
-      <li><strong>{{ site.data.ui-text[site.locale].follow_label }}</strong></li>
-    {% endif %}
-    {% if site.author.github %}
-      <li><a href="http://github.com/{{ site.author.github }}"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a></li>
-    {% endif %}
-    {% if site.author.bitbucket %}
-      <li><a href="http://bitbucket.org/{{ site.author.bitbucket }}"><i class="fab fa-bitbucket" aria-hidden="true"></i> Bitbucket</a></li>
-    {% endif %}
-    {% if site.atom_feed.hide != true %}
-    <li><a href="{% if site.atom_feed.path %}{{ site.atom_feed.path }}{% else %}{{ base_path }}/feed.xml{% endif %}"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> {{ site.data.ui-text[site.locale].feed_label | default: "Feed" }}</a></li>
-    {% endif %}
-  </ul>
-</div>
-{% endif %}
-
-<div class="page__footer-copyright">&copy; {{ site.time | date: '%Y' }} {{ site.name | default: site.title }}. {{ site.data.ui-text[site.locale].powered_by | default: "Powered by" }} <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://github.com/academicpages/academicpages.github.io">AcademicPages</a>, a fork of <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+{%- assign a = site.author -%}
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="{{ '/' | relative_url }}"><span class="brand-mark" aria-hidden="true">q</span><span>Quilee Simeon</span></a>
+        <p class="footer-blurb">Applied Scientist at Amazon FAI. Evals, agents, and the occasional brain.</p>
+      </div>
+      <div>
+        <h2>Site</h2>
+        <ul>
+          {%- for item in site.data.navigation.main %}
+          <li><a href="{{ item.url | relative_url }}">{{ item.title }}</a></li>
+          {%- endfor %}
+        </ul>
+      </div>
+      <div>
+        <h2>Research</h2>
+        <ul>
+          <li><a href="{{ '/publications/' | relative_url }}">Publications</a></li>
+          <li><a href="{{ '/talks/' | relative_url }}">Talks</a></li>
+          <li><a href="{{ '/teaching/' | relative_url }}">Teaching</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Elsewhere</h2>
+        <ul>
+          <li><a href="https://github.com/{{ a.github }}">GitHub</a></li>
+          <li><a href="{{ a.linkedin }}">LinkedIn</a></li>
+          <li><a href="{{ a.scholar }}">Google Scholar</a></li>
+          <li><a href="{{ a.x }}">X</a></li>
+          <li><a href="{{ '/feed.xml' | relative_url }}">RSS</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-base">
+      <span>© {{ site.time | date: "%Y" }} Quilee Simeon</span>
+      <span>Built with Jekyll · <a href="https://github.com/{{ site.repository }}">Source</a></span>
+    </div>
+  </div>
+</footer>
