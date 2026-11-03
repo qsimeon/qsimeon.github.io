@@ -82,10 +82,10 @@ honors:
   - title: K. Lisa Yang ICoN Graduate Fellowship
     by: MIT
     year: "2025–26"
-  - title: Honorable Mention, Envisioning the Future of Computing Prize
+  - title: Honorable Mention (twice), Envisioning the Future of Computing Prize
     by: MIT SERC
-    url: https://computing.mit.edu/cross-cutting/social-and-ethical-responsibilities-of-computing/envisioning-the-future-of-computing-prize/envisioning-the-future-of-computing-prize-2025-winners/
-    year: "2025"
+    url: https://computing.mit.edu/cross-cutting/social-and-ethical-responsibilities-of-computing/envisioning-the-future-of-computing-prize/envisioning-the-future-of-computing-prize-2026-winners/
+    year: "2025, 2026"
   - title: Graduate Research Spotlight, The Bridge
     by: IEEE-HKN
     url: https://magazines.ieee.org/hkn/library/page/issue_2_2024/28/
@@ -101,12 +101,12 @@ teaching:
   - role: Teaching assistant, ORCD workshops on GPU computing, CUDA & distributed deep learning
     where: MIT Office of Research Computing and Data
     dates: 2025 – 2026
-  - role: Teaching Assistant, Emergent Computations in Distributed Neural Circuits
+  - role: Teaching Assistant, Emergent Computations Within Distributed Neural Circuits (9.53)
     where: MIT Brain & Cognitive Sciences
-    dates: Fall 2023
+    dates: "2023"
   - role: Teaching Assistant, Principles of Neural Computation in Brains and Machines
     where: MIT Brain & Cognitive Sciences
-    dates: Spring 2023
+    dates: "2023"
   - role: Instructor, MIT Global Teaching Labs
     where: Cardiff, Wales
     dates: Jan 2020
