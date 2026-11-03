@@ -9,7 +9,7 @@ work:
     blurb: Plug in a device and a coding agent figures out what it is, then writes, tests, and serves an MCP server for it, in about 25 minutes.
     url: /octopus-coding-agent-is-software/
     links:
-      - { label: arXiv, url: "https://arxiv.org/abs/2605.09055" }
+      - { label: Website, url: "https://octopusprotocol.ai" }
       - { label: Code, url: "https://github.com/qsimeon/octopus-hw" }
     visual: octopus-rig-full.jpeg
     featured: true

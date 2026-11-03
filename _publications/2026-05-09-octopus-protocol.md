@@ -6,6 +6,7 @@ venue: arXiv:2605.09055 (cs.RO)
 authors: Q. Simeon, J. M. Wei, Y. Fan
 paperurl: https://arxiv.org/abs/2605.09055
 links:
+  - { label: Website, url: "https://octopusprotocol.ai" }
   - { label: Code, url: "https://github.com/qsimeon/octopus-hw" }
   - { label: Blog post, url: "/octopus-coding-agent-is-software/" }
 excerpt: A coding agent discovers connected hardware and writes, tests, and serves an MCP server for it, so the agent becomes the driver.
