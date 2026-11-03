@@ -67,7 +67,7 @@ work:
   - title: Growing sparse LLMs
     year: 2025
     kind: Efficiency · Numenta
-    blurb: Growing a pretrained 70M-parameter model to 1.4B without throwing away what it already knew.
+    blurb: Growing pretrained language models from 70M up to 1.4B parameters without throwing away what they already knew.
     url: /portfolio/numenta-sparse-llms/
     visual: numenta_sparse_llms.png
     featured: true
