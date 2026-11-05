@@ -8,7 +8,7 @@ hand-written layouts, two CSS files, and two small vanilla JS files.
 
 ## Running locally
 
-Requires Ruby (see `.ruby-version`) and Bundler.
+Requires Ruby 3.2 (the local setup uses rbenv with 3.2.4) and Bundler.
 
 ```bash
 bundle install
