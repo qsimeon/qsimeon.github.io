@@ -103,7 +103,10 @@ recognition:
         <p class="eyebrow">Writing</p>
         <h2 class="section-title">Ideas I'm <em>exploring.</em></h2>
       </div>
-      <a class="link-arrow" href="{{ '/blog/' | relative_url }}">All posts {% include icon.html name="arrow" %}</a>
+      <div class="section-links">
+        <a class="link-arrow" href="{{ site.author.substack }}">Essays on Substack {% include icon.html name="arrow-up-right" %}</a>
+        <a class="link-arrow" href="{{ '/blog/' | relative_url }}">All posts {% include icon.html name="arrow" %}</a>
+      </div>
     </div>
     <ul class="post-list" role="list">
       {%- for post in site.posts limit: 5 %}

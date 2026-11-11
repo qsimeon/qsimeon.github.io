@@ -161,6 +161,7 @@ hr { border: 0; border-top: 1px solid var(--line); }
 .link-arrow svg { width: 0.95rem; height: 0.95rem; transition: transform var(--dur) var(--ease-out); }
 .link-arrow:hover { color: var(--fg); }
 .link-arrow:hover svg { transform: translateX(3px); }
+.section-links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; }
 
 .chips { display: flex; flex-wrap: wrap; gap: 0.4rem; list-style: none; padding: 0; }
 .chip {

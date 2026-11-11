@@ -11,7 +11,7 @@ redirect_from:
   - /year-archive/
   - /wordpress/blog-posts/
 ---
-<p class="page-tools"><a class="btn btn-sm" href="{{ '/feed.xml' | relative_url }}">{% include icon.html name="rss" %} RSS feed</a></p>
+<p class="page-tools"><a class="btn btn-sm" href="{{ '/feed.xml' | relative_url }}">{% include icon.html name="rss" %} RSS feed</a> <a class="btn btn-sm" href="{{ site.author.substack }}">{% include icon.html name="substack" %} Essays on Substack</a></p>
 {%- assign years = site.posts | group_by_exp: "post", "post.date | date: '%Y'" %}
 {%- for year in years %}
 <h2 class="year-label">{{ year.name }}</h2>
