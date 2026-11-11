@@ -9,7 +9,7 @@ If you use AI chat tools regularly, you've run into this. You have two or three 
 
 Think of it like branches in a git repo. You started separate threads for separate ideas, and now you want to merge them. Git has merge. AI chat tools don't.
 
-Some providers have recently introduced "memories," a shared memory layer that lets context bleed across conversations. That's a step in the right direction, but it's indirect. I wanted something more native: select two chats, merge them, and get a new conversation that has the full context of both.
+Some providers have recently introduced "memories," a shared memory layer that lets context bleed across conversations. That's a step in the right direction, but it's indirect. I wanted something more native: select two chats, merge them, and get a new conversation that can draw on both.
 
 So I built [ChatMerge](https://chat-merge-app-production.up.railway.app/).
 

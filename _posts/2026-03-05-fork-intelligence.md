@@ -8,7 +8,7 @@ excerpt: "At a Google DeepMind x Cactus Compute hackathon, I used Claude Code to
 
 This is a vulnerability disclosure for a class of competition I'll call the **public-fork hackathon**: any coding competition where participants submit by forking a public GitHub repository and pushing their solutions to their fork.
 
-I didn't win this hackathon, although I could have. My pipeline surfaced the top-scoring solution in the entire competition, and I could have submitted it with trivial modifications and taken first place. I chose not to, because the meta-game interested me more. I could systematically harvest, evaluate and recombine every competitor's approach into something new, and I wanted to see what that looked like in practice.
+I didn't win this hackathon. My pipeline surfaced a solution that scored 100% on the local benchmark, the same pure-regex approach that topped the final leaderboard, and I could have submitted it with trivial modifications. I chose not to, because the meta-game interested me more. I could systematically harvest, evaluate and recombine every competitor's approach into something new, and I wanted to see what that looked like in practice.
 
 I'm writing about it because I think hackathon organizers need to know it's possible. I am not encouraging anyone to go do it. If this post has a genre, it is a red team report whose system under test is the public-fork hackathon format.
 
@@ -91,7 +91,7 @@ $ python 02_benchmark_forks.py
 
 Once you have a ranked list, you can read the top implementations and understand *why* they scored well. Claude Code makes this fast, since "Read the top 5 fork solutions and explain what each one does differently" is a single prompt.
 
-The top 10:
+The top seven:
 
 | # | Who | Score | Avg Time | Strategy |
 |---|-----|-------|----------|----------|
@@ -117,7 +117,7 @@ With full intelligence on the field, the last step was synthesis. I pulled in th
 - **Score-based selection**, which runs both regex and the model, compares the structural quality of their outputs and picks the better result
 - **Type coercion and validation** from multiple forks (fixing string-to-int mismatches and normalizing time formats)
 
-The result scored **94% on the local benchmark**, with 100% F1 on all 30 cases, 100% on-device and ~200ms average latency. That is higher than any individual fork I drew from.
+The result scored **94% on the local benchmark**, with 100% F1 on all 30 cases, 100% on-device and ~200ms average latency. That beats every fork that still called the model. The best of those, ishaanvijai's, scored 91.6%.
 
 I copied no single competitor's code wholesale, yet the final solution wouldn't exist without reading all of them.
 
@@ -155,7 +155,7 @@ Claude Code is one of several tools that can do this. Cursor, Copilot Workspace 
 
 ## My Submissions
 
-I had Rosh2403's 100% solution sitting in my `fork_solutions/` directory. I could have submitted it as-is or with a few variable names changed, and placed at the top of the leaderboard. I didn't, because I wasn't interested in laundering someone else's work. I wanted to see what happens when you treat a field of competitors as a dataset and run selection and recombination over their ideas.
+I had Rosh2403's 100% solution sitting in my `fork_solutions/` directory. I could have submitted it as-is or with a few variable names changed, and likely tied for the top of the leaderboard. I didn't, because I wasn't interested in laundering someone else's work. I wanted to see what happens when you treat a field of competitors as a dataset and run selection and recombination over their ideas.
 
 Even the 94% synthesized version didn't feel right to submit. The hackathon was about exploring intelligent routing between on-device and cloud inference, and about helping Cactus Compute understand how developers reason about the edge-cloud boundary. Submitting a regex Frankenstein missed the spirit of the thing.
 

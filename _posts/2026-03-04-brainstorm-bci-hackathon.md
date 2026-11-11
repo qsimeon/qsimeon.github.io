@@ -47,7 +47,7 @@ The data has **9 target classes**: silence (0 Hz) and eight frequencies of the a
 
 The 16.5:1 imbalance between silence and each tone class is the first trap for an unprepared model. A model that always predicts silence gets 67% raw accuracy but only 11% balanced accuracy. Balanced accuracy, which averages recall over the classes, is the metric the competition scores.
 
-One signal-processing detail matters here: the sampling rate is 1000 Hz, so the Nyquist frequency is 500 Hz, and the highest stimulus (9736 Hz) aliases into the recordable band. The model does not need the physical frequency. It only needs to learn the distinct cortical response that each stimulus produces, including the aliased ones.
+One signal-processing detail matters here. The brain recording is sampled at 1000 Hz, so it can only represent activity below 500 Hz, while the tones go up to 9736 Hz. That is not a problem, because the recording never contains the sound wave. It contains the cortical response each tone evokes, which lives at much lower frequencies, and the model only needs to learn which response belongs to which tone.
 
 Signal characteristics that informed our preprocessing choices:
 - Mean voltage: -0.23 µV, standard deviation: 112.66 µV
@@ -100,16 +100,16 @@ Final hyperparameters: `projected_channels=32`, `window_size=1600`, `F1=8`, `D=2
 
 ## The Critical Insight: Window Size vs. Latency
 
-Most teams assumed that a larger input window means higher latency. That assumption deserves a direct test, because for EEGNet it is false.
+The usual assumption is that a larger input window means higher latency. That assumption deserves a direct test, because for our EEGNet it did not hold.
 
 We compared two configurations directly:
 
 | Configuration | Balanced Accuracy | Inference Latency |
 |---|---|---|
-| 128ms window | ~0.67 | <1ms |
-| 1600ms window | ~0.87 | <1ms |
+| 128ms window | ~0.66 | <1ms |
+| 1600ms window | ~0.85 | <1ms |
 
-**Same latency, 20 points more balanced accuracy.**
+**Same latency, about 19 points more balanced accuracy.** Both numbers are on the validation split, and the latency column times the model's forward pass alone. The two checkpoints also differ in PCA size (64 versus 32 components), so the window is not the only change. The <5ms in the results below is a different quantity: the competition's prediction lag, which counts how long after a tone starts the model's output switches to it.
 
 The reason is that EEGNet's average pooling layers decimate the time dimension early in the network. By the time the input reaches the separable convolution block, a 1600-sample window has shrunk to 400 samples, and the classifier sees about 50. The cost of the forward pass is dominated by the initial convolution and the final linear layer, neither of which scales strongly with the input window length.
 
@@ -127,10 +127,10 @@ This asymmetry, in which temporal history is cheap to include but critical for a
 |---|---|---|
 | **Total** | **91.7** | 69.2 |
 | Accuracy (50 pts) | 47.1 | 30.9 |
-| Latency (25 pts) | 23.8 | 15.4 |
+| Prediction lag (25 pts) | 23.8 | 15.4 |
 | Size (25 pts) | 20.8 | 23.0 |
 
-Our balanced accuracy was **94.2%** (47.1/50), inference latency was **<5ms**, and the model size was **~0.2 MB**.
+Our balanced accuracy was **94.2%** (47.1/50), prediction lag was **<5ms**, and the model size was **~0.2 MB**.
 
 The remaining headroom is in two places. The first is model size, since the serialized PCA components add weight to the checkpoint. The second is accuracy on the rarer tone classes, where limited training data makes generalization harder.
 
@@ -156,7 +156,7 @@ uv run python examples/train_eegnet.py \
 
 **Balanced accuracy and class weighting are essential on imbalanced neural data.** Track balanced accuracy from the start alongside raw accuracy, and weight the loss to balance the classes.
 
-**Domain-specific architectures beat general ones in the small-data regime.** EEGNet's inductive biases (temporal filtering before spatial filtering, and explicit pooling) directly match the structure of ECoG data. With 90 seconds of training data, that match matters more than raw model capacity.
+**With little data, start from a domain-specific architecture.** EEGNet's inductive biases (temporal filtering before spatial filtering, and explicit pooling) directly match the structure of ECoG data. With 90 seconds of training data, that match is likely to matter more than raw model capacity.
 
 ---
 

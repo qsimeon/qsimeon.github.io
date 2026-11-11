@@ -12,6 +12,6 @@ I built **session-merge** to fix this. It's a Claude Code skill (and a standalon
 
 The quickest path is to run `--find-splits` to see all your groups of duplicate-named sessions, then `--merge-splits` to fix them all at once. For manual control, you can name exactly which sessions to combine by UUID.
 
-Under the hood, session-merge works with the JSONL (JSON Lines) session files in `~/.claude/projects/`. It sorts entries chronologically and rewrites their session IDs. Only the session-level identity changes, so message threading stays intact.
+Under the hood, session-merge works with the JSONL (JSON Lines) session files in `~/.claude/projects/`. It finds each session's main trunk (its longest `parentUuid` chain), orders the sessions chronologically, rewrites their session IDs to the merged one, and links the root of each session to the leaf of the one before, so Claude Code can resume one continuous chain.
 
 [Read the full docs](https://qsimeon.github.io/session-merge) or [grab it from GitHub](https://github.com/qsimeon/session-merge).

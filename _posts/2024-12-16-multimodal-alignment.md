@@ -54,7 +54,7 @@ Our work rests on the following hypotheses:
 
 - A shared latent space exists in which linear transformations can align unimodal representations from different encoders.
 - Aligning these representations produces embeddings that closely approximate those of performant models such as DINOv2, as measured by kernel alignment metrics.
-- Multimodal alignment captures mechanisms of representation convergence, which provides empirical evidence for the Platonic Representation Hypothesis.
+- Multimodal alignment offers a direct way to probe representation convergence, which bears on the Platonic Representation Hypothesis.
 
 ## Mathematical Framework
 
@@ -207,7 +207,7 @@ We test **two key hypotheses**, using the mutual-kNN values described in the Mat
 
 ### Kernel Alignment Gains from Training
 
-Our first key finding is that the **mutual-KNN kernel alignment metric** improves after training for both the linear and MLP adapters. Our contrastive alignment objective therefore aligns the image and text representations effectively.
+Our first key finding is that the **mutual-KNN kernel alignment metric** improves after training for both the linear and MLP adapters. By this metric, the contrastive objective brings the image and text representations closer together.
 
 ![Kernel Metric Bar Plot](/images/deep_learning_project/kernel_metric_barplot.jpg)
 *Figure 3. Bar plot of the mutual-KNN kernel alignment metric before and after training for the (A) linear and (B) 2-layer MLP adapters. For both adapter types and all encoders, kernel alignment to the DINOv2-small encoder improves after training with the dual-encoder contrastive objective.*
@@ -216,12 +216,12 @@ Before training, the alignment scores are relatively low, particularly for the t
 
 ### Visualization of Alignment
 
-To illustrate the alignment further, we use dimensionality reduction to visualize the embeddings from the DINOv2-small encoder and from our aligned multimodal encoder. Principal component analysis (PCA) shows the idea: we compute the principal components (PCs) of the DINOv2-small embeddings and project the multimodal embeddings onto the same PCs. Multidimensional scaling (MDS) is a similar technique, but nonlinear.
+To illustrate the alignment further, we use dimensionality reduction to visualize the embeddings from the DINOv2-small encoder and from our aligned multimodal encoder. Figure 4 uses multidimensional scaling (MDS), a nonlinear relative of principal component analysis (PCA), to draw both sets of embeddings in two dimensions.
 
-During training, the aligned multimodal embeddings move progressively closer to the DINOv2 embeddings. This supports the hypothesis that our contrastive objective aligns the representations effectively.
+During training, the aligned multimodal embeddings move progressively closer to the DINOv2 embeddings. This is consistent with the rise in the alignment metric.
 
 ![MDS Alignment Visualization](/images/deep_learning_project/pca_alignment.jpg)
-*Figure 4. MDS plots of the embeddings from the DINOv2-small encoder (blue) and our aligned multimodal encoder (yellow) at the first epoch (left) and last epoch (right) of training, for both adapter types: (A) linear and (B) MLP. The multimodal representations become progressively more aligned with the DINOv2 embeddings during training.*
+*Figure 4. MDS plots of the embeddings from the DINOv2-small encoder (blue) and our aligned multimodal encoder (red) at the first epoch (left) and last epoch (right) of training, for both adapter types: (A) linear and (B) MLP. The multimodal representations become progressively more aligned with the DINOv2 embeddings during training.*
 
 ### Support for the Key Hypotheses
 
@@ -283,7 +283,9 @@ We aim to extend our experiments to a third modality, such as audio. For example
 
 We will also generalize the dual-encoder loss to a **multi-encoder contrastive loss** for $M$ modalities:
 
-$$\mathcal{L}_{\text{multi-encoder}} = -\frac{1}{N} \sum_{i=1}^N \log \frac{\exp\left(\sum_k \prod_{m=1}^M (f_m^{(i)})_k / \tau\right)} {\sum_{j=1}^N \exp\left(\sum_k \prod_{m=1}^M (f_m^{(j)})_k / \tau\right)}.$$
+$$\mathcal{L}_{\text{multi-encoder}} = -\frac{1}{N} \sum_{i=1}^N \log \frac{\exp\left(\sum_k (f_1^{(i)})_k \prod_{m=2}^M (f_m^{(i)})_k / \tau\right)} {\sum_{j=1}^N \exp\left(\sum_k (f_1^{(i)})_k \prod_{m=2}^M (f_m^{(j)})_k / \tau\right)}.$$
+
+Modality 1 is the anchor. The numerator scores sample $i$'s own tuple, and each term in the denominator pairs sample $i$'s anchor with the other modalities of sample $j$.
 
 ### 3. Zero-Shot Evaluation with Pre-Trained Heads
 

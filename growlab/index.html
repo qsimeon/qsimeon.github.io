@@ -284,8 +284,8 @@ function render(d){
       `Flat vs grown at identical FLOP budget, schedule shape, data order and final architecture, `
      +`each arm at its own best peak LR (flat 5e-4, grown 1e-3). `
      +`${c.verdict==='grown wins'?'<strong>Every grown seed beats every flat seed</strong>':'The seeds overlap'} (Cohen's d=${s.cohens_d.toFixed(2)}). `
-     +`<strong>Read this narrowly:</strong> both arms are pinned to a 5.9M endpoint that is ~10× above `
-     +`compute-optimal for this budget. An unconstrained 1.2M flat model scores 3.905 and beats both. `
+     +`<strong>Read this narrowly:</strong> both arms are pinned to a 5.9M endpoint, about 5× the best flat size we trained `
+     +`(1.2M) and roughly 10× a rough, untrained estimate of the optimum (0.6M). An unconstrained 1.2M flat model at its best LR scores 3.775 (3 seeds) and beats both. `
      +`Growth wins <em>when the target size is fixed</em>, not in general. `
      +`Per-run nondeterminism on MPS is ~0.05, so treat the last two decimals as noise.`;
     tiles.insertAdjacentHTML('beforeend',
@@ -297,9 +297,9 @@ function render(d){
        <div class="m">both arms ran at 1e-3, about twice the flat arm's stable limit,
        so one flat seed half-diverged. Retracted.</div></div>
        <div class="tile"><div class="k">Unconstrained baseline</div>
-       <div class="v" style="color:var(--warning)">3.905</div>
-       <div class="m">a flat 1.2M model with the same budget and no fixed endpoint
-       beats the grown 5.9M trajectory</div></div>`);
+       <div class="v" style="color:var(--warning)">3.775</div>
+       <div class="m">a flat 1.2M model with the same budget, no fixed endpoint and its best LR
+       (2e-3, 3 seeds) beats the grown 5.9M trajectory</div></div>`);
   } else if(arms.length) document.getElementById('verdict').textContent='running…';
 
   const a=d.autolab, ours=S.grown.mean;

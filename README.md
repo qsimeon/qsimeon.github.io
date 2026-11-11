@@ -54,6 +54,9 @@ assets/js/connectome.js the animated neural graph behind the home hero (pages op
   `_includes/visual.html` (`growth`, `scaling`, `terminal`, `merge`, `forks`, `quote`).
 - **Math.** Add `math: true` to a post's front matter to load MathJax on that page only.
 - **Plugins** must be on the GitHub Pages whitelist: feed, sitemap, seo-tag, redirect-from.
+- **Local preview** must override `url` (`bundle exec jekyll serve` does this), or pages load their CSS from production.
+- **Posts that live elsewhere.** A post with `link:` in its front matter makes its card open that URL instead (`_includes/post-row.html`). Add `redirect_to:` and `sitemap: false` so the post's own URL forwards there, as `letting-go` does.
+- **Résumé and CV.** `files/qsimeon_resume.pdf` comes from the public variant of the LaTeX résumé. Keep `_data/cv.yml` in sync with it by hand.
 - **Voice.** Write in first person, in complete sentences. No em dashes and no semicolons in prose. State claims
   directly instead of through "not X but Y" contrasts, and use noun headings. Pages describe the work in its final
   state, without revision history or local paths. Code blocks, figures and numbers are never edited for style.
