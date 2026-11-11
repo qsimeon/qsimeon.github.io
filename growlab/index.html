@@ -12,7 +12,7 @@
 </script>
 <meta name="theme-color" content="#f8f7f4" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0a0a0c" media="(prefers-color-scheme: dark)">
-<title>growlab — choosing the parameter trajectory N(t)</title>
+<title>GrowLab: choosing the parameter trajectory N(t)</title>
 <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -126,18 +126,18 @@
 
   <header>
     <div>
-      <h1>growlab</h1>
-      <p class="sub">Scaling laws ask: given compute <em>C</em>, choose <em>N</em> and <em>D</em>.
-        They assume the parameter count <em>N</em> is constant for the whole run — and never argued for it.</p>
-      <p class="q">So: given compute <em>C</em>, choose the <strong>trajectory N(t)</strong>. The answer is a shape, not a number.</p>
+      <h1>GrowLab</h1>
+      <p class="sub">A scaling law takes compute <em>C</em> and chooses the parameter count <em>N</em> and token count <em>D</em>.
+        Each law assumes that <em>N</em> stays constant for the whole run without arguing for it.</p>
+      <p class="q">GrowLab asks a different question: given compute <em>C</em>, choose the <strong>trajectory N(t)</strong>. The answer is a whole curve rather than a single number.</p>
     </div>
     <div class="live"><span class="dot" id="dot"></span><span id="livetxt">connecting…</span></div>
   </header>
 
   <div class="card">
     <div class="row"><div><h2>The control</h2>
-      <p class="note" id="ctlnote">Flat vs grown, identical LR schedule, identical FLOP budget, multiple seeds.
-        The original result changed four things at once and ran one seed.</p></div></div>
+      <p class="note" id="ctlnote">The flat and grown arms share a learning-rate schedule and FLOP budget across multiple seeds.
+        The first version of this result changed four things at once and ran one seed.</p></div></div>
     <div class="hero">
       <div><div class="tile"><div class="k">Verdict</div>
         <div class="verdict" id="verdict">running…</div></div></div>
@@ -147,7 +147,7 @@
 
   <div class="charts">
     <div class="card">
-      <div class="row"><div><h2>Validation loss vs compute spent</h2>
+      <div class="row"><div><h2>Validation loss against compute spent</h2>
         <p class="note">Both arms stop at the same FLOP budget. Lower is better.</p></div>
         <button class="toggle" data-t="t1">table</button></div>
       <div class="legend" id="lg1"></div>
@@ -155,7 +155,7 @@
     </div>
     <div class="card">
       <div class="row"><div><h2>Parameter trajectory N(t)</h2>
-        <p class="note">The shape under test. Both arms end at the same architecture.</p></div>
+        <p class="note">This is the shape under test. Both arms must end at the same architecture.</p></div>
         <button class="toggle" data-t="t2">table</button></div>
       <div class="legend" id="lg2"></div>
       <div id="c2"></div><div id="t2" hidden></div>
@@ -163,8 +163,8 @@
   </div>
 
   <div class="card">
-    <div class="row"><div><h2>AutoLab — searching trajectory space</h2>
-      <p class="note">Six hand-run points is not a search. An autonomous agent proposes,
+    <div class="row"><div><h2>AutoLab search of trajectory space</h2>
+      <p class="note">Six hand-run points are too few for a search, so an autonomous agent proposes,
         runs and merges growth schedules against the objective.</p></div>
       <a id="allink" class="toggle" href="#" target="_blank" rel="noopener">dashboard ↗</a></div>
     <div id="albest"></div>
@@ -276,14 +276,14 @@ function render(d){
     // wins must say so on the public page.
     const sep = c.verdict === 'grown wins' || (S.grown.mean < S.flat.mean);
     document.getElementById('verdict').innerHTML = sep
-      ? `growth wins<span style="font-size:19px;font-weight:500"> — at a fixed target size</span>`
+      ? `growth wins<span style="font-size:19px;font-weight:500">, at a fixed target size</span>`
       : c.verdict;
     document.getElementById('verdict').style.color = sep ? 'var(--good)' : 'var(--warning)';
     document.getElementById('ctlnote').innerHTML=
       `Flat vs grown at identical FLOP budget, LR schedule, data order and final architecture. `
      +`<strong>Every grown seed beats every flat seed</strong> (Cohen's d=${s.cohens_d.toFixed(2)}). `
      +`<strong>Read this narrowly:</strong> both arms are pinned to a 5.9M endpoint that is ~10× above `
-     +`compute-optimal for this budget — an unconstrained 1.2M flat model scores 3.905 and beats both. `
+     +`compute-optimal for this budget. An unconstrained 1.2M flat model scores 3.905 and beats both. `
      +`Growth wins <em>when the target size is fixed</em>, not in general. `
      +`Per-run nondeterminism on MPS is ~0.05, so treat the last two decimals as noise.`;
     tiles.insertAdjacentHTML('beforeend',
@@ -292,12 +292,12 @@ function render(d){
        <div class="m">Cohen's d ${s.cohens_d.toFixed(2)} · Welch t ${s.welch_t.toFixed(2)}, df 2</div></div>
        <div class="tile"><div class="k">vs LR-matched baseline</div>
        <div class="v">−0.397</div>
-       <div class="m">flat at its own best LR (5e-4) scores 4.509 ± 0.015 —
-       separation holds, gap halves</div></div>
+       <div class="m">flat at its own best LR (5e-4) scores 4.509 ± 0.015,
+       so the separation holds and the gap halves</div></div>
        <div class="tile"><div class="k">Unconstrained baseline</div>
        <div class="v" style="color:var(--warning)">3.905</div>
-       <div class="m">a flat 1.2M model, same budget, no fixed endpoint — beats
-       the grown 5.9M trajectory</div></div>`);
+       <div class="m">a flat 1.2M model with the same budget and no fixed endpoint
+       beats the grown 5.9M trajectory</div></div>`);
   } else if(arms.length) document.getElementById('verdict').textContent='running…';
 
   const a=d.autolab, ours=S.grown.mean;
@@ -325,7 +325,7 @@ function render(d){
   document.getElementById('livetxt').textContent=a.live?'agent live':'agent idle';
   document.getElementById('foot').innerHTML=
     `Controlled: identical WSD schedule, identical peak LR, identical FLOP budget, identical data order, `
-   +`same final architecture. Varied: the shape of N(t). &nbsp;·&nbsp; 4096-token BPE over WikiText-103 — `
+   +`same final architecture. Varied: the shape of N(t). &nbsp;·&nbsp; 4096-token BPE over WikiText-103, `
    +`a small vocab so the transformer body, not the embedding matmul, dominates FLOPs. `
    +`&nbsp;·&nbsp; snapshot ${d.generated_at}`;
 }

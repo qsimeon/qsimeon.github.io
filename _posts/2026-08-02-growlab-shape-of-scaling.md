@@ -3,16 +3,16 @@ title: "GrowLab: Scaling Laws Assume Model Size Is Constant. What If It Grows?"
 date: 2026-08-02
 permalink: /blog/growlab/
 tags: [machine-learning, scaling-laws, language-models, agents, autonomous-research, hackathon]
-excerpt: "Training compute is the area under the parameter-count curve, and a rectangle is only one shape with a given area. We built a harness where the growth schedule is a searchable parameter, handed it to an autonomous research agent, and then spent the last hours of the build trying to break our own headline. Two of three claims did not survive."
+excerpt: "Training compute is the area under the parameter-count curve, and a rectangle is only one shape with a given area. We built a harness that makes the growth schedule a searchable parameter and handed it to an autonomous research agent. Then we spent the last hours of the build trying to break our own headline. Two of three claims did not survive."
 ---
 
-A scaling law answers a narrow, useful question: given a fixed compute budget *C*, how many parameters *N* should the model have, and how many tokens *D* should it see? Chinchilla and its successors answer that well, and the answer shapes how essentially every modern language model is provisioned.
+A scaling law answers a narrow and useful question. Given a fixed compute budget *C*, how many parameters *N* should a model have, and how many tokens *D* should it see? Chinchilla and the laws that followed answer this well, and their answer shapes how nearly every modern language model is sized.
 
-But look at what every one of those laws quietly assumes. *N* is a single number, fixed at step zero and held there until the run ends. That is not a finding — nobody ever ran the experiment that justified it. It is simply how models are built.
+Every one of those laws also assumes that *N* is a single number, set at step zero and held until the run ends. That assumption is an untested habit of how models are built.
 
-Now notice what compute actually costs. Each optimizer step spends roughly `6N` floating-point operations per token, so the bill for a run is the integral of *N* over the run: **training compute is the area under the parameter-count curve.** If *N* is constant, that area is a rectangle — one shape among infinitely many with the same area.
+Compute itself allows other choices. Each optimizer step costs roughly `6N` floating-point operations per token, so the total cost of a run is the integral of *N* over training. In other words, **training compute is the area under the parameter-count curve.** A constant *N* makes that area a rectangle, which is only one of many shapes with the same area.
 
-So the question underneath this project is not "how big should the model be?" It is:
+So this project asks a different question:
 
 > Given compute *C*, what **shape** should *N(t)* trace?
 
@@ -36,8 +36,8 @@ So the question underneath this project is not "how big should the model be?" It
 <line x1="410" y1="250" x2="720" y2="250"/>
 </g>
 <g font-family="inherit" font-size="12.5" font-weight="600">
-<text x="40" y="28" fill="#3987e5">CONSTANT N — the assumption</text>
-<text x="410" y="28" fill="#d95926">GROWING N(t) — same compute</text>
+<text x="40" y="28" fill="#3987e5">CONSTANT N: the assumption</text>
+<text x="410" y="28" fill="#d95926">GROWING N(t): same compute</text>
 </g>
 <g fill="currentColor" fill-opacity="0.6" font-size="11" font-family="inherit">
 <text x="46" y="72">5.9M parameters, 2,433 steps</text>
@@ -50,28 +50,26 @@ So the question underneath this project is not "how big should the model be?" It
 <text x="575" y="180">same area</text>
 </g>
 </svg>
-<figcaption style="text-align:center;font-size:0.85em;font-style:italic;opacity:0.7;margin-top:0.7em;">The two shaded regions are the same size. Under the 6N approximation the areas of these two real trajectories agree to within 0.001% — both runs spent 4×10<sup>14</sup> FLOPs. Staying small early is what buys the growing run 2,908 optimizer steps instead of 2,433.</figcaption>
+<figcaption style="text-align:center;font-size:0.85em;font-style:italic;opacity:0.7;margin-top:0.7em;">The two shaded regions are the same size. Under the 6N approximation the areas of these two real trajectories agree to within 0.001%: both runs spent 4×10<sup>14</sup> FLOPs. Staying small early buys the growing run 2,908 optimizer steps instead of 2,433.</figcaption>
 </figure>
 
-The intuition for why the rectangle might be the wrong shape is simple. Early in training a model is learning cheap statistics — which tokens are frequent, that a space usually follows a word — and that knowledge needs almost no capacity. Carrying 5.9M parameters through those steps is paying for a machine you are not yet able to use. Start smaller, buy more steps with the same operations, and add capacity later, when there is something worth spending it on.
+The intuition for why a rectangle might be the wrong shape is simple. Early in training, a model is learning cheap statistics, such as which tokens are frequent and that a space usually follows a word. That knowledge needs almost no capacity, so carrying 5.9M parameters through those steps pays for a machine the model cannot use yet. A better plan may be to start small, spend the saved operations on more steps, and add capacity later, once there is something worth spending it on.
 
-## The system, which is really the point
+## The harness and the agent
 
-The scientific question is old-fashioned. How we attacked it is not.
+**GrowLab** is a small training harness with a FLOP budget. The line of code that matters most is the loop condition. Each step adds `flops_per_token(model) × tokens` to a running total, and training stops when the total reaches the budget. The number of steps is therefore an *output* of the trajectory. A wall-clock budget would measure how well the hardware handles small matrix multiplications. A step budget would quietly handicap the growing arm, because that arm is smaller for part of the run and so spends less compute. A FLOP budget is the only one that asks the question we meant to ask.
 
-**GrowLab** is a small FLOP-budgeted training harness. The one line of code that matters is the loop condition: it accumulates `flops_per_token(model) × tokens` each step and stops when the budget is exhausted, so step count is an *output* of the trajectory rather than an input. Budget by wall-clock and you measure how well your hardware packs small matmuls; budget by steps and you have silently handicapped the growing arm, which is smaller for part of the run and therefore spends strictly less compute. Only a FLOP budget asks the question we meant to ask.
+The second design decision is that the growth schedule is a **parameter** that can be searched. A string like `200:width:192,400:depth,600:width:256,800:depth,1000:depth` means *widen to 192 dimensions at step 200, add a layer at step 400*, and so on. That string defines a search space, and a search space can be handed to an agent.
 
-The second design decision: the growth schedule is a **parameter**, not a preset. A string like `200:width:192,400:depth,600:width:256,800:depth,1000:depth` means *widen to 192 dimensions at step 200, add a layer at step 400*, and so on. That string is a search space, and search spaces are things you can hand to an agent.
+We did exactly that, using two platforms with two separate jobs.
 
-Which is exactly what happened. Two platforms were involved, doing two completely different jobs.
+**[AutoLab](https://app.autolab.ai/projects/qsimeon/growlab) was the researcher.** Its control node holds an LLM agent, an objective ("minimise mean validation loss at a fixed 4×10<sup>14</sup> FLOP budget by choosing the trajectory *N(t)*"), and a set of constraints. The agent writes a schedule into `grow/experiment.py`, commits it, and queues the job. My laptop, attached as an execution node, picks up the job, trains three seeds, and prints one line: `OBJECTIVE 4.07450`. The agent reads that number, marks the experiment merged or discarded, and writes its next hypothesis. It ran **eight experiments on its own**. After the first one, no person chose what to try. It reproduced our hand-built schedule exactly and then beat it by moving growth 50 steps earlier. Then it stopped itself with the status *"remaining variation is seed noise."* Stopping at the noise floor was the right call.
 
-**[AutoLab](https://app.autolab.ai/projects/qsimeon/growlab) was the researcher.** Its control node holds an LLM agent, an objective ("minimise mean validation loss at a fixed 4×10<sup>14</sup> FLOP budget by choosing the trajectory *N(t)*"), and a set of constraints. The agent writes a schedule into `grow/experiment.py`, commits it, and queues the job. My laptop — attached as an execution node — picks it up, trains three seeds, and prints one line: `OBJECTIVE 4.07450`. The agent reads that float, marks the experiment merged or discarded, and writes the next hypothesis. It ran **eight experiments autonomously**; after the first, no human chose what to try. It reproduced our hand-built schedule exactly, beat it by shifting growth 50 steps earlier, then stopped itself with the status *"remaining variation is seed noise."* An agent that declines to keep optimising below the noise floor is doing the right thing.
+AutoLab supplies no compute, since the laptop is the only hardware in the project. It also never sees a loss curve, a growth event or a trajectory. Its whole view of a seven-minute run is one number on the last line of the output.
 
-What AutoLab does **not** do: it supplies no compute — the laptop is the only silicon in the project — and it never sees a loss curve, a growth event, or a trajectory. Its entire view of a seven-minute run is one number on the last line of stdout.
+**[Maritime](https://api.maritime.sh/a/961c500c-7530-4c1a-b8cd-d276b7bec384/) was the front door.** It builds the repository's Dockerfile into a serverless micro-VM and serves the results dashboard at a public URL. That is its only job. Because the dashboard runs there, the demo keeps working when the laptop lid closes or the conference Wi-Fi drops. Maritime does no training and holds no GPU, no LLM, no AutoLab credentials and no record of the experiments.
 
-**[Maritime](https://api.maritime.sh/a/961c500c-7530-4c1a-b8cd-d276b7bec384/) was the front door.** It builds the repo's Dockerfile into a serverless micro-VM and serves the results dashboard on a public URL. That is the whole job, and it is the reason the demo survives a laptop lid closing or a conference-room wifi outage. What Maritime does **not** do: no training, no GPU, no LLM, no AutoLab credentials, no knowledge that an experiment exists.
-
-The structurally important fact is that **the two platforms never talk to each other.** They are not two halves of a pipeline; they are independent consumers of the same repository, and the only thing crossing between them is a single JSON file the laptop writes. If Maritime is down the science continues. If the agent has finished or the login expired, the dashboard still renders.
+The most important structural fact is that **the two platforms never talk to each other.** Each one reads the same repository on its own. The only thing that passes between them is a single JSON file that the laptop writes. If Maritime is down, the science continues. If the agent has finished or its login has expired, the dashboard still renders.
 
 <figure style="display:block; margin:2.2em 0;">
 <svg viewBox="0 0 760 430" width="100%" role="img" aria-labelledby="f3t" style="max-width:100%;height:auto;overflow:visible">
@@ -82,7 +80,7 @@ The structurally important fact is that **the two platforms never talk to each o
 <marker id="glArrB" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#3987e5"/></marker>
 </defs>
 <rect x="14" y="26" width="290" height="112" rx="10" fill="#d95926" fill-opacity="0.1" stroke="#d95926" stroke-opacity="0.5"/>
-<text x="32" y="52" fill="#d95926" font-size="12.5" font-weight="600" font-family="inherit">AUTOLAB — the researcher</text>
+<text x="32" y="52" fill="#d95926" font-size="12.5" font-weight="600" font-family="inherit">AUTOLAB: the researcher</text>
 <g fill="currentColor" fill-opacity="0.65" font-size="11" font-family="inherit">
 <text x="32" y="74">LLM agent holding the objective.</text>
 <text x="32" y="92">Proposes N(t), dispatches, reads</text>
@@ -90,7 +88,7 @@ The structurally important fact is that **the two platforms never talk to each o
 <text x="32" y="130" fill-opacity="0.75">No GPU. No curves. No dashboard.</text>
 </g>
 <rect x="456" y="26" width="290" height="112" rx="10" stroke="currentColor" stroke-opacity="0.4" fill="currentColor" fill-opacity="0.03"/>
-<text x="474" y="52" fill="currentColor" font-size="12.5" font-weight="600" font-family="inherit">LAPTOP — the only compute</text>
+<text x="474" y="52" fill="currentColor" font-size="12.5" font-weight="600" font-family="inherit">LAPTOP: the only compute</text>
 <g fill="currentColor" fill-opacity="0.65" font-size="11" font-family="inherit">
 <text x="474" y="74">FLOP-budgeted training loop.</text>
 <text x="474" y="92">3 seeds, ~2,900 steps, ~7 min.</text>
@@ -107,7 +105,7 @@ The structurally important fact is that **the two platforms never talk to each o
 <text x="601" y="242" fill="currentColor" fill-opacity="0.6" font-size="10.5" text-anchor="middle" font-family="inherit">the only artifact that crosses</text>
 <path d="M601,256 L601,306" stroke="#3987e5" stroke-width="1.8" fill="none" marker-end="url(#glArrB)"/>
 <rect x="456" y="312" width="290" height="98" rx="10" fill="#3987e5" fill-opacity="0.1" stroke="#3987e5" stroke-opacity="0.5"/>
-<text x="474" y="338" fill="#3987e5" font-size="12.5" font-weight="600" font-family="inherit">MARITIME — the front door</text>
+<text x="474" y="338" fill="#3987e5" font-size="12.5" font-weight="600" font-family="inherit">MARITIME: the front door</text>
 <g fill="currentColor" fill-opacity="0.65" font-size="11" font-family="inherit">
 <text x="474" y="360">Micro-VM built from the Dockerfile.</text>
 <text x="474" y="378">Serves the dashboard on a public URL.</text>
@@ -119,25 +117,27 @@ The structurally important fact is that **the two platforms never talk to each o
 <text x="264" y="381" fill="currentColor" fill-opacity="0.55" font-size="11" font-family="inherit">the two platforms</text>
 <text x="264" y="397" fill="currentColor" fill-opacity="0.55" font-size="11" font-family="inherit">never talk to each other</text>
 </svg>
-<figcaption style="text-align:center;font-size:0.85em;font-style:italic;opacity:0.7;margin-top:0.7em;">Three machines, three jobs. A cloud agent decides <em>what</em> to run; a laptop runs it; a micro-VM shows the result to strangers. Nothing about the science depends on the third, and nothing about the demo depends on the first.</figcaption>
+<figcaption style="text-align:center;font-size:0.85em;font-style:italic;opacity:0.7;margin-top:0.7em;">Three machines do three jobs. A cloud agent decides <em>what</em> to run, a laptop runs it, and a micro-VM shows the result to strangers. The science runs without the third machine, and the demo runs without the first.</figcaption>
 </figure>
 
-## What we measured, and what happened when we checked it
+## Results
 
-The control is a straight A/B. One arm starts at 6 layers, 256 dimensions (5.9M parameters) and stays there; the other starts at 3 layers, 128 dimensions (1.2M parameters) and grows into the identical final architecture across five events. Both get the same FLOP budget, the same WikiText-103 token stream in the same order, the same fixed evaluation slice, and three seeds.
+The control is a straight A/B comparison. One arm starts at 6 layers and 256 dimensions (5.9M parameters) and stays there. The other starts at 3 layers and 128 dimensions (1.2M parameters) and grows into the same final architecture over five growth events. Both arms get the same FLOP budget, the same WikiText-103 tokens in the same order, the same fixed evaluation slice, and three seeds.
 
 | arm | val loss | seeds | steps bought |
 |---|---|---|---|
 | flat (constant *N*) | 4.509 ± 0.015 | 4.525, 4.496, 4.506 | 2,433 |
 | **grown** (1.2M → 5.9M) | **4.111** ± 0.053 | 4.080, 4.172, 4.082 | **2,908** |
 
-A gap of 0.397 nats with complete seed separation: the worst grown seed (4.172) still beats the best flat seed (4.496), no overlap. The mechanism is visible in the last column — being small early buys 19% more optimizer steps for the same operations.
+The grown arm wins by 0.397 nats, and the seeds separate completely: the worst grown seed (4.172) still beats the best flat seed (4.496). The last column shows the mechanism. Staying small early buys 19% more optimizer steps for the same number of operations.
 
-That is the number we report now. It is not the number we had at first. **Our first headline was a 0.913-nat gap and "102× more stable".** Both were artifacts of our own design, found by spending the last hours of the build attacking our result instead of polishing it.
+## Checking our own result
 
-The first artifact was the learning rate. Both arms ran at 1e-3, a value inherited from the growing preset. The grown arm begins at 3 layers and 128 dimensions, where 1e-3 is near optimal; the flat arm is 6 layers and 256 dimensions from step zero, where 1e-3 is roughly twice its stable limit. So the "controlled" learning rate was one arm's setting imposed on the other. Given its own best rate, 5e-4, the flat arm scores 4.509 ± 0.015 rather than 5.024 ± 0.532 — the gap halves, and the stability claim does not merely shrink, it **reverses**: at each arm's own learning rate the flat arm is about 3.6× *more* stable than the grown one. What we had reported as "growth buys learning-rate robustness" was one flat seed half-diverging at a rate that model could not take.
+That is the number we report now, but our first headline was different. **At first we claimed a 0.913-nat gap and "102× more stable" training.** Both came from flaws in our own design, and we found them by spending the last hours of the build attacking the result instead of polishing it.
 
-The second artifact was worse, because it was baked into the question. Both arms were pinned to finish at 5.9M parameters — same finish line, fair race. But for a 4×10<sup>14</sup> FLOP budget compute-optimal is around 0.6M parameters, so the mandated endpoint is roughly **ten times larger than the budget wants**. Lift the constraint and run a plain flat 1.2M model at the same budget: it scores **3.905**, beating our growth trajectory outright, because at that size the same FLOPs buy 11,811 steps instead of 2,908. (A later per-arm learning-rate sweep put the same model at 3.775 ± 0.008, which only widens the margin.)
+The first flaw was the learning rate. Both arms ran at 1e-3, a value carried over from the growing preset. That rate is close to optimal for the grown arm, which begins at 3 layers and 128 dimensions. The flat arm has 6 layers and 256 dimensions from step zero, and for that model 1e-3 is about twice the stable limit. Our "controlled" learning rate was really one arm's setting imposed on the other. At its own best rate of 5e-4, the flat arm scores 4.509 ± 0.015 instead of 5.024 ± 0.532. That halves the gap and **reverses** the stability claim. When each arm uses its own learning rate, the flat arm is about 3.6× *more* stable than the grown one. The learning-rate robustness we had credited to growth was one flat seed half-diverging at a rate that model could not handle.
+
+The second flaw was worse, because it was built into the question. We required both arms to finish at 5.9M parameters so that they would run the same race. For a 4×10<sup>14</sup> FLOP budget, though, the compute-optimal size is around 0.6M parameters, so the required endpoint is about **ten times larger than the budget wants**. When we removed that constraint and trained a plain flat 1.2M model on the same budget, it scored **3.905** and beat our growth trajectory outright. At that size the same FLOPs buy 11,811 steps instead of 2,908. (A later learning-rate sweep for each arm put the same model at 3.775 ± 0.008, which widens the margin.)
 
 <figure style="display:block; margin:2.2em 0;">
 <svg viewBox="0 0 760 400" width="100%" role="img" aria-labelledby="f2t" style="max-width:100%;height:auto;overflow:visible">
@@ -167,45 +167,43 @@ The second artifact was worse, because it was baked into the question. Both arms
 <circle cx="719.3" cy="294.9" r="3.8" fill="#0f9d8f"/>
 <g font-size="11" font-family="inherit">
 <rect x="306" y="72" width="24" height="3" rx="1.5" fill="#3987e5"/>
-<text x="340" y="78" fill="currentColor" fill-opacity="0.75">flat, 5.9M params — 2,433 steps — final 4.509</text>
+<text x="340" y="78" fill="currentColor" fill-opacity="0.75">flat, 5.9M params · 2,433 steps · final 4.509</text>
 <rect x="306" y="98" width="24" height="3" rx="1.5" fill="#d95926"/>
-<text x="340" y="104" fill="currentColor" fill-opacity="0.75">grown, 1.2M → 5.9M — 2,908 steps — final 4.111</text>
+<text x="340" y="104" fill="currentColor" fill-opacity="0.75">grown, 1.2M → 5.9M · 2,908 steps · final 4.111</text>
 <rect x="306" y="124" width="24" height="3" rx="1.5" fill="#0f9d8f"/>
-<text x="340" y="130" fill="currentColor" fill-opacity="0.75">flat, 1.2M params, unconstrained — 11,811 steps — 3.905</text>
+<text x="340" y="130" fill="currentColor" fill-opacity="0.75">flat, 1.2M params, unconstrained · 11,811 steps · 3.905</text>
 </g>
-<text x="340" y="152" fill="currentColor" fill-opacity="0.45" font-size="10.5" font-family="inherit">all three spend exactly 4×10¹⁴ FLOPs; lower is better</text>
+<text x="340" y="152" fill="currentColor" fill-opacity="0.45" font-size="10.5" font-family="inherit">all three spend exactly 4×10¹⁴ FLOPs. Lower is better</text>
 </svg>
-<figcaption style="text-align:center;font-size:0.85em;font-style:italic;opacity:0.7;margin-top:0.7em;">Growth beats the flat model <em>at the same 5.9M endpoint</em> (orange below blue). Both lose to a flat 1.2M model that was never told where to finish (teal). Curves are the in-run evaluations logged every 50 steps over 20 batches; the quoted final numbers use a 50-batch evaluation and run about 0.05 higher. Seed 0 shown for each arm.</figcaption>
+<figcaption style="text-align:center;font-size:0.85em;font-style:italic;opacity:0.7;margin-top:0.7em;">Growth beats the flat model <em>at the same 5.9M endpoint</em> (orange below blue). Both lose to a flat 1.2M model that was never told where to finish (teal). Curves are the in-run evaluations logged every 50 steps over 20 batches. The quoted final numbers use a 50-batch evaluation and run about 0.05 higher. Seed 0 shown for each arm.</figcaption>
 </figure>
 
-So the claim that survives is real but much narrower than the one we started the day with:
+The claim that survives is real, but it is much narrower than the one we started the day with:
 
-> At a fixed FLOP budget, with both arms required to end at 5.9M parameters and each arm at its own best learning rate, **growing into a target size beats starting at that size** — 0.397 nats, with complete seed separation.
+> At a fixed FLOP budget, with both arms required to end at 5.9M parameters and each arm at its own best learning rate, **growing into a target size beats starting at that size** by 0.397 nats, with complete seed separation.
 
-The conditions it is hostage to belong in the same breath. It is conditional on an endpoint about ten times larger than compute-optimal. It is 5.9M parameters, roughly 2,900 steps, one laptop. It is three seeds against a kernel-nondeterminism floor of about 0.05 nats on Apple Silicon, which means our four-decimal figures carry about two significant figures of real signal. Growth is not shown to be compute-optimal in general — only to be the better way to *arrive at an oversized model*.
+That claim comes with conditions. It depends on an endpoint about ten times larger than compute-optimal. It covers 5.9M parameters, roughly 2,900 steps and one laptop. It rests on three seeds, against a floor of about 0.05 nats of kernel nondeterminism on Apple Silicon, so our four-decimal figures carry only about two significant figures of real signal. We have shown that growth is the better way to *arrive at an oversized model*. We have not shown that growth is compute-optimal in general.
 
-There is a sting in that. The endpoint constraint was enforced in code: any trajectory not ending at exactly 5.9M raises `SystemExit` before its loss is ever reported. So the configuration that actually wins was **structurally unreachable by the agent**. However well it searched, it could not have found it. We handed our researcher a search space that excluded the best known answer.
+The endpoint constraint also hurt the agent. Our code enforced it: any trajectory that did not end at exactly 5.9M raised `SystemExit` before its loss was reported. The configuration that actually wins was therefore **structurally unreachable by the agent**. We had handed our researcher a search space that excluded the best known answer, so even a perfect search would have missed it.
 
-## The lesson, which is the most valuable thing here
+## The lesson
 
-Both errors are the same species. The instinct to hold everything constant and vary one thing is correct as a default, but **fixing a variable only controls it when that variable's optimum does not interact with the treatment.** When the optimum moves with the treatment, fixing it does not neutralise the variable — it silently picks a winner.
+Both mistakes have the same cause. Holding everything constant and varying one thing is a good default, but **fixing a variable only controls for it when that variable's optimum does not depend on the treatment.** When the optimum moves with the treatment, fixing the variable silently picks a winner.
 
-Optimal learning rate depends on model size, and our two arms were different sizes for most of training. Sharing a learning rate between them was therefore not a control; it was a handicap applied to whichever arm the shared value fit worse. Fixing the endpoint was the same mistake one level up: the question was *what shape should N(t) trace*, and pinning the terminal value of *N(t)* assumed part of the answer before measuring it.
+The optimal learning rate depends on model size, and our two arms were different sizes for most of training. A shared learning rate handicapped whichever arm it fit worse. Fixing the endpoint was the same mistake one level up. The question was *what shape should N(t) trace*, and pinning the final value of *N(t)* assumed part of the answer before we measured it.
 
-The practical rule: for any claim of the form "X beats Y," **tune each arm independently and compare best to best.** Anything else measures "X beats Y at Y's bad settings." Safe to fix are the things whose optimum genuinely does not move — dataset, data order, evaluation set, compute budget, seed count. Tuned per arm: learning rate, warmup length, probably batch size.
+The practical rule is this: for any claim of the form "X beats Y," **tune each arm independently and compare best to best.** Any other comparison measures whether X beats Y at Y's bad settings. It is safe to fix the things whose optimum really does not move: the dataset, data order, evaluation set, compute budget and number of seeds. The learning rate, the warmup length and probably the batch size should be tuned for each arm.
 
-## What is still open
+## Open questions
 
-**Does growth ever beat the compute-optimal flat model, or only oversized endpoints?** This decides whether there is a general result at all. Settling it means sweeping the endpoint and asking whether the grown curve ever dips beneath the flat frontier or merely approaches it from above. Our one probe is inconclusive: a trajectory ending at 2.7M scores 3.787 ± 0.018 against 3.911 ± 0.032 for a flat 2.7M model — a real win at a matched endpoint — but it only ties the best flat model overall (3.775 ± 0.008), inside the noise floor.
+**Does growth ever beat the compute-optimal flat model, or only oversized endpoints?** The answer decides whether there is a general result at all. Settling it means sweeping the endpoint to see whether the grown curve ever drops below the flat frontier or only approaches it from above. Our one probe is inconclusive. A trajectory ending at 2.7M scores 3.787 ± 0.018, against 3.911 ± 0.032 for a flat 2.7M model, which is a real win at a matched endpoint. It only ties the best flat model overall (3.775 ± 0.008), within the noise floor.
 
-**Does any of it survive at real scale?** Chinchilla predicts where growth should fail: at roughly 20 tokens per parameter, a grown model reaches its final size having seen far fewer than 20·*N* tokens *at* that size, so it is structurally undertrained for what it has become. Whether time spent smaller substitutes for those missing tokens is unknown.
+**Does any of it survive at real scale?** Chinchilla predicts where growth should fail. At roughly 20 tokens per parameter, a grown model reaches its final size having seen far fewer than 20·*N* tokens *at* that size, so it is undertrained for the model it has become. We do not know whether the time it spent smaller makes up for those missing tokens.
 
-**Should growth be triggered rather than scheduled?** Our step numbers have no justification beyond "they worked," and the agent's most productive move was shifting them 50 steps earlier — so timing matters and we did not know the right timing. But "step 200" is not a *reason* to grow. A model should grow when its current size stops being the thing limiting it: a condition, not a clock. Turning that into a measurable trigger would make growth a policy rather than a hyperparameter you must search.
+**Should a condition trigger growth instead of a schedule?** Our step numbers have no justification beyond the fact that they worked. The agent's most productive move was shifting them 50 steps earlier, which shows that timing matters and that we did not know the right timing. "Step 200" gives no *reason* to grow. A model should grow when its current size becomes the thing limiting it. Turning that idea into a measurable trigger would make growth a policy, so nobody would have to search for it as a hyperparameter.
 
-Beyond those: should the model choose width versus depth for itself, and what about **sparsity** — growing into a larger but sparser model, so parameter count rises faster than FLOP count? And one a practitioner asks first: at matched FLOPs the grown arm is **6 to 11% slower in wall-clock**, because small matmuls underutilise the device. The operations are genuinely saved; the seconds are not. Probably a scale artifact, but we have not shown where the wall-clock curve crosses, and reporting only FLOPs would be choosing the metric that flatters us.
+A few more questions follow from these. Should the model choose between width and depth for itself? What about **sparsity**, growing into a larger but sparser model so that the parameter count rises faster than the FLOP count? A practitioner will also ask about speed. At matched FLOPs the grown arm is **6 to 11% slower in wall-clock time**, because small matrix multiplications underuse the device. Growth saves operations but not seconds at this scale. That is probably an artifact of the small scale, but we have not shown where the wall-clock curves cross, and reporting only FLOPs would mean choosing the metric that flatters us.
 
----
-
-Built at Sundai Hack #133. The claim we can defend is smaller than the one we announced at hour six, and the project is more interesting for it.
+We built GrowLab at Sundai Hack #133. The claim we can defend is smaller than the one we announced at hour six, which makes the project more interesting.
 
 **Code:** [github.com/qsimeon/growlab](https://github.com/qsimeon/growlab) · **The agent's search:** [app.autolab.ai/projects/qsimeon/growlab](https://app.autolab.ai/projects/qsimeon/growlab) · **Live dashboard:** [api.maritime.sh](https://api.maritime.sh/a/961c500c-7530-4c1a-b8cd-d276b7bec384/)

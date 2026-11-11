@@ -2,18 +2,18 @@
 title: "How We Won a BCI Hackathon: Decoding Brain Signals on the Edge"
 date: 2026-03-04
 tags: [neuroscience, machine-learning, bci, signal-processing, hackathon]
-excerpt: "Team MindMeld placed 1st at BrainStorm 2026 by decoding 1024-channel brain recordings in real-time on edge hardware. Here's the full technical breakdown of our winning approach."
+excerpt: "Team MindMeld placed 1st at BrainStorm 2026 by decoding 1024-channel brain recordings in real time on edge hardware. This post is the full technical breakdown of our winning approach."
 ---
 
-Team **MindMeld** took first place in Track 1 of [BrainStorm 2026](https://brainstormhackathon.com), a two-day BCI hackathon hosted by [Precision Neuroscience](https://www.precisionneuro.io/) at the Microsoft NERD Center in Boston. Ten teams of graduate students and postdocs competed. This is the technical breakdown of what we built and why it worked.
+Team **MindMeld** took first place in Track 1 of [BrainStorm 2026](https://brainstormhackathon.com), a two-day brain-computer interface (BCI) hackathon hosted by [Precision Neuroscience](https://www.precisionneuro.io/) at the Microsoft NERD Center in Boston. Ten teams of graduate students and postdocs competed. This post explains what we built and why it worked.
 
 ---
 
 ## The Problem
 
-Given a stream of voltage recordings from 1024 electrodes implanted on an animal's auditory cortex, classify what sound frequency the subject is hearing — one sample at a time, in real time.
+The input is a stream of voltage recordings from 1024 electrodes implanted on an animal's auditory cortex. The task is to classify which sound frequency the subject is hearing, one sample at a time and in real time.
 
-The challenge runs deeper than accuracy. Your model must operate on **edge hardware**: low power, limited memory, compute-constrained. The final score is a composite of three weighted metrics:
+Accuracy is only part of the challenge. The model must run on **edge hardware**, meaning a device with low power, limited memory and little compute. The final score combines three weighted metrics:
 
 | Metric | Weight | Formula |
 |---|---|---|
@@ -21,17 +21,17 @@ The challenge runs deeper than accuracy. Your model must operate on **edge hardw
 | Prediction Lag | 25% | `exp(-6 × lag_ms / 500) × 25` |
 | Model Size (MB) | 25% | `exp(-4 × size_mb / 5) × 25` |
 
-The exponential penalties on lag and size are aggressive on purpose. A 5 MB model instead of 1 MB costs ~12 points. A 50ms lag instead of 10ms costs ~8 points. You can't just maximize accuracy — every engineering decision has to be weighed against all three dimensions.
+The exponential penalties on lag and size are steep on purpose. A 5 MB model instead of 1 MB costs ~12 points, and a 50ms lag instead of 10ms costs ~8 points. Every engineering decision therefore has to be weighed against all three metrics, with accuracy as only one of them.
 
-One additional hard constraint: **strict causal inference**. Real BCIs can't see the future. The evaluation harness feeds data sample by sample; your model can maintain a history buffer but cannot use any future data points or bidirectional filters.
+The task adds one hard constraint, **strict causal inference**, because a real BCI cannot see the future. The evaluation harness feeds data one sample at a time. A model can keep a buffer of past samples but cannot use future data points or bidirectional filters.
 
 ---
 
 ## The Data
 
-The training set is 90,386 timesteps at 1000 Hz — roughly 90 seconds of recording — across 1024 channels, stored as float32.
+The training set holds 90,386 timesteps sampled at 1000 Hz, roughly 90 seconds of recording, across 1024 channels stored as float32.
 
-**9 target classes**, representing the frequency of the auditory stimulus in Hz:
+The data has **9 target classes**: silence (0 Hz) and eight frequencies of the auditory stimulus, in Hz.
 
 ```
 0 Hz    (silence): 60,454 samples — 67%
@@ -45,32 +45,32 @@ The training set is 90,386 timesteps at 1000 Hz — roughly 90 seconds of record
 9736 Hz:            3,666 samples —  4%
 ```
 
-The 16.5:1 imbalance between silence and each tone class is the first thing that will destroy an unprepared model. A model that predicts silence constantly gets 67% raw accuracy but 11% balanced accuracy — and the competition scores balanced accuracy.
+The 16.5:1 imbalance between silence and each tone class is the first trap for an unprepared model. A model that always predicts silence gets 67% raw accuracy but only 11% balanced accuracy. Balanced accuracy, which averages recall over the classes, is the metric the competition scores.
 
-One signal processing note worth flagging: the sampling rate is 1000 Hz, so the Nyquist frequency is 500 Hz. The highest stimulus (9736 Hz) aliases into the recordable band. The model doesn't need to know the physical frequency — it just needs to learn the distinct cortical response pattern that each stimulus produces, including the aliased ones.
+One signal-processing detail matters here: the sampling rate is 1000 Hz, so the Nyquist frequency is 500 Hz, and the highest stimulus (9736 Hz) aliases into the recordable band. The model does not need the physical frequency. It only needs to learn the distinct cortical response that each stimulus produces, including the aliased ones.
 
 Signal characteristics that informed our preprocessing choices:
-- Mean voltage: -0.23 µV, std: 112.66 µV
-- 93.9% of signal power is in 0–30 Hz (LFP dominates)
+- Mean voltage: -0.23 µV, standard deviation: 112.66 µV
+- 93.9% of signal power is in 0–30 Hz, where the local field potential (LFP) dominates
 - Signal is spatially sparse: ~250 of the 1024 channels account for 50% of total power
 
 ---
 
 ## The Approach
 
-Our pipeline has three components: dimensionality reduction, a compact convolutional architecture, and a training strategy tuned for this specific problem.
+Our pipeline has three parts: dimensionality reduction, a compact convolutional architecture and a training strategy tuned for this problem.
 
 ### 1. PCA Channel Reduction
 
-Feeding all 1024 raw channels into a neural network creates two problems: the model becomes large (each weight matrix scales with channel count) and generalization suffers (most channels carry redundant or irrelevant information on this task).
+Feeding all 1024 raw channels into a neural network causes two problems. The model gets large, because each weight matrix scales with the channel count. Generalization also suffers, because most channels carry redundant or irrelevant information for this task.
 
-We fit PCA on the training data and project from 1024 channels down to 32 principal components. This does two useful things simultaneously. First, it compresses the model: downstream weight matrices are 32-wide instead of 1024-wide, dramatically reducing parameter count and file size. Second, it denoises: the top 32 PCs capture the most structured, consistent covariance across the electrode array, effectively filtering out noise-dominated directions.
+We fit principal component analysis (PCA) on the training data and project the 1024 channels down to 32 principal components (PCs). This does two useful things at once. First, it compresses the model by making downstream weight matrices 32 wide instead of 1024 wide, which sharply reduces the parameter count and file size. Second, it removes noise: the top 32 PCs capture the most structured and consistent covariance across the electrode array, so the noise-dominated directions drop out.
 
-At inference, PCA is a single matrix multiply — negligible latency overhead.
+At inference, PCA is a single matrix multiply, which adds negligible latency.
 
 ### 2. EEGNet Architecture
 
-We used EEGNet ([Lawhern et al., 2018](https://arxiv.org/abs/1611.08024)), a compact CNN designed specifically for EEG/ECoG-based BCIs. The key idea is factoring the spatiotemporal convolution into two sequential steps: a temporal filter that learns *when* features occur, followed by a depthwise spatial filter that learns *which channel combinations* matter. This factorization gives EEGNet its parameter efficiency — it avoids the explosion of parameters that a full spatiotemporal convolution would require.
+We used EEGNet ([Lawhern et al., 2018](https://arxiv.org/abs/1611.08024)), a compact convolutional neural network (CNN) designed for BCIs based on electroencephalography (EEG) or electrocorticography (ECoG). Its key idea is to split the spatiotemporal convolution into two sequential steps. A temporal filter learns *when* features occur, and a depthwise spatial filter then learns *which channel combinations* matter. This factorization makes EEGNet parameter-efficient, since it avoids the explosion of parameters that a full spatiotemporal convolution would require.
 
 ```
 Input: (batch, 1, channels=32, time=1600)
@@ -84,15 +84,15 @@ Block 3 — Separable conv + pointwise: combine learned features
 Flatten → Linear → 9 classes
 ```
 
-The aggressive average pooling in Blocks 2 and 3 is what keeps latency low even with a large input window — the temporal dimension is decimated early, so the expensive operations operate on a much smaller representation.
+The aggressive average pooling in Blocks 2 and 3 keeps latency low even with a large input window. It decimates the temporal dimension early, so the expensive operations run on a much smaller representation.
 
 ### 3. Training Strategy
 
-**Class-weighted loss.** With 16:1 imbalance, standard cross-entropy collapses to predicting silence. We weight the loss inversely proportional to class frequency, which forces the model to treat each class equally during training.
+**Class-weighted loss.** With a 16.5:1 imbalance, standard cross-entropy collapses to predicting silence. We weight the loss by the inverse of each class's frequency, which makes the model treat every class equally during training.
 
-**Large temporal context window.** This was our most important finding. EEGNet operates on a sliding causal window of past samples. We set `window_size=1600` — 1.6 seconds of context. The naive choice is a small window (128ms) for speed, but auditory cortex responses to sustained tones are slow-building patterns. A short window catches only the onset transient; a long window captures the full sustained oscillatory response, making classification substantially easier.
+**Large temporal context window.** This was our most important finding. EEGNet reads a sliding causal window of past samples, and we set `window_size=1600`, which gives 1.6 seconds of context. The obvious choice for speed is a small window (128ms), but auditory cortex responses to sustained tones build slowly. A short window catches only the onset transient. A long window captures the full sustained oscillation, which makes classification much easier.
 
-**Training on the full dataset for the final submission.** Once we settled on the best configuration using the provided validation split, we retrained on the combined train + validation data before the final push.
+**Training on the full dataset for the final submission.** After choosing the best configuration on the provided validation split, we retrained on the combined training and validation data before the final push.
 
 Final hyperparameters: `projected_channels=32`, `window_size=1600`, `F1=8`, `D=2`, `batch_size=64`.
 
@@ -100,30 +100,28 @@ Final hyperparameters: `projected_channels=32`, `window_size=1600`, `F1=8`, `D=2
 
 ## The Critical Insight: Window Size vs. Latency
 
-The assumption most teams made — and the one worth directly challenging — is that a larger input window means higher latency.
+Most teams assumed that a larger input window means higher latency. That assumption deserves a direct test, because for EEGNet it is false.
 
-For EEGNet, that's not true.
-
-We tested two configurations directly:
+We compared two configurations directly:
 
 | Configuration | Balanced Accuracy | Inference Latency |
 |---|---|---|
 | 128ms window | ~0.67 | <1ms |
 | 1600ms window | ~0.87 | <1ms |
 
-**Same latency. +20% accuracy.**
+**Same latency, 20 points more balanced accuracy.**
 
-Why? EEGNet's average pooling layers decimate the time dimension early in the network. By the time the input reaches the separable convolution block, a 1600-sample window has been reduced to ~25 samples. The forward pass cost is dominated by the initial convolution and the final linear layer — neither of which scales strongly with input window length.
+The reason is that EEGNet's average pooling layers decimate the time dimension early in the network. By the time the input reaches the separable convolution block, a 1600-sample window has shrunk to 400 samples, and the classifier sees about 50. The cost of the forward pass is dominated by the initial convolution and the final linear layer, neither of which scales strongly with the input window length.
 
-The PCA projection runs in constant time. The bottleneck at inference is memory bandwidth and a few matrix operations, not window size.
+The PCA projection runs in constant time. At inference, memory bandwidth and a few matrix operations form the bottleneck, while window size contributes little.
 
-This asymmetry — where temporal history is cheap to include but critical for accuracy — generalizes beyond this specific problem. In any streaming BCI task where neural responses are slow relative to the sampling rate, it is worth profiling the actual latency before assuming that window size is a bottleneck.
+This asymmetry, in which temporal history is cheap to include but critical for accuracy, applies beyond this problem. In any streaming BCI task where neural responses are slow relative to the sampling rate, it is worth profiling the actual latency before assuming that window size is a bottleneck.
 
 ---
 
 ## Results
 
-**1st place, Track 1, BrainStorm 2026.** Final score: **91.7 / 100** — 22.5 points ahead of second place.
+**1st place, Track 1, BrainStorm 2026.** We finished with a final score of **91.7 / 100**, 22.5 points ahead of second place.
 
 | | mindmeld | 2nd place (synapse) |
 |---|---|---|
@@ -132,9 +130,9 @@ This asymmetry — where temporal history is cheap to include but critical for a
 | Latency (25 pts) | 23.8 | 15.4 |
 | Size (25 pts) | 20.8 | 23.0 |
 
-Balanced accuracy: **94.2%** (47.1/50). Inference latency: **<5ms**. Model size: **~0.2 MB**.
+Our balanced accuracy was **94.2%** (47.1/50), inference latency was **<5ms**, and the model size was **~0.2 MB**.
 
-The remaining headroom is in model size — the serialized PCA components add weight to the checkpoint — and in accuracy on the rarer tone classes where limited training data makes generalization harder.
+The remaining headroom is in two places. The first is model size, since the serialized PCA components add weight to the checkpoint. The second is accuracy on the rarer tone classes, where limited training data makes generalization harder.
 
 Code: [github.com/qsimeon/brainstorm-track1-public](https://github.com/qsimeon/brainstorm-track1-public)
 
@@ -152,13 +150,13 @@ uv run python examples/train_eegnet.py \
 
 ## Takeaways
 
-**Temporal context is cheap.** Don't assume window size drives latency. Profile it. For convolutional architectures with pooling, the cost scales much less than linearly.
+**Temporal context is cheap.** Profile latency before assuming that window size drives it. For convolutional architectures with pooling, the cost grows much less than linearly with window length.
 
-**PCA is underrated for high-density arrays.** In micro-ECoG recordings, most structured signal lives in a low-dimensional subspace. PCA compression simultaneously reduces model size, speeds up inference, and often improves generalization.
+**PCA is underrated for high-density arrays.** In micro-ECoG recordings, most of the structured signal lies in a low-dimensional subspace. PCA compression reduces model size, speeds up inference and often improves generalization, all at once.
 
-**Balanced accuracy and class weighting are non-negotiable on imbalanced neural data.** Track balanced accuracy from the start, not just raw accuracy. Weight your loss accordingly.
+**Balanced accuracy and class weighting are essential on imbalanced neural data.** Track balanced accuracy from the start alongside raw accuracy, and weight the loss to balance the classes.
 
-**Domain-specific architectures beat general ones in the small-data regime.** EEGNet's inductive biases — temporal before spatial, explicit pooling — are directly matched to the structure of ECoG data. With 90 seconds of training data, that match matters more than raw model capacity.
+**Domain-specific architectures beat general ones in the small-data regime.** EEGNet's inductive biases (temporal filtering before spatial filtering, and explicit pooling) directly match the structure of ECoG data. With 90 seconds of training data, that match matters more than raw model capacity.
 
 ---
 
@@ -166,4 +164,4 @@ uv run python examples/train_eegnet.py \
 
 ---
 
-*Authored by Quilee Simeon. Team MindMeld: Quilee Simeon, Dennis Loevlie, Raghav Gali, Rohan Bhatane, Shravankumar Janawade, Sriram G. — BrainStorm 2026, Track 1 Neural Decoder Challenge, hosted by [Precision Neuroscience](https://www.precisionneuro.io/).*
+*Authored by Quilee Simeon. Team MindMeld: Quilee Simeon, Dennis Loevlie, Raghav Gali, Rohan Bhatane, Shravankumar Janawade, Sriram G. We competed in BrainStorm 2026, Track 1: Neural Decoder Challenge, hosted by [Precision Neuroscience](https://www.precisionneuro.io/).*
