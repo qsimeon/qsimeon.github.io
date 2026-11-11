@@ -56,6 +56,7 @@
   .legend{display:flex;gap:20px;font-size:12px;color:var(--text-secondary);margin-bottom:6px}
   .charts{display:grid;grid-template-columns:1fr 1fr;gap:20px}
   @media(max-width:900px){.charts{grid-template-columns:1fr}}
+  @media(max-width:600px){.card{overflow-x:auto}td{white-space:normal!important}}
   svg{display:block;width:100%;overflow:visible}
   .gl{stroke:var(--grid);stroke-width:1}
   .ax{stroke:var(--axis);stroke-width:1}
@@ -136,7 +137,7 @@
 
   <div class="card">
     <div class="row"><div><h2>The control</h2>
-      <p class="note" id="ctlnote">The flat and grown arms share a learning-rate schedule and FLOP budget across multiple seeds.
+      <p class="note" id="ctlnote">The flat and grown arms share a FLOP budget and schedule shape, each at its own best learning rate, across multiple seeds.
         The first version of this result changed four things at once and ran one seed.</p></div></div>
     <div class="hero">
       <div><div class="tile"><div class="k">Verdict</div>
@@ -280,8 +281,9 @@ function render(d){
       : c.verdict;
     document.getElementById('verdict').style.color = sep ? 'var(--good)' : 'var(--warning)';
     document.getElementById('ctlnote').innerHTML=
-      `Flat vs grown at identical FLOP budget, LR schedule, data order and final architecture. `
-     +`<strong>Every grown seed beats every flat seed</strong> (Cohen's d=${s.cohens_d.toFixed(2)}). `
+      `Flat vs grown at identical FLOP budget, schedule shape, data order and final architecture, `
+     +`each arm at its own best peak LR (flat 5e-4, grown 1e-3). `
+     +`${c.verdict==='grown wins'?'<strong>Every grown seed beats every flat seed</strong>':'The seeds overlap'} (Cohen's d=${s.cohens_d.toFixed(2)}). `
      +`<strong>Read this narrowly:</strong> both arms are pinned to a 5.9M endpoint that is ~10× above `
      +`compute-optimal for this budget. An unconstrained 1.2M flat model scores 3.905 and beats both. `
      +`Growth wins <em>when the target size is fixed</em>, not in general. `
@@ -289,11 +291,11 @@ function render(d){
     tiles.insertAdjacentHTML('beforeend',
       `<div class="tile"><div class="k">Loss, grown vs flat</div>
        <div class="v">${sign}${Math.abs(s.delta).toFixed(3)}</div>
-       <div class="m">Cohen's d ${s.cohens_d.toFixed(2)} · Welch t ${s.welch_t.toFixed(2)}, df 2</div></div>
-       <div class="tile"><div class="k">vs LR-matched baseline</div>
-       <div class="v">−0.397</div>
-       <div class="m">flat at its own best LR (5e-4) scores 4.509 ± 0.015,
-       so the separation holds and the gap halves</div></div>
+       <div class="m">Cohen's d ${s.cohens_d.toFixed(2)} · Welch t ${s.welch_t.toFixed(1)}, df ${s.welch_df.toFixed(1)}</div></div>
+       <div class="tile"><div class="k">First claim, shared LR</div>
+       <div class="v" style="color:var(--muted);text-decoration:line-through">−0.913</div>
+       <div class="m">both arms ran at 1e-3, about twice the flat arm's stable limit,
+       so one flat seed half-diverged. Retracted.</div></div>
        <div class="tile"><div class="k">Unconstrained baseline</div>
        <div class="v" style="color:var(--warning)">3.905</div>
        <div class="m">a flat 1.2M model with the same budget and no fixed endpoint
@@ -324,8 +326,8 @@ function render(d){
   document.getElementById('dot').className='dot'+(a.live?' on':'');
   document.getElementById('livetxt').textContent=a.live?'agent live':'agent idle';
   document.getElementById('foot').innerHTML=
-    `Controlled: identical WSD schedule, identical peak LR, identical FLOP budget, identical data order, `
-   +`same final architecture. Varied: the shape of N(t). &nbsp;·&nbsp; 4096-token BPE over WikiText-103, `
+    `Controlled: identical WSD schedule shape, FLOP budget and data order, `
+   +`same final architecture, each arm at its own best peak LR. Varied: the shape of N(t). &nbsp;·&nbsp; 4096-token BPE over WikiText-103, `
    +`a small vocab so the transformer body, not the embedding matmul, dominates FLOPs. `
    +`&nbsp;·&nbsp; snapshot ${d.generated_at}`;
 }

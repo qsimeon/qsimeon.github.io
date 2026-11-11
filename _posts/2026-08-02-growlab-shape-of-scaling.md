@@ -67,7 +67,7 @@ We did exactly that, using two platforms with two separate jobs.
 
 AutoLab supplies no compute, since the laptop is the only hardware in the project. It also never sees a loss curve, a growth event or a trajectory. Its whole view of a seven-minute run is one number on the last line of the output.
 
-**[Maritime](https://api.maritime.sh/a/961c500c-7530-4c1a-b8cd-d276b7bec384/) was the front door.** It builds the repository's Dockerfile into a serverless micro-VM and serves the results dashboard at a public URL. That is its only job. Because the dashboard runs there, the demo keeps working when the laptop lid closes or the conference Wi-Fi drops. Maritime does no training and holds no GPU, no LLM, no AutoLab credentials and no record of the experiments.
+**[Maritime](https://maritime.sh) was the front door.** It builds the repository's Dockerfile into a serverless micro-VM and serves the results dashboard at a public URL. That is its only job. Because the dashboard runs there, the demo keeps working when the laptop lid closes or the conference Wi-Fi drops. Maritime does no training and holds no GPU, no LLM, no AutoLab credentials and no record of the experiments.
 
 The most important structural fact is that **the two platforms never talk to each other.** Each one reads the same repository on its own. The only thing that passes between them is a single JSON file that the laptop writes. If Maritime is down, the science continues. If the agent has finished or its login has expired, the dashboard still renders.
 
@@ -206,4 +206,4 @@ A few more questions follow from these. Should the model choose between width an
 
 We built GrowLab at Sundai Hack #133. The claim we can defend is smaller than the one we announced at hour six, which makes the project more interesting.
 
-**Code:** [github.com/qsimeon/growlab](https://github.com/qsimeon/growlab) · **The agent's search:** [app.autolab.ai/projects/qsimeon/growlab](https://app.autolab.ai/projects/qsimeon/growlab) · **Live dashboard:** [api.maritime.sh](https://api.maritime.sh/a/961c500c-7530-4c1a-b8cd-d276b7bec384/)
+**Code:** [github.com/qsimeon/growlab](https://github.com/qsimeon/growlab) · **Live dashboard and the agent's experiment log:** [qsimeon.github.io/growlab](/growlab/)
