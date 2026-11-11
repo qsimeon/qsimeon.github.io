@@ -21,11 +21,12 @@ The site is then at <http://localhost:4000>. Always use `bundle exec`, so the pi
 ## How it fits together
 
 ```
-_data/cv.yml        ─┬─▶ home "Path" timeline, /cv/, /teaching/
+_data/cv.yml        ─┬─▶ home "Path" timeline, /cv/, /teaching/, /about/ (community)
 _data/projects.yml  ─┼─▶ home bento (featured: true), /portfolio/ (work + press)
 _posts/             ─┼─▶ home "Writing", /blog/, _layouts/post.html
 _publications/      ─┼─▶ /publications/, /cv/, _layouts/entry.html
-_talks/, _portfolio/ ┘   (also rendered by entry.html)
+_talks/             ─┼─▶ /talks/, /cv/, _layouts/entry.html
+_portfolio/         ─┘   entry.html pages, reached only from links in projects.yml and about.html
 
 assets/css/tokens.css   design tokens: every color is a light-dark() pair
 assets/css/site.css     everything else, in layers: reset → base → layout → components → pages → prose
@@ -35,12 +36,11 @@ assets/js/connectome.js the animated neural graph behind the home hero (pages op
 
 | Path | Contents |
 |------|----------|
-| `_pages/` | Home (`/`), about, blog index, work, publications, talks, teaching, CV, 404 |
+| `_pages/` | Home (`/`), about, blog index, work (/portfolio/), publications, talks, teaching, CV, privacy (/privacy/), 404 |
 | `_layouts/` | `default` (shell), `page`, `post`, `entry` (collection items) |
 | `_includes/` | head, header, footer, `card`, `post-row`, `visual` (card artwork), `icon` (inline SVG) |
 | `letting-go.html`, `brainstorm_bci_blog.html`, `growlab/` | Standalone showcase pages. They load `tokens.css` so they share the palette and theme |
 | `files/` | Downloadables; `qsimeon_resume.pdf` is built from the LaTeX resume (public variant, no phone number) |
-| `_archive/` | Retired posts and pages. Not built, because Jekyll skips `_`-prefixed dirs |
 
 ## Conventions worth knowing
 

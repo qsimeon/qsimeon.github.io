@@ -1,4 +1,4 @@
-# Single source of truth for the CV page, the home-page timeline, and /teaching/.
+# Single source of truth for the CV page, the home-page timeline, /teaching/, and the community list on /about/.
 # Keep in sync with the LaTeX resume (~/Documents/Career/Resume/src/resume.tex).
 
 experience:
