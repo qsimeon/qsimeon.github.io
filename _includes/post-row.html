@@ -1,5 +1,5 @@
 {%- assign post = include.post -%}
-<a class="post-row" href="{{ post.url | relative_url }}">
+<a class="post-row" href="{{ post.link | default: post.url | relative_url }}">
   <time class="post-date" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %-d, %Y" }}</time>
   <div>
     <h3 class="post-title">{{ post.title }}</h3>
