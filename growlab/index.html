@@ -327,7 +327,7 @@ function render(d){
   document.getElementById('livetxt').textContent=a.live?'agent live':'agent idle';
   document.getElementById('foot').innerHTML=
     `Controlled: identical WSD schedule shape, FLOP budget and data order, `
-   +`same final architecture, each arm at its own best peak LR. Varied: the shape of N(t). &nbsp;·&nbsp; 4096-token BPE over WikiText-103, `
+   +`same final architecture. Compared: flat vs grown N(t), each at its own best peak LR (flat 5e-4, grown 1e-3), so the gap is best versus best. &nbsp;·&nbsp; 4096-token BPE over WikiText-103, `
    +`a small vocab so the transformer body, not the embedding matmul, dominates FLOPs. `
    +`&nbsp;·&nbsp; snapshot ${d.generated_at}`;
 }
