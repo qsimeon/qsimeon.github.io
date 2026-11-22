@@ -86,6 +86,8 @@ defaults:
   - scope: { path: "" }
     values:
       image: /images/og.png
+  - scope: { path: "drafts" }
+    values: { sitemap: false }
   - scope: { path: "", type: posts }
     values: { layout: post, section: writing }
   - scope: { path: "", type: pages }
