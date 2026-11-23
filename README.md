@@ -40,7 +40,7 @@ assets/js/connectome.js the animated neural graph behind the home hero (pages op
 | `_layouts/` | `default` (shell), `page`, `post`, `entry` (collection items) |
 | `_includes/` | head, header, footer, `card`, `post-row`, `visual` (card artwork), `icon` (inline SVG) |
 | `letting-go.html`, `brainstorm_bci_blog.html`, `growlab/` | Standalone showcase pages. They load `tokens.css` so they share the palette and theme |
-| `drafts/` | Unlisted previews: linked from nowhere on the site, left out of the sitemap, and marked noindex. A page moves out of here when it is published |
+| `riemann/` | The Riemann Hypothesis lesson, a self-contained page built in a separate project. To update it, replace `index.html` with the rebuilt file |
 | `files/` | Downloadables; `qsimeon_resume.pdf` is built from the LaTeX resume (public variant, no phone number) |
 
 ## Conventions worth knowing
