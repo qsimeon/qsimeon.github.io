@@ -168,9 +168,17 @@ footer li{margin:.3em 0}
 
 .step{max-width:780px}
 .step-h{margin:42px 0 10px;color:var(--ink)}
-details.algebra{max-width:780px;margin:4px 0 0;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 16px}
-details.algebra summary{cursor:pointer;font-weight:600;color:var(--gold)}
-details.algebra p{margin:10px 0 0;font-size:16px}
+details.more{max-width:780px;margin:14px 0 0;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 16px}
+details.more.wide[open]{max-width:none}
+details.more summary{cursor:pointer;font-weight:600;color:var(--gold);list-style:none;display:flex;gap:10px;align-items:baseline}
+details.more summary::-webkit-details-marker{display:none}
+details.more summary::before{content:"+";font:700 17px/1 var(--sans);width:14px;flex:none;text-align:center}
+details.more[open] summary::before{content:"−"}
+details.more p,details.more li{font-size:16px}
+details.more p{margin:10px 0 0;max-width:760px}
+details.more .viz{margin-top:16px}
+details.more ul.steps{margin:10px 0 0}
+details.more+p,details.more+.factor{margin-top:20px}
 
 .claims{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px}
 .claims.two{grid-template-columns:repeat(2,1fr);max-width:820px}
@@ -184,6 +192,24 @@ table.dens td{padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.06);col
 table.dens td b{color:var(--ink)}
 @media (max-width:820px){.claims,.claims.two{grid-template-columns:1fr}}
 ul.steps{max-width:780px;padding-left:1.2em;margin:0 0 1em}ul.steps li{margin:.45em 0;color:var(--soft);line-height:1.65}ul.steps li strong{color:var(--ink)}
+
+/* chapter index */
+.toc{position:fixed;left:16px;top:50%;transform:translateY(-50%);width:136px;display:flex;flex-direction:column;z-index:40;opacity:0;pointer-events:none;transition:opacity .25s}
+body.past-hero .toc{opacity:1;pointer-events:auto}
+.toc a{font:500 13px/1.3 var(--sans);color:var(--dim);text-decoration:none;padding:6px 0 6px 12px;border-left:2px solid var(--line)}
+.toc a span{display:inline-block;width:16px;color:var(--soft)}
+.toc a:hover{color:var(--ink)}
+.toc a.on{color:var(--gold);border-left-color:var(--gold)}
+.toc a.on span{color:var(--gold)}
+.toc-btn{display:none}
+@media (max-width:1399px){
+  .toc{top:56px;left:12px;transform:none;width:auto;min-width:210px;background:rgba(6,9,18,.95);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:12px;padding:8px 12px}
+  body.past-hero .toc{opacity:0;pointer-events:none}
+  body.past-hero .toc.open{opacity:1;pointer-events:auto}
+  .toc a{font-size:15px;padding:8px 0 8px 12px}
+  .toc-btn{display:block;position:fixed;top:12px;left:12px;z-index:41;font-size:13px;padding:8px 13px;background:rgba(6,9,18,.82);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .25s}
+  body.past-hero .toc-btn{opacity:1;pointer-events:auto}
+}
 </style></head>
 <body>
 <header class="hero" id="top">
@@ -192,8 +218,8 @@ ul.steps{max-width:780px;padding-left:1.2em;margin:0 0 1em}ul.steps li{margin:.4
   <div class="hero-copy">
     <div class="kicker">An interactive lesson</div>
     <h1>The Riemann<br>Hypothesis</h1>
-    <p class="sub">A step-by-step lesson for non-mathematicians, from counting primes to the zeros of Riemann's zeta function, with a picture or a slider for each idea.</p>
-    <div class="oneliner">In 1859 Bernhard Riemann tied the spread of the prime numbers to the low points of a landscape built from one function. <strong class="gold">The hypothesis: every one of those low points sits on a single straight line.</strong> It stayed unproved for 167 years. In November 2026 Levent Alpöge, working with Claude, proved it in a computer-checked proof that other mathematicians confirmed the next day. This page explains what was proved, one step at a time.</div>
+    <p class="sub">From counting primes to the zeros of Riemann's zeta function, for readers with high-school math.</p>
+    <div class="oneliner">In 1859 Bernhard Riemann tied the spread of the prime numbers to the low points of a landscape built from one function. <strong class="gold">The hypothesis: every one of those low points lies on a single straight line.</strong> It stayed unproved for 167 years. In November 2026 Levent Alpöge, working with Claude, proved it in a computer-checked proof that other mathematicians confirmed the next day.</div>
     <div class="cta">
       <button class="primary" id="tourBtn">Play the guided tour</button>
       <button id="scrollBtn">Explore at my own pace</button>
@@ -201,17 +227,31 @@ ul.steps{max-width:780px;padding-left:1.2em;margin:0 0 1em}ul.steps li{margin:.4
   </div>
 </header>
 
+<button class="toc-btn" id="tocBtn" aria-expanded="false" aria-controls="toc">Contents</button>
+<nav class="toc" id="toc" aria-label="Chapters">
+  <a href="#claim">Start here</a>
+  <a href="#ch1"><span>1</span>Prime numbers</a>
+  <a href="#ch2"><span>2</span>Counting primes</a>
+  <a href="#ch3"><span>3</span>Euler's product</a>
+  <a href="#ch4"><span>4</span>Complex inputs</a>
+  <a href="#ch5"><span>5</span>The landscape</a>
+  <a href="#ch6"><span>6</span>Zeros as waves</a>
+  <a href="#ch7"><span>7</span>Why the line ½</a>
+  <a href="#ch8"><span>8</span>Divisors</a>
+  <a href="#ch9"><span>9</span>The 2026 proof</a>
+</nav>
+
 <main class="wrap">
 
 <!-- 0 -->
 <section class="chapter" id="claim">
   <div class="kicker">Start here</div>
   <h2>What the Riemann Hypothesis says</h2>
-  <p class="lead">The claim can be said three ways. The chapters below build each one from scratch.</p>
+  <p class="lead">The claim can be said three ways.</p>
   <div class="claims">
-    <div class="claim"><div class="verdict gold">In everyday words</div><p>Prime numbers are spread out as evenly as they possibly could be. They stray from their average no more than random coin flips would.</p><div class="where">Chapters 1, 2 and 7</div></div>
-    <div class="claim"><div class="verdict cyan">As a counting rule</div><p>Count the primes up to any number x past 2,657. The count stays close to Gauss's smooth estimate li(x), off by less than √x × ln x ÷ 25. Up to a million that means within about 550 of the estimate's 78,628. The true count is 78,498.</p><div class="where">Chapter 2</div></div>
-    <div class="claim"><div class="verdict violet">As Riemann wrote it</div><p>Every nontrivial zero of the zeta function has real part ½. Zeta is a function built from the primes, and a zero is an input where its output is exactly 0. Apart from a row of simple zeros at −2, −4, −6 and so on (the trivial zeros), every zero sits on one straight line.</p><div class="where">Chapters 3, 4 and 5</div></div>
+    <div class="claim"><div class="verdict gold">In everyday words</div><p>Prime numbers are spread out about as evenly as they could be. Their count strays from its smooth average by roughly the square root of the numbers involved, the same scale as the drift of random coin flips.</p><div class="where">Chapters 1, 2 and 7</div></div>
+    <div class="claim"><div class="verdict cyan">As a counting rule</div><p>Count the primes up to any number x past 2,657. The count stays within √x × ln x ÷ 8π of Gauss's smooth estimate li(x), where 8π is about 25. Up to a million the estimate is 78,628 and the true count is 78,498.</p><div class="where">Chapter 2</div></div>
+    <div class="claim"><div class="verdict violet">As Riemann wrote it</div><p>Every nontrivial zero of the zeta function has real part ½. Zeta is a function built from the primes, and a zero is an input where its output is exactly 0. Apart from a row of simple zeros at −2, −4, −6 and so on (the trivial zeros), every zero lies on one straight line.</p><div class="where">Chapters 3, 4 and 5</div></div>
   </div>
   <p class="step" style="margin-top:22px">The three say the same thing because the zeros make waves in the prime count (Chapter 6), and on the line ½ those waves are exactly as small as coin-flip noise (Chapter 7).</p>
 </section>
@@ -222,10 +262,10 @@ ul.steps{max-width:780px;padding-left:1.2em;margin:0 0 1em}ul.steps li{margin:.4
   <h2>Prime numbers</h2>
   <div class="cols">
     <div>
-      <p class="lead">A <strong>prime</strong> is a whole number bigger than 1 that only divides by 1 and itself: 2, 3, 5, 7, 11, 13 and so on. Every other number is built by multiplying primes together, and each number has <strong>exactly one recipe</strong>. That makes primes the building blocks of multiplication.</p>
-      <p>Why is 1 not a prime? If it were, recipes would stop being unique: 6 would be 2 × 3, and also 1 × 2 × 3, and also 1 × 1 × 2 × 3. Leaving 1 out keeps one recipe per number, and Chapter 3 depends on that.</p>
-      <p>Hover over (or tap) any square to see its recipe. Then run the Sieve of Eratosthenes, a trick over 2,000 years old: cross out every multiple of 2, then of 3, of 5 and of 7. Whatever survives is prime.</p>
-      <p>Why stop at 7? A non-prime up to 100 is two smaller numbers multiplied together, and they cannot both be bigger than 10, because 11 × 11 is already 121. So every non-prime up to 100 has a prime factor of 10 or less, which means 2, 3, 5 or 7.</p>
+      <p class="lead">A <strong>prime</strong> is a whole number bigger than 1 that only divides by 1 and itself: 2, 3, 5, 7, 11, 13 and so on. Every whole number bigger than 1 is built by multiplying primes together, and each has <strong>exactly one recipe</strong>. That makes primes the building blocks of multiplication.</p>
+      <details class="more"><summary>Why is 1 not a prime?</summary><p>If it were, recipes would stop being unique: 6 would be 2 × 3, and also 1 × 2 × 3, and also 1 × 1 × 2 × 3. Leaving 1 out keeps one recipe per number, and Chapter 3 depends on that.</p></details>
+      <p style="margin-top:18px">Hover over (or tap) any square to see its recipe. Then run the Sieve of Eratosthenes: cross out every multiple of 2, then of 3, of 5 and of 7. Whatever survives is prime.</p>
+      <details class="more"><summary>Why stop at 7?</summary><p>A non-prime up to 100 is two smaller numbers multiplied together, and they cannot both be bigger than 10, because 11 × 11 is already 121. So every non-prime up to 100 has a prime factor of 10 or less: 2, 3, 5 or 7.</p></details>
       <div class="factor" id="factorOut">60 = 2 × 2 × 3 × 5</div>
       <div class="controls"><button class="primary" id="sieveBtn">Run the sieve</button><button id="sieveReset">Reset</button></div>
       <p style="margin-top:22px;font-size:15px;color:var(--dim)">Gaps between the first 40 primes. No obvious rhythm:</p>
@@ -233,30 +273,30 @@ ul.steps{max-width:780px;padding-left:1.2em;margin:0 0 1em}ul.steps li{margin:.4
     </div>
     <div class="viz"><div class="sieve" id="sieve"></div></div>
   </div>
-  <div class="takeaway">Primes are easy to define, but where they fall looks irregular. The rest of the page finds the order underneath.</div>
+  <div class="takeaway">Primes are easy to define, but where they fall looks irregular. Counting them reveals an order underneath.</div>
 </section>
 
 <!-- 2 -->
 <section class="chapter" id="ch2">
   <div class="kicker">Chapter 2</div>
   <h2>Counting primes</h2>
-  <p class="lead">Primes get rarer as numbers grow. In the 1790s, as a teenager, Carl Friedrich Gauss noticed that they thin out in a regular way. This chapter builds his estimate step by step and measures how far the real count strays from it.</p>
+  <p class="lead">Primes get rarer as numbers grow. In the 1790s, as a teenager, Carl Friedrich Gauss noticed that they thin out in a regular way.</p>
 
   <h3 class="step-h">Step 1: How common are primes near a number?</h3>
-  <p class="step">Gauss's rule: near a number x, about 1 in every <span class="math">ln x</span> numbers is prime. Here <span class="math">ln x</span> is the natural logarithm, which grows very slowly. For powers of ten it is about 2.3 times the number of zeros: ln 1,000 ≈ 6.9 and ln 1,000,000 ≈ 13.8. So near a thousand about 1 number in 7 is prime, and near a million about 1 in 14. The table checks the rule against the real primes.</p>
+  <p class="step">Gauss's rule: near a number x, about 1 in every <span class="math">ln x</span> numbers is prime. Here <span class="math">ln x</span> is the natural logarithm, which grows very slowly: ln 1,000 ≈ 6.9 and ln 1,000,000 ≈ 13.8. So near a thousand about 1 number in 7 is prime, and near a million about 1 in 14.</p>
   <div class="viz" style="max-width:780px">
     <table class="dens"><thead><tr><th>Numbers checked</th><th>Gauss predicts</th><th>Reality</th></tr></thead><tbody id="densBody"></tbody></table>
-    <div class="cap">Each row looks at the last 10% of numbers below a power of ten and counts the primes there. Computed live from the primes up to a million.</div>
+    <div class="cap">Each row looks at the last 10% of numbers below a power of ten and counts the primes there.</div>
   </div>
 
   <h3 class="step-h">Step 2: Add up the chances to get a count</h3>
-  <p class="step">If each number n has about a 1 in <span class="math">ln n</span> chance of being prime, the expected number of primes up to x is the sum of those chances: <span class="math">1/ln 2 + 1/ln 3 + 1/ln 4 + … + 1/ln x</span>. Smooth that sum into the area under the curve <span class="math">1/ln t</span> and you get Gauss's estimate, written <strong class="cyan">li(x)</strong> (short for logarithmic integral). The simpler guess <span class="math">x / ln x</span>, dashed in the next chart, is a cruder version that gives every number up to x the same chance as x itself.</p>
+  <p class="step">Treat 1 in <span class="math">ln n</span> as each number's rough chance of being prime (a rough guide, since for small n it is too big: 1/ln 2 is 1.44). Then the expected number of primes up to x is the sum of those chances: <span class="math">1/ln 2 + 1/ln 3 + … + 1/ln x</span>. Smoothed into the area under the curve <span class="math">1/ln t</span>, that sum is Gauss's estimate, written <strong class="cyan">li(x)</strong> (short for logarithmic integral).</p>
   <div class="viz">
     <div class="legend"><span><i style="background:var(--coral)"></i>a number that really is prime</span><span><i style="background:rgba(76,201,240,.55)"></i>a number that is not</span></div>
     <canvas id="chanceCv" style="height:240px"></canvas>
     <div class="controls"><label>Count up to <input type="range" id="chanceN" min="10" max="150" value="60"> <b id="chanceNVal" class="gold">60</b></label></div>
     <div class="readout" id="chanceRead"></div>
-    <div class="cap">Each bar is one number's chance of being prime, 1/ln n. Adding all the bars gives the expected count.</div>
+    <div class="cap">Each bar is one number's rough chance of being prime, 1/ln n. Adding all the bars gives the expected count.</div>
   </div>
 
   <h3 class="step-h">Step 3: Compare the estimate with the real count</h3>
@@ -270,17 +310,18 @@ ul.steps{max-width:780px;padding-left:1.2em;margin:0 0 1em}ul.steps li{margin:.4
     </div>
     <div class="readout" id="stairRead"></div>
   </div>
+  <details class="more"><summary>What is the dashed curve?</summary><p>The simpler guess <span class="math">x / ln x</span> is a cruder version of the estimate. It gives every number up to x the same chance of being prime as x itself, so it undercounts the small numbers, where primes are more common.</p></details>
 
   <h3 class="step-h">Step 4: How far off is the estimate?</h3>
-  <p class="step">The estimate misses by a small, wobbly amount, the <strong>wiggle</strong>. The question is how big the wiggle can get. In 1976 Lowell Schoenfeld proved that if the Riemann Hypothesis is true, the wiggle at x is always smaller than <span class="math">√x × ln x ÷ 25.1</span> (the 25.1 is 8π). That is the gold band below. At a million it allows about 550, and the real wiggle there is 130.</p>
-  <p class="step">Why does the band start at 2,657? Schoenfeld made the band as tight as he could prove. Small numbers are lumpy enough to poke slightly outside such a tight band. At 1,000, for example, the wiggle is 9.6 while the band allows only 8.7. From 2,657 on, the wiggle stays inside the band for every number, and the 2026 proof makes that a guarantee. A slightly wider band would cover the small numbers too, but it would say less about the large ones.</p>
-  <p class="step">This is the counting form of the Riemann Hypothesis. In 1901 Helge von Koch showed that a wiggle of roughly this size is equivalent to the hypothesis. Before the proof, the best band anyone could prove was far wider.</p>
+  <p class="step">The estimate misses by a small, wobbly amount, the <strong>wiggle</strong>. How big can it get? In 1976 Lowell Schoenfeld proved that if the Riemann Hypothesis is true, the wiggle at x is smaller than <span class="math">√x × ln x ÷ 8π</span> (8π is about 25.1) for every x from 2,657 on. That is the gold band below. At a million it allows about 550, and the real wiggle there is 130.</p>
+  <p class="step">This is the counting form of the hypothesis. In 1901 Helge von Koch showed that a wiggle of roughly this size is equivalent to it, and the 2026 proof makes the band a guarantee.</p>
+  <details class="more"><summary>Why does the band start at 2,657?</summary><p>The band is as tight as Schoenfeld could prove, and small numbers are lumpy enough to poke slightly outside it. At 1,000, for example, the wiggle is 9.6 while the band allows only 8.7. From 2,657 on, the wiggle stays inside for every number. A slightly wider band would cover the small numbers too, but it would say less about the large ones.</p></details>
   <div class="viz" id="wiggleViz">
     <div class="legend"><span><i style="background:var(--coral)"></i>the wiggle: Gauss's estimate minus the real count</span><span><i style="background:var(--gold)"></i>the band the Riemann Hypothesis guarantees (from 2,657 on)</span></div>
     <canvas id="wiggleCv" style="height:220px"></canvas>
     <div class="cap">Uses the same zoom as the staircase chart. Drag that slider to see the band appear at 2,657.</div>
   </div>
-  <div class="takeaway">Zoomed out, the prime count follows Gauss's estimate. Zoomed in, it wiggles around it. The Riemann Hypothesis says the wiggle stays below √x × ln x ÷ 25 from 2,657 on.</div>
+  <div class="takeaway">Zoomed out, the prime count follows Gauss's estimate. Zoomed in, it wiggles around it. The Riemann Hypothesis says the wiggle stays below √x × ln x ÷ 8π from 2,657 on.</div>
 </section>
 
 <!-- 3 -->
@@ -288,7 +329,7 @@ ul.steps{max-width:780px;padding-left:1.2em;margin:0 0 1em}ul.steps li{margin:.4
   <div class="kicker">Chapter 3</div>
   <h2>Euler's product and the zeta function</h2>
   <p class="lead">Add up one over every whole number squared: <span class="math">1 + 1/2² + 1/3² + 1/4² + …</span> forever. The total settles at about <strong class="gold">1.6449</strong>. Leonhard Euler worked that out in 1734. He also found a way to reach the same total using only the primes.</p>
-  <p class="lead"><strong>Give each prime its own sum.</strong> A prime's sum uses only that prime and its powers. For 2 it is <span class="math">1 + 1/2² + 1/4² + 1/8² + …</span>, which comes to 1.333. For 3 it is <span class="math">1 + 1/3² + 1/9² + …</span>, which comes to 1.125. Multiply all the prime sums together and you land on 1.6449 again.</p>
+  <p class="lead"><strong>Give each prime its own sum.</strong> A prime's sum uses only that prime and its powers. For 2 it is <span class="math">1 + 1/2² + 1/4² + 1/8² + …</span>, which comes to 1.333. For 3 it is <span class="math">1 + 1/3² + 1/9² + …</span>, which comes to 1.125. Multiply all the prime sums together and you get 1.6449 again.</p>
   <div class="viz" id="eulerViz">
     <canvas id="eulerCv" style="height:300px"></canvas>
     <div class="controls">
@@ -298,7 +339,7 @@ ul.steps{max-width:780px;padding-left:1.2em;margin:0 0 1em}ul.steps li{margin:.4
     </div>
     <div class="cap">Top bar: add one piece for each whole number. Bottom bar: start at 1 and multiply in one prime's sum at a time (2 multiplies by 1.333, 3 by 1.125, 5 by 1.042, and so on). Both reach the same gold line. The power buttons swap squares for other powers, and the two bars still agree.</div>
   </div>
-  <p class="lead" style="margin-top:34px"><strong>Why the two match.</strong> Multiplying sums means pairing every piece of one with every piece of the other. Pair 1/2² from 2's sum with 1/3² from 3's sum and you get 1/6², the piece for 6. Each whole number is built from primes in exactly one way (Chapter 1), so once every prime is in, each number's piece appears exactly once. Bring in the primes one at a time and watch the numbers fill in.</p>
+  <p class="lead" style="margin-top:34px"><strong>Why the two match.</strong> Multiplying sums pairs every piece of one with every piece of the other: 1/2² from 2's sum times 1/3² from 3's sum gives 1/6², the piece for 6. Each whole number has exactly one prime recipe (Chapter 1), so once every prime is in, each number's piece appears exactly once. Bring in the primes one at a time and watch the numbers fill in.</p>
   <div class="viz" id="buildViz">
     <div class="controls" style="margin:0 0 14px">
       <button class="primary" id="buildNext">Bring in prime 2</button>
@@ -313,7 +354,7 @@ ul.steps{max-width:780px;padding-left:1.2em;margin:0 0 1em}ul.steps li{margin:.4
       </div>
     </div>
   </div>
-  <p style="margin-top:26px">Riemann called this total the <strong>zeta function</strong>, written <span class="math">ζ(s)</span>, where <span class="math">s</span> is the power. You choose the power and zeta returns the total. Because that total is also a product of prime sums, every fact about zeta is a fact about primes.</p>
+  <p style="margin-top:26px">Riemann called this total the <strong>zeta function</strong>, written <span class="math">ζ(s)</span>, where <span class="math">s</span> is the power: you choose the power and zeta returns the total.</p>
   <div class="takeaway">Zeta is a sum over all whole numbers and also a product over the primes. So every fact about zeta is a fact about primes.</div>
 </section>
 
@@ -321,8 +362,8 @@ ul.steps{max-width:780px;padding-left:1.2em;margin:0 0 1em}ul.steps li{margin:.4
 <section class="chapter" id="ch4">
   <div class="kicker">Chapter 4</div>
   <h2>Complex inputs and zeros</h2>
-  <p class="lead">Riemann plugged in <strong>points on a flat map</strong> instead of ordinary numbers. Mathematicians call these points complex numbers. An input point <span class="math">s = σ + it</span> has a left-right position <span class="math">σ</span> and an up-down position <span class="math">t</span>. The output is also a point on a map. A <strong class="gold">zero</strong> is an input whose output lands exactly on the center of the output map, which this page calls the bullseye.</p>
-  <h3 class="step-h">Plugging in a point</h3>
+  <p class="lead">Riemann plugged in <strong>points on a flat map</strong> instead of ordinary numbers. Mathematicians call these points complex numbers. An input point <span class="math">s = σ + it</span> has a left-right position <span class="math">σ</span> and an up-down position <span class="math">t</span>. The output is also a point on a map. A <strong class="gold">zero</strong> is an input whose output lands exactly on the center of the output map, the <strong>bullseye</strong>.</p>
+  <h3 class="step-h">Step 1: Plugging in a point</h3>
   <p class="step">Each piece of the sum, <span class="math">1/n<sup>s</sup></span>, becomes an arrow. Its length is <span class="math">1/n<sup>σ</sup></span>, set by the left-right position. Its direction turns clockwise by an angle of <span class="math">t × ln n</span>, set by the up-down position. Zeta lays the arrows head to tail, and the point where the chain ends is the output.</p>
   <div class="viz" id="arrowViz">
     <div class="controls" style="margin:0 0 12px">
@@ -332,38 +373,33 @@ ul.steps{max-width:780px;padding-left:1.2em;margin:0 0 1em}ul.steps li{margin:.4
     </div>
     <canvas id="arrowCv" style="height:340px"></canvas>
     <div class="readout" id="arrowRead"></div>
-    <div class="cap">The first arrow (for n = 1) always has length 1 and points right. Later arrows shrink and turn. 2,000 arrows are drawn, and the gold ring marks zeta's exact value.</div>
+    <div class="cap">The first arrow (for n = 1) always has length 1 and points right. Later arrows shrink and turn. The gold ring marks zeta's exact value.</div>
   </div>
 
-  <h3 class="step-h">Zeros, and why they matter for primes</h3>
-  <p class="step">A zero is a zero <em>of the zeta function</em>: an input <span class="math">s</span> where the output <span class="math">ζ(s)</span> is exactly 0. In the arrow picture, the chain of arrows ends exactly where it started. It is the same idea as in school algebra, where 3 is a zero of <span class="math">x − 3</span> because plugging in 3 gives 0.</p>
-  <p class="step">School algebra also explains why zeros matter. Know where a polynomial is zero and you can rebuild it: the zeros 2 and 3 give <span class="math">(x − 2)(x − 3) = x² − 5x + 6</span>. Zeta can be rebuilt in a similar way. That gives it two complete recipes:</p>
+  <h3 class="step-h">Step 2: Zeros, and why they matter for primes</h3>
+  <p class="step">A zero of zeta is an input <span class="math">s</span> where <span class="math">ζ(s)</span> is exactly 0. In the arrow picture, the chain of arrows ends exactly where it started. Zeros matter because they can rebuild a function. In school algebra the zeros 2 and 3 give <span class="math">(x − 2)(x − 3) = x² − 5x + 6</span>. Zeta can be rebuilt in a similar way, so it has two complete recipes:</p>
   <div class="claims two">
     <div class="claim"><div class="verdict cyan">Recipe 1: from the primes</div><p>Multiply one small sum per prime (Chapter 3): <span class="math">ζ(s) = 1/(1 − 2<sup>−s</sup>) × 1/(1 − 3<sup>−s</sup>) × 1/(1 − 5<sup>−s</sup>) × …</span></p><div class="where">Euler, 1737</div></div>
     <div class="claim"><div class="verdict gold">Recipe 2: from the zeros</div><p>Multiply one factor per nontrivial zero, like <span class="math">(x − 2)(x − 3)</span> but with infinitely many factors, then a few known simple pieces that handle the spike at s = 1 and the trivial zeros. Riemann guessed this in 1859, and Jacques Hadamard proved it in 1893.</p><div class="where">Riemann, Hadamard</div></div>
   </div>
-  <p class="step" style="margin-top:20px">Both recipes make the same function. So the list of primes and the list of zeros carry the same information, written two ways. Know every zero and you can recover every prime. Chapter 6 shows exactly how: each zero adds one wave to the prime count, and their sum is the prime staircase. That is why the zeros of zeta tell you about the primes.</p>
+  <p class="step" style="margin-top:20px">Both recipes make the same function, so the list of primes and the list of zeros carry the same information. Know every zero and you can recover every prime. Chapter 6 shows how: each zero adds one wave to the prime count.</p>
 
-  <h3 class="step-h">Where the sum stops working</h3>
-  <p class="step">Whether the chain of arrows settles on an end point depends only on how fast the arrows shrink, which is set by the left-right position <span class="math">σ</span>. The up-down position only turns them.</p>
-  <p class="step">To the right of <span class="math">σ = 1</span> the pieces shrink fast enough for the total to settle. At <span class="math">σ = 1</span> the pieces are 1, ½, ⅓, ¼, … They do shrink, but too slowly: the total passes 10 after about 12,000 pieces and keeps climbing forever. To the left of 1 they shrink more slowly still. So the sum gives no answer anywhere to the left of 1, and that includes the line <span class="math gold">σ = ½</span> (drawn in gold throughout), where the hypothesis lives.</p>
-
-  <h3 class="step-h">A simpler sum with the same problem</h3>
-  <p class="step">Take <span class="math">1 + x + x² + x³ + …</span> At <span class="math">x = ½</span> it is 1 + ½ + ¼ + ⅛ + …, which comes to 2. Whenever x is between −1 and 1, the total equals <span class="math">1/(1 − x)</span>. Outside that range the sum never settles, yet <span class="math">1/(1 − x)</span> keeps giving sensible answers: at x = 2 it gives −1. The sum is one way of writing the function <span class="math">1/(1 − x)</span>, and that way only works on part of the line. The function itself works everywhere except x = 1, where it divides by zero.</p>
+  <h3 class="step-h">Step 3: Going left of σ = 1</h3>
+  <p class="step">The sum only settles to the right of <span class="math">σ = 1</span>. At <span class="math">σ = 1</span> the pieces are 1, ½, ⅓, ¼, … They shrink too slowly: the total passes 10 after about 12,000 pieces and keeps climbing forever. Further left they shrink more slowly still. Yet the hypothesis is about the line <span class="math gold">σ = ½</span> (drawn in gold throughout), which is left of 1. Zeta still has exactly one sensible value there. Just as 1 + x + x² + … only works between −1 and 1 while the function it adds up to, 1/(1 − x), works almost everywhere, zeta extends past its sum in exactly one way. This is called <strong>analytic continuation</strong>.</p>
+  <details class="more wide"><summary>A simpler sum with the same problem</summary>
+    <p>Take <span class="math">1 + x + x² + x³ + …</span> At <span class="math">x = ½</span> it is 1 + ½ + ¼ + ⅛ + …, which comes to 2. Whenever x is between −1 and 1, the total equals <span class="math">1/(1 − x)</span>. Outside that range the sum never settles, yet <span class="math">1/(1 − x)</span> keeps giving sensible answers: at x = 2 it gives −1. The sum is a way of writing the function <span class="math">1/(1 − x)</span> that only works on part of the line. The function itself works everywhere except x = 1, where it divides by zero.</p>
   <div class="viz" id="geoViz">
     <div class="legend"><span><i style="background:var(--cyan)"></i>the function 1/(1 − x)</span><span><i style="background:var(--coral)"></i>the sum's running total, piece by piece</span></div>
     <div class="cols" style="gap:16px"><canvas id="geoCv" style="height:300px"></canvas><canvas id="geoRunCv" style="height:300px"></canvas></div>
     <div class="controls"><label>Slide x <input type="range" id="geoX" min="-250" max="250" value="50"> <b id="geoXVal" class="gold">0.50</b></label></div>
     <div class="readout" id="geoRead"></div>
   </div>
-  <p class="step" style="margin-top:26px">Zeta is in the same situation. Chapter 3's sum is one way of writing zeta, and it only works to the right of <span class="math">σ = 1</span>. Zeta itself makes sense on the whole map except the single point <span class="math">s = 1</span>, which plays the role of x = 1 above.</p>
-
-  <h3 class="step-h">Why there is only one way to extend it</h3>
-  <p class="step">With pencil and paper you could continue a curve any way you like. Smooth functions on this map of points are far stricter. Here "smooth" has a demanding meaning: zoom in close on almost any point and the function only rotates and stretches the map, with no tearing. (At a few special points it can squash the map flat.) If you know such a function on any small patch, however tiny, its value everywhere else is already decided. A short arc of a perfect circle works the same way, since only one circle fits it. The region to the right of σ = 1, where the sum works, is far bigger than a small patch, so it pins zeta down everywhere else. Mathematicians call this <strong>analytic continuation</strong>.</p>
-
-  <h3 class="step-h">Computing zeta left of 1</h3>
-  <p class="step">One practical route is to flip every second sign: <span class="math">1 − 1/2<sup>s</sup> + 1/3<sup>s</sup> − 1/4<sup>s</sup> + …</span> Neighboring pieces now nearly cancel, so this total settles everywhere to the right of <span class="math">σ = 0</span>, including the band between 0 and 1. It equals zeta multiplied by <span class="math">(1 − 2/2<sup>s</sup>)</span>, so dividing by that factor gives zeta. At <span class="math">s = 1</span> the factor is 1 − 2/2 = 0, which is exactly the point where zeta has no answer.</p>
-  <details class="algebra"><summary>Show the algebra</summary><p>Start with zeta: 1 + 1/2<sup>s</sup> + 1/3<sup>s</sup> + 1/4<sup>s</sup> + … The even pieces 1/2<sup>s</sup> + 1/4<sup>s</sup> + 1/6<sup>s</sup> + … add up to zeta divided by 2<sup>s</sup>, because 1/(2n)<sup>s</sup> is 1/2<sup>s</sup> times 1/n<sup>s</sup>. Subtracting the even pieces twice turns each of them from plus to minus, which gives the sign-flipped sum. So the sign-flipped sum equals zeta − 2 × zeta/2<sup>s</sup>, which is zeta × (1 − 2/2<sup>s</sup>).</p></details>
+    <p>Zeta is in the same situation. Chapter 3's sum is a way of writing zeta that only works to the right of <span class="math">σ = 1</span>. Zeta itself makes sense on the whole map except the single point <span class="math">s = 1</span>, which plays the role of x = 1 above.</p>
+    <p>Why only one way to extend it? With pencil and paper you could continue a curve any way you like. Smooth functions on this map of points are far stricter. Here "smooth" has a demanding meaning: zoom in close on almost any point and the function only rotates and stretches the map, with no tearing. (At a few special points it can squash the map flat.) If you know such a function on any small patch, however tiny, its value everywhere else is already decided. A short arc of a perfect circle works the same way, since only one circle fits it. The region to the right of σ = 1, where the sum works, is far bigger than a small patch, so it pins zeta down everywhere else.</p>
+  </details>
+  <details class="more wide"><summary>Computing zeta left of 1</summary>
+    <p>One practical route is to flip every second sign: <span class="math">1 − 1/2<sup>s</sup> + 1/3<sup>s</sup> − 1/4<sup>s</sup> + …</span> Neighboring pieces now nearly cancel, so this total settles everywhere to the right of <span class="math">σ = 0</span>, including the band between 0 and 1. It equals zeta multiplied by <span class="math">(1 − 2/2<sup>s</sup>)</span>, so dividing by that factor gives zeta. At <span class="math">s = 1</span> the factor is 1 − 2/2 = 0, which is exactly the point where zeta has no answer.</p>
+    <p>Where the factor comes from: Start with zeta: 1 + 1/2<sup>s</sup> + 1/3<sup>s</sup> + 1/4<sup>s</sup> + … The even pieces 1/2<sup>s</sup> + 1/4<sup>s</sup> + 1/6<sup>s</sup> + … add up to zeta divided by 2<sup>s</sup>, because 1/(2n)<sup>s</sup> is 1/2<sup>s</sup> times 1/n<sup>s</sup>. Subtracting the even pieces twice turns each of them from plus to minus, which gives the sign-flipped sum. So the sign-flipped sum equals zeta − 2 × zeta/2<sup>s</sup>, which is zeta × (1 − 2/2<sup>s</sup>).</p>
   <div class="viz" id="csViz">
     <div class="controls" style="margin:0 0 12px">
       <div class="seg" id="csS"><button data-s="2" class="on">s = 2</button><button data-s="1">s = 1</button><button data-s="0.5">s = ½</button></div>
@@ -373,17 +409,19 @@ ul.steps{max-width:780px;padding-left:1.2em;margin:0 0 1em}ul.steps li{margin:.4
     <canvas id="csCv" style="height:300px"></canvas>
     <div class="readout" id="csRead"></div>
   </div>
-  <p class="step" style="margin-top:26px">This page computes zeta with a sped-up version of that sign-flipped sum. For points further left, Riemann found a mirror formula that links each point to the left of the strip to a matching point to the right of it, reflected across the gold line.</p>
+    <p>A sped-up version of this sign-flipped sum is a standard way to compute zeta inside the strip. For points left of the strip, Riemann's mirror formula takes the value from the matching point on the other side of the gold line, where the sum works.</p>
+  </details>
 
-  <h3 class="step-h">Trivial zeros, nontrivial zeros and the critical strip</h3>
-  <p class="step">Zeta has two kinds of zeros. The <strong class="violet">trivial zeros</strong> sit at <span class="math">−2, −4, −6</span> and so on, all on the horizontal axis where <span class="math">t = 0</span>. Their positions are known exactly, they come from one simple factor in a formula (explained below the walk), and their effect on the prime count is tiny. That is why they are called trivial. Every other zero is <strong class="gold">nontrivial</strong>, and those are the ones that steer the primes (Chapter 6). When the hypothesis says "every nontrivial zero", it means every zero except that easy row.</p>
-  <p class="step">Why do the nontrivial zeros all fall in the band between <span class="math">σ = 0</span> and <span class="math">σ = 1</span>, called the <strong>critical strip</strong>? Look to the left and right of it.</p>
-  <ul class="steps">
-    <li><strong>Right of 1</strong>, zeta equals Chapter 3's product of prime sums. None of those sums is ever zero, and the product settles down quickly, so it can never be zero either.</li>
-    <li><strong>Left of 0</strong>, Riemann's mirror formula builds zeta from its values to the right of 1, which are never zero. It multiplies them by factors that are also never zero, except one sine factor that is zero exactly at −2, −4, −6 and so on. Those are the trivial zeros, and they are the only zeros out there.</li>
-    <li><strong>That leaves the strip.</strong> Riemann's hypothesis is that inside it, every zero sits on the center line <span class="math gold">σ = ½</span>.</li>
-  </ul>
-  <p class="step">Try all three regions below. Walk up along ½ and the curve keeps hitting the bullseye. Slide right past 1 and it stays well away. Slide left to −2, past the strip. There the walk runs from t = −10 to t = 10, so you can watch the curve spiral in, pass exactly through the bullseye at t = 0 (a trivial zero), and spiral back out. Any other position on the left misses.</p>
+  <h3 class="step-h">Step 4: Trivial zeros, nontrivial zeros and the critical strip</h3>
+  <p class="step">Zeta has two kinds of zeros. The <strong class="violet">trivial zeros</strong> are at <span class="math">−2, −4, −6</span> and so on, on the horizontal axis. Their positions are known exactly and their effect on the prime count is tiny. Every other zero is <strong class="gold">nontrivial</strong>, and those are the ones that steer the primes. They all lie in the band between <span class="math">σ = 0</span> and <span class="math">σ = 1</span>, called the <strong>critical strip</strong>. The hypothesis says that inside the strip, every zero lies on the center line <span class="math gold">σ = ½</span>.</p>
+  <details class="more"><summary>Why are the nontrivial zeros all in the strip?</summary>
+    <ul class="steps">
+      <li><strong>Right of 1</strong>, zeta equals Chapter 3's product of prime sums. None of those sums is ever zero, and the product settles down quickly, so it can never be zero either.</li>
+      <li><strong>Left of 0</strong>, Riemann's mirror formula builds zeta from its values at matching points to the right of 1, on the other side of the gold line, which are never zero. It multiplies them by factors that are also never zero, except one sine factor that is zero exactly at −2, −4, −6 and so on. Those are the trivial zeros, the only zeros out there.</li>
+    </ul>
+    <p>That leaves the strip for every other zero.</p>
+  </details>
+  <p class="step" style="margin-top:22px">Try it below. Walk up along ½ and the curve keeps passing through the bullseye. Slide right past 1 and it stays well away. Slide left to −2 and the walk runs from t = −10 to t = 10, passing through the bullseye once, at t = 0: a trivial zero.</p>
   <div class="viz" id="walkViz">
     <div class="curvegrid">
       <div><div class="panel-title">Input map (where you walk)</div><canvas id="inCv" style="height:440px"></canvas></div>
@@ -399,10 +437,10 @@ ul.steps{max-width:780px;padding-left:1.2em;margin:0 0 1em}ul.steps li{margin:.4
     <div class="readout" id="curveRead"></div>
     <div class="readout" id="curveZone"></div>
     <div class="chips" id="chips"></div>
-    <div class="cap">The walker climbs the line from t = 0 to t = 60 (from t = −10 to t = 10 when it is left of the strip). The right panel draws where zeta sends each step. Faint gold dots mark the known zeros on the gold line, violet dots the trivial zeros, and the red × the spike at s = 1. Gold or violet chip: an exact bullseye (a zero). Red chip: the closest the curve came on that loop, which still missed.</div>
+    <div class="cap">The walker climbs from t = 0 to t = 60 (from t = −10 to t = 10 left of the strip), and the right panel draws where zeta sends each step. Gold dots: known zeros on the gold line. Violet dots: trivial zeros. Red ×: the spike at s = 1. A gold or violet chip marks an exact hit. A red chip shows the closest the curve came on that loop.</div>
   </div>
-  <h3 class="step-h">Where the trivial zeros come from</h3>
-  <p class="step">The trivial zeros come from a <strong>sine</strong>, the wave you get by going round a circle. Send a point round a circle of radius 1 and track its height: it rises to 1, falls back to 0, drops to −1 and returns to 0. The height after turning by some angle is the sine of that angle. Riemann's mirror formula contains <span class="math">sin(πs/2)</span>, which makes one full turn for every 4 steps of <span class="math">s</span>. Its height is 0 whenever the point is at the far left or far right of the circle, and that happens at every even number: …, −4, −2, 0, 2, 4, …</p>
+  <details class="more wide"><summary>Where do the trivial zeros come from?</summary>
+    <p>The trivial zeros come from a <strong>sine</strong>, the wave you get by going round a circle. Send a point round a circle of radius 1 and track its height: it rises to 1, falls back to 0, drops to −1 and returns to 0. The height after turning by some angle is the sine of that angle. Riemann's mirror formula contains <span class="math">sin(πs/2)</span>, which makes one full turn for every 4 steps of <span class="math">s</span>. Its height is 0 whenever the point is at the far left or far right of the circle, which happens at every even number: …, −4, −2, 0, 2, 4, …</p>
   <div class="viz" id="sineViz">
     <canvas id="sineCv" style="height:290px"></canvas>
     <div class="controls">
@@ -412,8 +450,9 @@ ul.steps{max-width:780px;padding-left:1.2em;margin:0 0 1em}ul.steps li{margin:.4
     <div class="readout" id="sineRead"></div>
     <div class="cap">Left: the point on the circle after turning by the angle πs/2. Right: its height, plotted against s. Violet dots are trivial zeros of zeta. Hollow dots are where the sine is zero but another piece of the formula cancels it.</div>
   </div>
-  <p class="step" style="margin-top:22px">So why are only the negative even numbers zeros of zeta? The mirror formula multiplies the sine by other pieces. At 0 and at the positive even numbers 2, 4, 6, one of those pieces shoots to infinity at exactly the same spot, and the two effects cancel out to an ordinary number. That is why <span class="math">ζ(0) = −½</span> and why <span class="math">ζ(2) = π²/6</span> from Chapter 3. Neither is zero. At −2, −4, −6 and so on nothing cancels the sine, so zeta is exactly zero there.</p>
-  <details class="algebra"><summary>Show the mirror formula</summary><p>ζ(s) = 2<sup>s</sup> π<sup>s−1</sup> sin(πs/2) Γ(1−s) ζ(1−s). Here Γ (gamma) is the factorial stretched to every number, with Γ(n) = (n − 1)! for whole numbers. It shoots to infinity at 0, −1, −2 and so on. At s = 2, 4, 6 the piece Γ(1−s) sits at −1, −3, −5, where it shoots to infinity and cancels the sine. At s = 0 the piece ζ(1−s) is ζ(1), the spike. At s = −2, −4, −6 the pieces Γ(3), Γ(5), Γ(7) are the ordinary numbers 2, 24, 720, and ζ(3), ζ(5), ζ(7) are ordinary numbers to the right of 1, so the sine's zero survives.</p></details>
+    <p>So why are only the negative even numbers zeros of zeta? The mirror formula multiplies the sine by other pieces. At 0 and at the positive even numbers 2, 4, 6, one of those pieces shoots to infinity at exactly the same spot, and the two effects cancel out to an ordinary number. That is why <span class="math">ζ(0) = −½</span> and why <span class="math">ζ(2) = π²/6</span> from Chapter 3. Neither is zero. At −2, −4, −6 and so on nothing cancels the sine, so zeta is exactly zero there.</p>
+    <p>The mirror formula itself: ζ(s) = 2<sup>s</sup> π<sup>s−1</sup> sin(πs/2) Γ(1−s) ζ(1−s). Here Γ (gamma) is the factorial stretched to every number, with Γ(n) = (n − 1)! for whole numbers. It shoots to infinity at 0, −1, −2 and so on. At s = 2, 4, 6 the piece Γ(1−s) is Γ(−1), Γ(−3), Γ(−5), which shoot to infinity and cancel the sine. At s = 0 the piece ζ(1−s) is ζ(1), the spike. At s = −2, −4, −6 the pieces Γ(3), Γ(5), Γ(7) are the ordinary numbers 2, 24, 720, and ζ(3), ζ(5), ζ(7) are ordinary numbers to the right of 1, so the sine's zero survives.</p>
+  </details>
   <div class="takeaway">On the line σ = ½ the curve keeps passing exactly through the bullseye. Slide off the line and every loop misses. The Riemann Hypothesis says this stays true forever, however far up you walk.</div>
 </section>
 
@@ -431,17 +470,18 @@ ul.steps{max-width:780px;padding-left:1.2em;margin:0 0 1em}ul.steps li{margin:.4
       <button data-view="pole">The spike at s = 1</button>
       <div class="seg" id="colorSeg"><button data-c="calm" class="on">Calm colors</button><button data-c="rainbow">Direction rainbow</button></div>
     </div>
-    <div class="cap">Height is the size of zeta's output, gently capped so the spike at s = 1 fits. Region shown: σ from −2.6 to 3, t from −3 to 50. Computed live in your browser.</div>
+    <div class="cap">Height is the size of zeta's output, gently capped so the spike at s = 1 fits. Region shown: σ from −2.6 to 3, t from −3 to 50.</div>
   </div>
 
   <h3 class="step-h">The strip in the landscape</h3>
-  <p class="step">Outside the strip the only zeros are the <strong class="violet">trivial zeros</strong> (Chapter 4), so there the ground touches the floor only at the violet one at the front left. In 1896 Jacques Hadamard and Charles de la Vallée Poussin proved that no zeros sit on the strip's edges either. That was enough to prove Gauss's estimate right in the long run, a result called the Prime Number Theorem. The <strong>spike</strong> at s = 1 is the one point where zeta has no value, so the ground there rises without limit.</p>
+  <p class="step">Outside the strip the only zeros are the <strong class="violet">trivial zeros</strong> (Chapter 4), so there the ground touches the floor only at the violet one at the front left. The <strong>spike</strong> at s = 1 is the one point where zeta has no value, so the ground there rises without limit.</p>
+  <details class="more"><summary>What about the edges of the strip?</summary><p>In 1896 Jacques Hadamard and Charles de la Vallée Poussin proved that no zeros lie on the edges σ = 0 and σ = 1. That was enough to prove Gauss's estimate right in the long run, a result called the Prime Number Theorem. The hypothesis asks for much more: every zero on the center line.</p></details>
 
   <h3 class="step-h">Zeros come in mirror pairs</h3>
-  <p class="step">The mirror formula has a second consequence. If there is a zero at some point in the strip, there is also one at the reflection of that point across the gold line, at the same height. A zero on the gold line is its own reflection. A zero off the line would come with a twin on the other side, and one of the two would be to the right of ½.</p>
+  <p class="step">Riemann's mirror formula links zeta's value at each point to its value at a matching point on the other side of the gold line. One consequence: if there is a zero at some point in the strip, there is also one at the reflection of that point across the gold line, at the same height. A zero on the gold line is its own reflection. A zero off the line would come with a twin on the other side, and one of the two would be to the right of ½.</p>
 
   <h3 class="step-h">The hypothesis in this picture</h3>
-  <p class="step">Every nontrivial zero sits exactly on the gold line, so none of them has a twin. The first few are at heights <strong class="gold">14.13, 21.02, 25.01 and 30.42</strong>. Nobody has a formula for these heights. They are found by computer, and more than 12 trillion have been found so far, every one of them on the line.</p>
+  <p class="step">Every nontrivial zero lies exactly on the gold line, so none of them has a twin. The first few are at heights <strong class="gold">14.13, 21.02, 25.01 and 30.42</strong>. Nobody has a formula for these heights. They are found by computer, and more than 12 trillion have been found so far, every one of them on the line.</p>
   <div class="takeaway">Riemann's hypothesis, in one picture: inside the strip, the landscape only ever touches the floor along the gold center line.</div>
 </section>
 
@@ -449,17 +489,17 @@ ul.steps{max-width:780px;padding-left:1.2em;margin:0 0 1em}ul.steps li{margin:.4
 <section class="chapter" id="ch6">
   <div class="kicker">Chapter 6</div>
   <h2>Zeros rebuild the prime count</h2>
-  <p class="lead">Riemann found a formula, now called the <strong>explicit formula</strong>, that rebuilds the prime staircase exactly from the zeros. Each zero contributes one wave. (Where the staircase jumps, the formula lands halfway up the step.)</p>
+  <p class="lead">Riemann found a formula, now called the <strong>explicit formula</strong>, that rebuilds the prime staircase exactly from the zeros. Each zero contributes one wave.</p>
 
   <h3 class="step-h">Step 1: A staircase with a cleaner formula</h3>
   <p class="step">Instead of climbing 1 at each prime, climb <span class="math">ln p</span> at each prime p. Also climb at prime powers: at 4 = 2² and 8 = 2³ climb ln 2, and at 9 = 3² climb ln 3. This weighted staircase holds the same information about primes, and its smooth estimate is simply the straight line <span class="math">y = x</span>, much tidier than li(x).</p>
 
   <h3 class="step-h">Step 2: Each zero adds a wave</h3>
-  <p class="step">The explicit formula says: the weighted staircase at x equals <span class="math">x</span>, minus one wave for each zero, minus two tiny corrections. A zero at height <span class="math">γ</span> on the gold line makes a wave shaped like <span class="math">cos(γ × ln x)</span>, slightly shifted, with a size of about <span class="math">2√x ÷ γ</span>. So the zero's height sets the wave's pitch, higher zeros give quieter and faster waves, and the √x comes from the zero sitting at ½.</p>
-  <details class="algebra"><summary>Show the formula</summary><p>ψ(x) = x − Σ x<sup>ρ</sup>/ρ − ln(2π) − ½ ln(1 − 1/x²). Here ψ(x) is the weighted staircase and the sum runs over every nontrivial zero ρ. A zero ρ = ½ + iγ and its partner ½ − iγ (zeros also mirror across the horizontal axis) combine into one real wave. The power x<sup>ρ</sup> equals √x × x<sup>iγ</sup>, and x<sup>iγ</sup> is an arrow turning by an angle of γ × ln x, much like the arrows in Chapter 4. Dividing by ρ, which is about γ in size, makes high zeros quieter. The term ln(2π) is a constant, and the last term comes from the trivial zeros. Both are tiny.</p></details>
+  <p class="step">The explicit formula says: the weighted staircase at x equals <span class="math">x</span>, minus one wave for each zero, minus two tiny corrections. A zero at height <span class="math">γ</span> on the gold line makes a wave shaped like <span class="math">cos(γ × ln x)</span>, slightly shifted, with a size of about <span class="math">2√x ÷ γ</span>. So the zero's height sets the wave's pitch, higher zeros give quieter and faster waves, and the √x comes from the zero's position at ½.</p>
+  <details class="more"><summary>Show the formula</summary><p>ψ(x) = x − Σ x<sup>ρ</sup>/ρ − ln(2π) − ½ ln(1 − 1/x²). Here ψ(x) is the weighted staircase and the sum runs over every nontrivial zero ρ. A zero ρ = ½ + iγ and its partner ½ − iγ (zeros also mirror across the horizontal axis) combine into one real wave. The power x<sup>ρ</sup> equals √x × x<sup>iγ</sup>, and x<sup>iγ</sup> is an arrow turning by an angle of γ × ln x, much like the arrows in Chapter 4. Dividing by ρ, which is about γ in size, makes high zeros quieter. The term ln(2π) is a constant, and the last term comes from the trivial zeros. Both are tiny. At a prime or prime power, where the staircase jumps, the formula lands halfway up the step.</p></details>
 
   <h3 class="step-h">Step 3: Watch the waves rebuild the primes</h3>
-  <p class="step">Press "Add the waves". With no waves you get the straight line. Each wave pushes the curve toward the true staircase, and with 300 waves the steps are sharp. The second mode adds the same waves to the staircase's steepness instead, which turns into spikes standing exactly at the primes and prime powers.</p>
+  <p class="step">Press "Add the waves". With no waves you get the straight line. Each wave pushes the curve closer to the true staircase, and with 300 waves the steps are sharp. "Make spikes at primes" adds the same waves to the staircase's steepness instead, which gives spikes exactly at the primes and prime powers.</p>
   <div class="viz" id="musicViz">
     <div class="controls" style="margin:0 0 12px">
       <div class="seg" id="musicMode"><button data-m="stair" class="on">Rebuild the staircase</button><button data-m="spike">Make spikes at primes</button></div>
@@ -471,7 +511,7 @@ ul.steps{max-width:780px;padding-left:1.2em;margin:0 0 1em}ul.steps li{margin:.4
     <canvas id="musicCv" style="height:380px"></canvas>
     <div class="panel-title" style="margin-top:14px" id="waveTitle">The newest wave on its own</div>
     <canvas id="waveCv" style="height:110px"></canvas>
-    <div class="cap">Uses the real zeros, computed to 6 decimals. The formula is Riemann's, in the form Hans von Mangoldt proved in 1895. The sound plays each zero's height times 10 as a pitch in hertz.</div>
+    <div class="cap">The waves use the real zero heights, to 6 decimal places. The formula is Riemann's, in the form Hans von Mangoldt proved in 1895. The sound plays each zero's height times 10 as a pitch in hertz.</div>
   </div>
   <p class="step" style="margin-top:22px">If a zero sat to the right of the line, at position β, its wave would grow like x<sup>β</sup> instead of √x. The next chapter shows why that matters.</p>
   <div class="takeaway">Each zero adds one wave to the prime count. The list of zeros determines the primes, and the primes determine the zeros.</div>
@@ -481,12 +521,12 @@ ul.steps{max-width:780px;padding-left:1.2em;margin:0 0 1em}ul.steps li{margin:.4
 <section class="chapter" id="ch7">
   <div class="kicker">Chapter 7</div>
   <h2>Why the line ½</h2>
-  <p class="lead">The waves from Chapter 6 explain why the line ½ matters. The argument takes three steps.</p>
+  <p class="lead">The waves from Chapter 6 explain why the line ½ matters.</p>
 
   <h3 class="step-h">Step 1: A zero's left-right position sets its wave's loudness</h3>
-  <p class="step">A zero at left-right position <span class="math">β</span> makes a wave that grows like <span class="math">x<sup>β</sup></span>. On the gold line β = ½, so every wave grows like √x. Zeros off the line come in mirror pairs (Chapter 5), so one of the pair would sit to the right of ½. Its louder wave would push the wiggle far beyond √x, at least now and then, and the waves from the line could not cancel it. Slide the zero right and compare its wave with the waves from the line and with the real wiggle.</p>
+  <p class="step">A zero at left-right position <span class="math">β</span> makes a wave that grows like <span class="math">x<sup>β</sup></span>. On the gold line β = ½, so every wave grows like √x. Zeros off the line come in mirror pairs (Chapter 5), so one of the pair would lie to the right of ½. Its louder wave would push the wiggle far beyond √x at least now and then, by more than the waves from the line could cancel. Slide the zero right and compare its wave with the waves from the line and with the real wiggle.</p>
   <div class="viz" id="rogueViz">
-    <div class="legend"><span><i style="background:var(--gold)"></i>wave size if zeros sit on the line: √x</span><span><i style="background:var(--violet)"></i>wave size from a rogue zero at β</span><span><i style="background:var(--coral)"></i>the real wiggle |li(x) − count|</span></div>
+    <div class="legend"><span><i style="background:var(--gold)"></i>wave size if zeros lie on the line: √x</span><span><i style="background:var(--violet)"></i>wave size from a rogue zero at β</span><span><i style="background:var(--coral)"></i>the real wiggle |li(x) − count|</span></div>
     <canvas id="rogueCv" style="height:300px"></canvas>
     <div class="controls"><label>Move a zero right: β <input type="range" id="beta" min="50" max="95" value="60"> <b id="betaVal" class="violet">0.60</b></label></div>
     <div class="readout" id="rogueRead"></div>
@@ -494,7 +534,7 @@ ul.steps{max-width:780px;padding-left:1.2em;margin:0 0 1em}ul.steps li{margin:.4
   </div>
 
   <h3 class="step-h">Step 2: √x is the size of coin-flip noise</h3>
-  <p class="step">Flip a fair coin x times and keep score: +1 for heads, −1 for tails. The score drifts, and it typically ends up within about √x of zero. After 10,000 flips that is about ±100, and after a million about ±1,000. A wiggle of size √x is the signature of pure chance.</p>
+  <p class="step">Flip a fair coin x times and keep score: +1 for heads, −1 for tails. The score drifts and typically ends up within about √x of zero. After 10,000 flips that is about ±100, and after a million about ±1,000. A wiggle of size √x is the signature of pure chance.</p>
 
   <h3 class="step-h">Step 3: The primes' own coin flips</h3>
   <p class="step">Give every whole number a score from its prime recipe. If the recipe repeats a prime, like 12 = 2 × 2 × 3, the score is 0. Otherwise it is +1 for an even number of primes (6 = 2 × 3) and −1 for an odd number (30 = 2 × 3 × 5, or any single prime). Add the scores up as you count. This running total, the Mertens function, is the primes' walk. The Riemann Hypothesis is equivalent to this: pick any power just above ½, such as x<sup>0.501</sup> or x<sup>0.5001</sup>, and in the long run the walk stays within a fixed multiple of it.</p>
@@ -505,7 +545,7 @@ ul.steps{max-width:780px;padding-left:1.2em;margin:0 0 1em}ul.steps li{margin:.4
     <div class="readout" id="walkRead"></div>
     <div class="cap">The blue coin walk scores 0 for the same share of numbers as the primes' walk (about 39%) and flips a fair coin for the rest.</div>
   </div>
-  <div class="takeaway">The primes' walk strays from zero no more than a fair coin's walk. In that sense the primes are as evenly spread as chance allows.</div>
+  <div class="takeaway">The primes' walk strays from zero about as far as a fair coin's walk, and not much further. In that sense the primes are as evenly spread as chance allows.</div>
 </section>
 
 <!-- 8 -->
@@ -515,11 +555,11 @@ ul.steps{max-width:780px;padding-left:1.2em;margin:0 0 1em}ul.steps li{margin:.4
   <p class="lead">The hypothesis can be restated as a fact about the divisors of whole numbers, with no zeta function in sight.</p>
 
   <h3 class="step-h">Step 1: Add up a number's divisors</h3>
-  <p class="step">Write <span class="math">σ(n)</span> for the total of all numbers that divide n. For 12 that is 1 + 2 + 3 + 4 + 6 + 12 = 28. (This σ has nothing to do with the left-right σ of earlier chapters. Mathematicians reuse letters.) Numbers with many small factors have big totals for their size: 12's total is 2.3 times 12, while a prime's total is just itself plus 1.</p>
+  <p class="step">Write <span class="math">σ(n)</span> for the total of all numbers that divide n. For 12 that is 1 + 2 + 3 + 4 + 6 + 12 = 28. (This σ is unrelated to the left-right σ of earlier chapters. Mathematicians reuse letters.) Numbers with many small factors have big totals for their size: 12's total is 2.3 times 12, while a prime's total is just itself plus 1.</p>
 
   <h3 class="step-h">Step 2: Robin's limit</h3>
-  <p class="step">In 1913 Thomas Gronwall showed that in the long run σ(n) never gets much bigger than <span class="math">1.781 × n × ln(ln n)</span>, and that the best numbers come as close to it as you like. The 1.781 is e<sup>γ</sup>, a constant from calculus. The ln(ln n) is the logarithm taken twice, which grows extremely slowly: it is only 2.6 for a million.</p>
-  <p class="step">In 1984 Guy Robin proved that the Riemann Hypothesis is true <strong>exactly when</strong> σ(n) stays below that limit for every n bigger than 5040. Exactly 27 numbers up to 5040 break the limit, and 5040 is the largest of them. It equals 1 × 2 × 3 × 4 × 5 × 6 × 7, so it has an unusually rich set of divisors. The 2026 proof therefore guarantees that no number above 5040 breaks the limit.</p>
+  <p class="step">Robin's limit is <span class="math">e<sup>γ</sup> × n × ln(ln n)</span>, where e<sup>γ</sup> ≈ 1.781. In 1984 Guy Robin proved that the Riemann Hypothesis is true <strong>exactly when</strong> σ(n) stays below that limit for every n bigger than 5040. Exactly 27 numbers up to 5040 break the limit, and 5040 is the largest of them. It equals 1 × 2 × 3 × 4 × 5 × 6 × 7, so it has an unusually rich set of divisors. The 2026 proof therefore guarantees that no number above 5040 breaks the limit.</p>
+  <details class="more"><summary>Where does the limit come from?</summary><p>In 1913 Thomas Gronwall showed that in the long run σ(n) never gets much bigger than 1.781 × n × ln(ln n), and that the best numbers come as close to it as you like. The 1.781 is e<sup>γ</sup>, a constant from calculus. The ln(ln n) is the logarithm taken twice, which grows extremely slowly: it is only 2.6 for a million.</p></details>
 
   <h3 class="step-h">Step 3: Try it</h3>
   <p class="step">The best candidates are numbers packed with small prime factors, like 55,440 or 720,720, because they have the most divisors for their size. "Try a record holder" cycles through them.</p>
@@ -541,14 +581,16 @@ ul.steps{max-width:780px;padding-left:1.2em;margin:0 0 1em}ul.steps li{margin:.4
 <section class="chapter" id="ch9">
   <div class="kicker">Chapter 9</div>
   <h2>What the proof settles</h2>
-  <p class="lead">Before 2026 the evidence was strong but could not settle the question. A pattern can hold for every number anyone checks and still fail later: the prime count stays below li(x) for every number ever tested, yet John Littlewood proved in 1914 that it eventually goes above.</p>
+  <p class="lead">Before 2026 the evidence was strong but could not settle the question. A pattern can hold for every number anyone checks and still fail later: the prime count stays below li(x) for every number ever tested, yet John Littlewood proved in 1914 that it eventually rises above.</p>
   <div class="stats">
     <div class="stat"><div class="big">12 trillion+</div><div class="sm">zeros checked by computer, every one on the line (Platt and Trudgian, 2021)</div></div>
     <div class="stat"><div class="big">over 41%</div><div class="sm">of all zeros proved to be on the line before 2026 (Pratt and coauthors, 2020)</div></div>
     <div class="stat"><div class="big">17 million</div><div class="sm">lines in the 2026 proof, written in Lean and checked by computer</div></div>
   </div>
-  <p class="step" style="margin-top:22px">On November 20, 2026, Levent Alpöge, a number theorist at Anthropic, announced a proof found with Claude, Anthropic's AI model. It is written in <strong>Lean</strong>, a programming language for mathematics in which a small program checks every step. Nobody can read 17 million lines, so reviewers checked that the theorem in the code really states Riemann's hypothesis and that the code makes no hidden assumptions. The Lean and Mathlib communities certified it on November 21, and several mathematicians rebuilt it independently.</p>
-  <p class="step">The proof also covers the <strong>Generalized Riemann Hypothesis</strong> (GRH) for Dirichlet L-functions, the same claim for related functions that count primes in patterns, such as primes ending in 1, 3, 7 or 9. Many results were proved on the assumption that RH or GRH holds, and those are now theorems. Click a box to see some of them.</p>
+  <details class="more"><summary>How does a computer check that a zero is exactly on the line?</summary><p>Rounding could make a zero look like it is on the line when it is a hair off. On the line, zeta's output can be rewritten as a single ordinary number, positive or negative (Hardy's Z function), and each change of sign means a zero lies exactly on the line. A separate formula counts every zero in the whole strip up to a given height. When the two counts match, no zero can be hiding off the line. This settles any finite stretch of the line, never all of it.</p></details>
+  <p class="step" style="margin-top:22px">On November 20, 2026, Levent Alpöge, a number theorist at Anthropic, announced a proof found with Claude, Anthropic's AI model. It is written in <strong>Lean</strong>, a programming language for mathematics in which a small program checks every step. The Lean and Mathlib communities certified it on November 21.</p>
+  <details class="more"><summary>How was the proof checked?</summary><p>A proof this long is not practical to check line by line, so reviewers checked two things by hand: that the theorem in the code really states Riemann's hypothesis, and that the code makes no hidden assumptions. Lean's checker verified every step in between. Several mathematicians also rebuilt the proof independently.</p></details>
+  <p class="step">The proof also covers the <strong>Generalized Riemann Hypothesis</strong> (GRH) for Dirichlet L-functions, the same claim for related functions that count primes in patterns, such as primes ending in 1, 3, 7 or 9. Results that assumed RH or GRH are now theorems. Click a box to see some of them.</p>
   <div class="viz mapwrap">
     <svg id="impSvg" viewBox="0 0 1000 560" role="img" aria-label="Results that depended on the Riemann Hypothesis"></svg>
     <div class="implist" id="impList"></div>
@@ -559,9 +601,9 @@ ul.steps{max-width:780px;padding-left:1.2em;margin:0 0 1em}ul.steps li{margin:.4
 </main>
 
 <footer class="wrap">
-  <p style="font-size:14px;margin-bottom:26px">Built by <a href="https://qsimeon.github.io/">Quilee Simeon</a>.</p>
+  <p style="font-size:14px;margin-bottom:26px">By <a href="https://qsimeon.github.io/">Quilee Simeon</a>.</p>
   <h3 style="color:var(--ink)">In four sentences</h3>
-  <p>Primes look random but follow a smooth law on average. The leftover wiggle is made of waves, one per zero of Riemann's zeta function. The Riemann Hypothesis says every nontrivial zero sits on the line σ = ½, which keeps each wave as small as possible, so the primes are as evenly spread as chance allows. Levent Alpöge, working with Claude, proved it in November 2026.</p>
+  <p>Primes look random but follow a smooth law on average. The leftover wiggle is made of waves, one per zero of Riemann's zeta function. The Riemann Hypothesis says every nontrivial zero lies on the line σ = ½, which keeps each wave as small as possible, so the primes are as evenly spread as chance allows. Levent Alpöge, working with Claude, proved it in November 2026.</p>
   <h3 style="color:var(--ink);margin-top:30px">Go further</h3>
   <ul>
     <li><a href="https://www.youtube.com/watch?v=sD0NjbwqlYw" target="_blank" rel="noopener">3Blue1Brown: But what is the Riemann zeta function? Visualizing analytic continuation</a> (video)</li>
@@ -569,7 +611,6 @@ ul.steps{max-width:780px;padding-left:1.2em;margin:0 0 1em}ul.steps li{margin:.4
     <li><a href="https://www.claymath.org/millennium/riemann-hypothesis/" target="_blank" rel="noopener">Clay Mathematics Institute: the official problem statement</a></li>
     <li>Marcus du Sautoy, <em>The Music of the Primes</em> (book, 2003), and John Derbyshire, <em>Prime Obsession</em> (book, 2003)</li>
   </ul>
-  <p style="margin-top:26px;font-size:13px">Everything on this page is computed in your browser: the zeta function (Borwein's method, checked against high-precision values), primes and the Mertens walk up to one million, and divisor sums up to 200,000. The zero heights were computed with the mpmath library.</p>
 </footer>
 
 <div class="tourbar" id="tourbar" aria-live="polite">
@@ -656,6 +697,8 @@ function poly(ctx,pts,color,width=2,dash){ctx.save();ctx.strokeStyle=color;ctx.l
 const redraws=[];
 function onResize(fn){redraws.push(fn);}
 let rzT=null;window.addEventListener('resize',()=>{clearTimeout(rzT);rzT=setTimeout(()=>redraws.forEach(f=>f()),80);});
+// a chart inside a closed foldout has zero width, so redraw everything when one opens
+document.addEventListener('toggle',e=>{if(e.target.open)redraws.forEach(f=>f());},true);
 function watchVisible(el,cb){new IntersectionObserver(es=>es.forEach(e=>cb(e.isIntersecting)),{rootMargin:'120px'}).observe(el);}
 
 /* ---------- chapter 1: sieve ---------- */
@@ -887,7 +930,7 @@ function drawCs(){
   $('csRead').innerHTML=s===2
     ?'After '+N+' pieces the plain sum is <b class="coral">'+av+'</b> and the sign-flipped version gives <b class="gold">'+fv+'</b>. Both close in on <b class="cyan">1.6449</b>. To the right of σ = 1 the two methods agree.'
     :s===1
-    ?'The plain sum 1 + ½ + ⅓ + … reaches <b class="coral">'+av+'</b> after '+N+' pieces and keeps climbing. The fix would divide by 1 − 2/2 = 0, so it gives nothing either. s = 1 has no answer at all, and it is the spike you will see in Chapter 5.'
+    ?'The plain sum 1 + ½ + ⅓ + … reaches <b class="coral">'+av+'</b> after '+N+' pieces and keeps climbing. The fix would divide by 1 − 2/2 = 0, so it gives nothing either. s = 1 has no answer at all, and it is the spike in Chapter 5\'s landscape.'
     :'The plain sum runs away: <b class="coral">'+av+'</b> after '+N+' pieces and still climbing. The sign-flipped version zigzags in on <b class="cyan">−1.4604</b>, the value of zeta at ½. The plain sum alone could never reach that number.';
 }
 $('csS').onclick=e=>{const b=e.target.closest('button');if(!b)return;csGen++;csS=+b.dataset.s;csN=400;[...$('csS').children].forEach(x=>x.classList.toggle('on',x===b));drawCs();};
@@ -901,7 +944,7 @@ const squeeze=(x,y)=>{const r=Math.hypot(x,y);if(r<=SQ)return [x,y];const k=SQ*(
 const sqR=r=>r<=SQ?r:SQ*(1+Math.log(r/SQ));
 const cur={t0:0,t1:60,sigma:.5,re:new Float64Array(NS),im:new Float64Array(NS),dx:new Float64Array(NS),dy:new Float64Array(NS),idx:0,playing:false,events:[],view:null,flash:-1e9,shown:0,big:false};
 const isTrivial=sg=>sg<0&&Number.isInteger(sg)&&sg%2===0;
-// left of the strip the walk starts below the axis (t = −10), so it passes through t = 0 where the trivial zeros sit
+// left of the strip the walk starts below the axis (t = −10), so it passes through t = 0 where the trivial zeros are
 // left of the strip it stops at t = 10, before zeta grows large, so the loop through the bullseye stays in view
 const tAt=i=>cur.t0+i*(cur.t1-cur.t0)/(NS-1),iAt=t=>Math.round((t-cur.t0)/(cur.t1-cur.t0)*(NS-1));
 function computeCurve(){
@@ -918,8 +961,8 @@ function computeCurve(){
   cur.view=[x0,x1,y0,y1];
   const v=sg,z=Math.abs(v-.5)<1e-9?'line':v>1?'east':v===1?'e1':v>0?'in':v===0?'e0':isTrivial(v)?'triv':'west';
   $('curveZone').innerHTML={
-    line:'<b class="gold">On the gold line.</b> Every nontrivial zero found so far sits here.',
-    in:'<b>Inside the critical strip, off the gold line.</b> The hypothesis says no zero sits here, so every loop should miss.',
+    line:'<b class="gold">On the gold line.</b> Every nontrivial zero found so far lies here.',
+    in:'<b>Inside the critical strip, off the gold line.</b> The hypothesis says no zero lies here, so every loop should miss.',
     east:'<b class="cyan">Right of the strip.</b> Here zeta is Chapter 3\'s product of prime sums, which is never zero. The curve never reaches the bullseye.',
     e1:'<b>The strip\'s right edge.</b> Proven zero-free in 1896. The walk starts beside the spike at s = 1, where zeta has no value.',
     e0:'<b>The strip\'s left edge.</b> Proven zero-free in 1896.',
@@ -1294,7 +1337,7 @@ const IMP=[
      'Real gaps are far smaller: near a 300-digit number the average gap is about 690. The conjectured ceiling, roughly (ln p)², is still unproved, even with RH.']},
  {id:'count',x:825,y:95,t:['Error bars on','prime counts'],tag:'Prime counting',c:C.cyan,
   h:'Error bars on prime counts',
-  p:['With RH, Lowell Schoenfeld proved in 1976 that the prime count up to x stays within √x × ln x / (8π) of li(x) for every x from 2,657 on. That is the gold band in Chapter 2.',
+  p:['With RH, Lowell Schoenfeld proved in 1976 that the prime count up to x stays within √x × ln x ÷ 8π of li(x) for every x from 2,657 on. That is the gold band in Chapter 2.',
      'Helge von Koch showed in 1901 that an error of this size is equivalent to RH itself, so no stronger hypothesis is hiding behind the band.']},
  {id:'algo',x:175,y:465,t:['Speed guarantees','for algorithms'],tag:'Algorithms',c:C.green,
   h:'Speed guarantees for algorithms',
@@ -1363,7 +1406,7 @@ onResize(()=>drawRobin(+$('robinN').value));
 
 /* ---------- the guided tour ---------- */
 const TOUR=[
- {sel:'#top',cap:'A guided tour of the lesson. The landscape is drawn from Riemann\'s zeta function, and by the end you will see what its low points have to do with primes.',dur:7000,run:()=>{}},
+ {sel:'#top',cap:'This landscape comes from Riemann\'s zeta function. Its low points decide how evenly the primes are spread.',dur:7000,run:()=>{}},
  {sel:'#claim',cap:'The claim in three forms: primes are as evenly spread as chance allows, their count stays close to Gauss\'s estimate, and every nontrivial zeta zero lies on one line.',dur:8000,run:()=>{}},
  {sel:'#ch1 .cols',cap:'A prime divides only by 1 and itself. The sieve crosses out multiples of 2, 3, 5 and 7, and the numbers left are the primes.',dur:9000,run:()=>runSieve(1.5)},
  {sel:'#stairViz',cap:'Climb one step at every prime and you get a jagged staircase. Zoom out and it stays close to Gauss\'s smooth curve. The hypothesis is about the size of the leftover wiggle.',dur:9000,run:()=>animateZoom(7500)},
@@ -1374,7 +1417,7 @@ const TOUR=[
  {sel:'#walkViz',cap:'Step off the line to σ = 0.65 and every loop misses. The Riemann Hypothesis says that off the line it always misses.',dur:8500,run:()=>{setSigma(.65);playCurve(1.8);}},
  {sel:'#landViz',cap:'The whole map at once: height shows how far zeta lands from the bullseye. Zeros are where the ground touches the floor.',dur:7000,run:()=>setMainView('overview')},
  {sel:'#landViz',cap:'From above, every dip inside the strip lines up on the gold line. More than 12 trillion have been checked.',dur:6500,run:()=>setMainView('map')},
- {sel:'#musicViz',cap:'Each zero adds one wave. Add the waves to the smooth estimate and the exact prime staircase appears.',dur:12000,run:()=>musicPlay(10500)},
+ {sel:'#musicViz',cap:'Each zero adds one wave. Add the waves to the smooth estimate and the steps of the prime staircase come into view.',dur:12000,run:()=>musicPlay(10500)},
  {sel:'#rogueViz',cap:'Why ½? Zeros on the line make waves that grow like √x, the size of coin-flip noise. One zero further right would make a far bigger wave.',dur:8000,run:()=>animBeta()},
  {sel:'#coinViz',cap:'Another form of the claim: the primes\' own walk (red) stays about as close to zero as a fair coin\'s walk (blue).',dur:7500,run:()=>{}},
  {sel:'#robinViz',cap:'A version with divisors: the hypothesis holds exactly when no number above 5040 breaks Robin\'s limit.',dur:7500,run:()=>{$('robinN').value=55440;robinTest();}},
@@ -1384,7 +1427,7 @@ const TOUR=[
 let betaGen=0;function animBeta(){const g=++betaGen;const t0=performance.now();const st=now=>{if(g!==betaGen)return;const u=Math.min(1,(now-t0)/6000);betaEl.value=Math.round(50+45*ease(u));drawRogue();if(u<1)requestAnimationFrame(st);};requestAnimationFrame(st);}
 let impGen=0;async function cycleImp(){const g=++impGen;for(const id of ['prime','gap','count','algo','cond','ends']){if(g!==impGen)return;selImp(id);await sleep(1600);}}
 const tour={i:-1,running:false,paused:false,elapsed:0,last:0};
-function tourScroll(sel,bottom){const el=document.querySelector(sel);if(!el)return;const r=el.getBoundingClientRect();const top=sel==='#top'?0:bottom?r.bottom+scrollY-(innerHeight-document.getElementById('tourbar').offsetHeight-44):r.top+scrollY-24;scrollTo({top,behavior:REDUCE?'auto':'smooth'});}
+function tourScroll(sel,bottom){const el=document.querySelector(sel);if(!el)return;const fold=el.closest('details');if(fold)fold.open=true;const r=el.getBoundingClientRect();const top=sel==='#top'?0:bottom?r.bottom+scrollY-(innerHeight-document.getElementById('tourbar').offsetHeight-44):r.top+scrollY-24;scrollTo({top,behavior:REDUCE?'auto':'smooth'});}
 function tourGo(i){tour.i=i;tour.elapsed=0;const s=TOUR[i];$('tourCap').textContent=s.cap;$('tourStep').textContent=(i+1)+' / '+TOUR.length;tourScroll(s.sel,s.bottom);setTimeout(()=>{if(tour.running&&tour.i===i)s.run();},REDUCE?50:900);}
 function tourTick(now){if(!tour.running)return;const dt=tour.last?now-tour.last:0;tour.last=now;if(!tour.paused)tour.elapsed+=dt;const s=TOUR[tour.i];$('tourProg').style.width=Math.min(100,100*tour.elapsed/s.dur)+'%';
   if(tour.elapsed>=s.dur){if(tour.i+1<TOUR.length)tourGo(tour.i+1);else{tourStop();return;}}requestAnimationFrame(tourTick);}
@@ -1394,6 +1437,20 @@ $('tourBtn').onclick=tourStart;$('tourStop').onclick=tourStop;
 $('tourPause').onclick=()=>{tour.paused=!tour.paused;$('tourPause').textContent=tour.paused?'Resume':'Pause';};
 $('scrollBtn').onclick=()=>$('ch1').scrollIntoView({behavior:REDUCE?'auto':'smooth'});
 window.__tour={start:tourStart,steps:TOUR};
+
+/* ---------- chapter index ---------- */
+(function(){
+  const toc=$('toc'),btn=$('tocBtn'),links=[...toc.querySelectorAll('a')];
+  const onScroll=()=>document.body.classList.toggle('past-hero',scrollY>innerHeight*.6);
+  addEventListener('scroll',onScroll,{passive:true});onScroll();
+  const setOpen=v=>{toc.classList.toggle('open',v);btn.setAttribute('aria-expanded',v);};
+  btn.onclick=e=>{e.stopPropagation();setOpen(!toc.classList.contains('open'));};
+  toc.onclick=e=>{if(e.target.closest('a'))setOpen(false);};
+  document.addEventListener('click',e=>{if(!toc.contains(e.target))setOpen(false);});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')setOpen(false);});
+  const io=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting)links.forEach(l=>l.classList.toggle('on',l.hash==='#'+en.target.id));}),{rootMargin:'-45% 0px -50% 0px'});
+  links.forEach(l=>io.observe(document.querySelector(l.hash)));
+})();
 
 /* ---------- init ---------- */
 function initAll(){
